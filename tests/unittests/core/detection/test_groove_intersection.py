@@ -21,12 +21,15 @@ API 注意：detect_transverse_grooves() 使用显式参数，返回显式 tuple
     这些分支决定 groove_count，是横沟检测算法最核心的数量判断来源。
 - 针对交叉点统计：覆盖无横沟、上下双侧列密度、仅上侧、仅下侧、全图横沟和边缘列过滤。
     这些分支决定 intersection_count，是交叉点统计算法最核心的数量判断来源。
-- 针对 debug 图：覆盖掩码叠加、横沟中心线和文字绘制，确保 debug 输出仍由算法层返回而不落盘。
+- 针对 debug 图：覆盖掩码叠加、横沟中心线和检测结果文字绘制，并用 dev2 基准图做逐像素稳定性比对。
 """
 
 import pathlib
 import unittest
 from unittest import mock
+
+_ROOT = pathlib.Path(__file__).parents[4]
+
 
 try:
     import cv2
@@ -299,7 +302,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
 
 _DATASET_GROOVE = pathlib.Path("tests/datasets/test_groove_intersection")
 _HAS_DATASET_GROOVE = (_DATASET_GROOVE / "center_inf").exists()
-_EXPECTED_REAL_IMAGE_FEATURES = {
+_EXPECTED_REAL_IMAGE_RESULTS = {
     "center_inf": {
         "groove_width_px": 25,
         "expected": {
@@ -315,6 +318,11 @@ _EXPECTED_REAL_IMAGE_FEATURES = {
         },
     },
 }
+_WISE_IMAGE_DEV2_BASELINE = _DATASET_GROOVE / "wise_image_dev2"
+_GENERATED_WISE_IMAGE_DEV2 = _ROOT / ".results" / "wise_image_dev2" / "test_groove_intersection"
+_HAS_WISE_DEV2_BASELINE = (
+    bool(list(_WISE_IMAGE_DEV2_BASELINE.glob("*.png"))) if _WISE_IMAGE_DEV2_BASELINE.exists() else False
+)
 
 
 @unittest.skipUnless(_HAS_CV2 and _HAS_DATASET_GROOVE,
@@ -323,7 +331,7 @@ class TestTransverseGroovesRealImages(unittest.TestCase):
     """真实原图输入测试。"""
 
     def _iter_real_images(self):
-        for subdir, case in _EXPECTED_REAL_IMAGE_FEATURES.items():
+        for subdir, case in _EXPECTED_REAL_IMAGE_RESULTS.items():
             for image_path in sorted((_DATASET_GROOVE / subdir).glob("*.png")):
                 yield subdir, case["groove_width_px"], image_path
 
@@ -337,19 +345,79 @@ class TestTransverseGroovesRealImages(unittest.TestCase):
         for subdir, groove_width_px, image_path in self._iter_real_images():
             with self.subTest(img=f"{subdir}/{image_path.name}"):
                 groove_count, intersection_count, vis_name, vis_image = self._run(image_path, groove_width_px)
-                expected = _EXPECTED_REAL_IMAGE_FEATURES[subdir]["expected"][image_path.name]
+                expected = _EXPECTED_REAL_IMAGE_RESULTS[subdir]["expected"][image_path.name]
                 rst = (groove_count, intersection_count, vis_name, vis_image)
                 expected = (*expected, "", None)
                 self.assertEqual(rst, expected)
 
     def test_real_images_output_has_no_score(self):
-        """core 层真实图片输出只包含特征和可选 debug 图，不包含 score"""
+        """core 层真实图片输出只包含检测结果和可选 debug 图，不包含 score"""
         for subdir, groove_width_px, image_path in self._iter_real_images():
             with self.subTest(img=f"{subdir}/{image_path.name}"):
                 result = self._run(image_path, groove_width_px)
                 rst = len(result)
                 expected = 4
                 self.assertEqual(rst, expected)
+
+
+@unittest.skipUnless(_HAS_CV2 and _HAS_DATASET_GROOVE,
+                     "需要 opencv 和 tests/datasets/test_groove_intersection 数据集")
+class TestTransverseGroovesVisualizationEquivalence(unittest.TestCase):
+    """验证 dev2 debug 染色图与 dev2 基准图完全一致。"""
+
+    @staticmethod
+    def _wise_name(subdir: str, stem: str) -> str:
+        return f"{subdir}_{stem}.png"
+
+    def _iter_real_images(self):
+        for subdir, case in _EXPECTED_REAL_IMAGE_RESULTS.items():
+            for image_path in sorted((_DATASET_GROOVE / subdir).glob("*.png")):
+                yield subdir, case["groove_width_px"], image_path
+
+    def _save_image(self, path: pathlib.Path, image: np.ndarray) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        success, buffer = cv2.imencode(".png", image)
+        self.assertTrue(success, f"图片编码失败: {path}")
+        path.write_bytes(buffer.tobytes())
+
+    def _run_debug(self, image_path: pathlib.Path, groove_width_px: int) -> np.ndarray:
+        from src.core.detection.groove_intersection import detect_transverse_grooves
+
+        _, _, _, vis_image = detect_transverse_grooves(
+            _load_color(image_path),
+            groove_width_px,
+            is_debug=True,
+        )
+        self.assertIsNotNone(vis_image, f"{image_path.name} 未生成染色图")
+        return vis_image
+
+    def test_generate_and_save_dev2_visualizations(self):
+        """生成 dev2 染色图并保存到 wise_image_dev2/ 供人工比对"""
+        for subdir, groove_width_px, image_path in self._iter_real_images():
+            with self.subTest(img=f"{subdir}/{image_path.name}"):
+                vis_image = self._run_debug(image_path, groove_width_px)
+                save_path = _GENERATED_WISE_IMAGE_DEV2 / self._wise_name(subdir, image_path.stem)
+                self._save_image(save_path, vis_image)
+
+    @unittest.skipUnless(_HAS_WISE_DEV2_BASELINE,
+                         "wise_image_dev2/ 为空，跳过稳定性比对")
+    def test_dev2_visualizations_equal_dev2_baseline(self):
+        """dev2 染色图应与 dev2 基准图逐像素完全一致"""
+        for subdir, groove_width_px, image_path in self._iter_real_images():
+            with self.subTest(img=f"{subdir}/{image_path.name}"):
+                wise_name = self._wise_name(subdir, image_path.stem)
+                dev2_path = _WISE_IMAGE_DEV2_BASELINE / wise_name
+                self.assertTrue(dev2_path.exists(), f"缺少 dev2 基准图: {wise_name}")
+
+                vis_image = self._run_debug(image_path, groove_width_px)
+                dev2_image = _load_color(dev2_path)
+
+                self.assertTrue(
+                    np.array_equal(vis_image, dev2_image),
+                    f"{subdir}/{image_path.name} 染色图与 dev2 基准不一致，"
+                    f"最大像素差={int(np.abs(vis_image.astype(int) - dev2_image.astype(int)).max())}",
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

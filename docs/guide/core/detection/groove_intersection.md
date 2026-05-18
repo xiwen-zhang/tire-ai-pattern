@@ -2,7 +2,7 @@
 
 `src.core.detection.groove_intersection` 提供横沟交点检测能力，用于统计一张轮胎小图中的横向粗线条数量，并输出横沟与纵向线条的交叉点数量。
 
-该模块属于 `src.core` 算法层，只负责从内存中的 BGR 图像提取算法特征。它不负责规则评分、不保存文件、不读写 `.results/`，也不处理业务流程调度。
+该模块属于 `src.core` 算法层，只负责从内存中的 BGR 图像生成检测结果。它不负责规则评分、不保存文件、不读写 `.results/`，也不处理业务流程调度。
 
 ## 适用场景
 
@@ -171,7 +171,7 @@ groove_count, intersection_count, vis_name, vis_image = detect_transverse_groove
 
 - 检测到的横沟区域叠加绿色半透明掩码。
 - 每条横沟中心绘制水平线。
-- 左上角绘制检测特征文字：`G:{groove_count}` 与 `X:{intersection_count}`。
+- 左上角绘制检测结果文字：`G:{groove_count}` 与 `X:{intersection_count}`。
 
 ## 示例
 
@@ -204,18 +204,21 @@ if vis_image is not None:
 
 ## 等价性验证
 
-本算法迁移后，测试沿用真实图片输入与固定特征期望值做回归。测试数据目录包含：
+本算法迁移后，测试沿用真实图片输入与固定检测结果做回归。测试数据目录包含：
 
 ```text
 tests/datasets/test_groove_intersection/
   center_inf/
   side_inf/
+    wise_image_dev2/
 ```
 
 - `center_inf/` 与 `side_inf/` 保存真实输入小图。
-- 单元测试对这些真实图的 `groove_count` 与 `intersection_count` 做固定期望值比对。
+- `wise_image_dev2/` 保存不含规则评分或规则通过状态的 dev2 debug 图基准。
+- 单元测试对真实图的 `groove_count` 与 `intersection_count` 做固定期望值比对。
+- 单元测试对 debug 图和 dev2 基准图做逐像素比对，防止可视化输出意外回归。
 
-任意一张图的特征输出不一致，都表示横沟检测或交点统计出现回归。debug 图只验证返回形状和绘制结果发生变化，不在算法文档中维护额外图片基准。
+任意一张图的检测结果不一致，都表示横沟检测或交点统计出现回归。debug 图基准只覆盖算法层返回的检测结果文字、横沟掩码和中心线，不包含规则层分数或通过状态。
 
 ## 异常
 
@@ -236,5 +239,5 @@ tests/datasets/test_groove_intersection/
 ## 设计边界
 
 - 算法层接收 `groove_width_px`（像素）作为参数。
-- 算法层不返回 score 或规则通过状态，只返回基础特征和可选 debug 图。
+- 算法层不返回 score 或规则通过状态，只返回检测结果和可选 debug 图。
 - 算法层不处理文件保存和业务流程编排。

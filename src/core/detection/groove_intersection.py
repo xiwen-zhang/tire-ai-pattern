@@ -254,7 +254,7 @@ def _draw_debug_image(
     groove_count: int,
     intersection_count: int,
 ) -> np.ndarray:
-    """生成横沟交点 debug 图，只展示检测特征。"""
+    """在原图上叠加横沟掩码、横沟中心线和检测结果文字。"""
     debug_image = image.copy()
 
     overlay = np.zeros_like(debug_image)
@@ -293,7 +293,7 @@ def _draw_debug_image(
             font_scale,
             text_color,
             font_thickness,
-            cv2.LINE_AA,
+            cv2.LINE_8,
         )
         current_y += text_height + 4
 
