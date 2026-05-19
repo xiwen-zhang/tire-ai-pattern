@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from src.common.exceptions import InputDataError, InputTypeError
-from src.core.longitudinal_groove import detect_longitudinal_grooves
+from src.core.detection.longitudinal_groove import detect_longitudinal_grooves
 from src.models.enums import RegionEnum
 from src.models.image_models import BaseImage, SmallImage
 from src.models.rule_models import BaseRuleFeature, BaseRuleScore, Rule11Config, Rule11Feature, Rule11Score
