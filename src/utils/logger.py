@@ -28,7 +28,7 @@ def _ensure_file_handler(logger: logging.Logger, level: int, formatter: logging.
 
 def setup_logger(
     name: str = "giti_tire",
-    level: str = "INFO",
+    level: str = "DEBUG",
     log_file: Optional[str] = None,
     console_output: bool = True
 ) -> logging.Logger:
