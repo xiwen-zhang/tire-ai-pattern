@@ -201,7 +201,7 @@ class Rule4Config(BaseRuleConfig):
 class Rule5Config(BaseRuleConfig):
     """Rule5：根据用户指定的对称性进行输出"""
     description: str = "根据用户指定的对称性进行输出"
-    max_score: int = 8
+    max_score: int = 1
     rule_type: RuleTypeEnum = RuleTypeEnum.BIG_IMAGE
 
 
