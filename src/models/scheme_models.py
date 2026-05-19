@@ -40,11 +40,11 @@ class RibTemplate(BaseModel):
 
     model_config = ConfigDict(frozen=True)
 
+    rib_name: Optional[str] = Field(default=None, description="RIB名称，如rib1，最外层必填")
+    operation_template: Optional[Tuple[RibOperation, ...]] = Field(default=None, description="操作序列模板")
     region: Optional[RegionEnum] = Field(default=None, description="来源区域")
     source_type: SourceTypeEnum = Field(default=SourceTypeEnum.ORIGINAL, description="来源类型")
     inherit_from: Optional[str] = Field(default=None, description="继承自哪个rib_name")
-    operation_template: Optional[Tuple[RibOperation, ...]] = Field(default=None, description="操作序列模板")
-    rib_name: Optional[str] = Field(default=None, description="RIB名称，如rib1，最外层必填")
     sub_template_name: Optional[StitchingSchemeName] = Field(default=None, description="子模板名称")
 
     @model_validator(mode="after")
@@ -78,36 +78,103 @@ class StitchingTemplate(BaseModel):
 
 
 class Symmetry0(StitchingTemplate):
-    """拼接模板：symmetry_0 - 5个花纹RIB无对称原则"""
+    """拼接模板：symmetry_0 - 5个RIB，无对称"""
 
     name: StitchingSchemeName = StitchingSchemeName.SYMMETRY_0
-    description: str = "花纹RIB无对称原则"
+    description: str = "5个RIB，无对称"
     rib_number: int = 5
     mode: str = "symmetry"
     rib_template_list: List[RibTemplate] = [
-        RibTemplate(region=RegionEnum.SIDE, operation_template=(RibOperation.NONE,), rib_name="rib1"),
-        RibTemplate(region=RegionEnum.CENTER, operation_template=(RibOperation.NONE,), rib_name="rib2"),
-        RibTemplate(region=RegionEnum.CENTER, operation_template=(RibOperation.NONE,), rib_name="rib3"),
-        RibTemplate(region=RegionEnum.CENTER, operation_template=(RibOperation.NONE,), rib_name="rib4"),
-        RibTemplate(region=RegionEnum.SIDE, operation_template=(RibOperation.NONE,), rib_name="rib5"),
+        RibTemplate(rib_name="rib1", operation_template=(RibOperation.NONE,), region=RegionEnum.SIDE),
+        RibTemplate(rib_name="rib2", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib3", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib4", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib5", operation_template=(RibOperation.NONE,), region=RegionEnum.SIDE),
     ]
 
 
 class Symmetry1(StitchingTemplate):
-    """拼接模板：symmetry_1 - 花纹RIB中心对称（左侧旋转180度是右侧）"""
+    """拼接模板：symmetry_1 - 5个RIB，中心对称"""
 
     name: StitchingSchemeName = StitchingSchemeName.SYMMETRY_1
-    description: str = "花纹RIB中心对称（左侧旋转180度是右侧）"
+    description: str = "5个RIB，中心对称"
     rib_number: int = 5
     mode: str = "symmetry"
     rib_template_list: List[RibTemplate] = [
-        RibTemplate(region=RegionEnum.SIDE, operation_template=(RibOperation.NONE,), rib_name="rib1"),
-        RibTemplate(region=RegionEnum.CENTER, operation_template=(RibOperation.NONE,), rib_name="rib2"),
-        RibTemplate(region=RegionEnum.CENTER, operation_template=(RibOperation.LEFT_FLIP,), rib_name="rib3"),
-        RibTemplate(region=RegionEnum.CENTER, source_type=SourceTypeEnum.INHERIT, inherit_from="rib2",
-                    operation_template=(RibOperation.FLIP,), rib_name="rib4"),
-        RibTemplate(region=RegionEnum.SIDE, source_type=SourceTypeEnum.INHERIT, inherit_from="rib1",
-                    operation_template=(RibOperation.FLIP,), rib_name="rib5"),
+        RibTemplate(rib_name="rib1", operation_template=(RibOperation.NONE,), region=RegionEnum.SIDE),
+        RibTemplate(rib_name="rib2", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib3", operation_template=(RibOperation.LEFT_FLIP,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib4", operation_template=(RibOperation.FLIP,), region=RegionEnum.CENTER,
+                    source_type=SourceTypeEnum.INHERIT, inherit_from="rib2"),
+        RibTemplate(rib_name="rib5", operation_template=(RibOperation.FLIP,), region=RegionEnum.SIDE,
+                    source_type=SourceTypeEnum.INHERIT, inherit_from="rib1"),
+    ]
+
+
+class Symmetry2(StitchingTemplate):
+    """拼接模板：symmetry_2 - 5个RIB，左右对称"""
+
+    name: StitchingSchemeName = StitchingSchemeName.SYMMETRY_2
+    description: str = "5个RIB，左右对称"
+    rib_number: int = 5
+    mode: str = "symmetry"
+    rib_template_list: List[RibTemplate] = [
+        RibTemplate(rib_name="rib1", operation_template=(RibOperation.NONE,), region=RegionEnum.SIDE),
+        RibTemplate(rib_name="rib2", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib3", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib4", operation_template=(RibOperation.FLIP_LR,), region=RegionEnum.CENTER,
+                    source_type=SourceTypeEnum.INHERIT, inherit_from="rib2"),
+        RibTemplate(rib_name="rib5", operation_template=(RibOperation.FLIP_LR,), region=RegionEnum.SIDE,
+                    source_type=SourceTypeEnum.INHERIT, inherit_from="rib1"),
+    ]
+
+
+class Symmetry4(StitchingTemplate):
+    """拼接模板：symmetry_4 - 4个RIB，无对称"""
+
+    name: StitchingSchemeName = StitchingSchemeName.SYMMETRY_4
+    description: str = "4个RIB，无对称"
+    rib_number: int = 4
+    mode: str = "symmetry"
+    rib_template_list: List[RibTemplate] = [
+        RibTemplate(rib_name="rib1", operation_template=(RibOperation.NONE,), region=RegionEnum.SIDE),
+        RibTemplate(rib_name="rib2", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib3", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib4", operation_template=(RibOperation.NONE,), region=RegionEnum.SIDE),
+    ]
+
+
+class Symmetry5(StitchingTemplate):
+    """拼接模板：symmetry_5 - 4个RIB，中心对称"""
+
+    name: StitchingSchemeName = StitchingSchemeName.SYMMETRY_5
+    description: str = "4个RIB，中心对称"
+    rib_number: int = 4
+    mode: str = "symmetry"
+    rib_template_list: List[RibTemplate] = [
+        RibTemplate(rib_name="rib1", operation_template=(RibOperation.NONE,), region=RegionEnum.SIDE),
+        RibTemplate(rib_name="rib2", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib3", operation_template=(RibOperation.FLIP,), region=RegionEnum.CENTER,
+                    source_type=SourceTypeEnum.INHERIT, inherit_from="rib2"),
+        RibTemplate(rib_name="rib4", operation_template=(RibOperation.FLIP,), region=RegionEnum.SIDE,
+                    source_type=SourceTypeEnum.INHERIT, inherit_from="rib1"),
+    ]
+
+
+class Symmetry6(StitchingTemplate):
+    """拼接模板：symmetry_6 - 4个RIB，左右对称"""
+
+    name: StitchingSchemeName = StitchingSchemeName.SYMMETRY_6
+    description: str = "4个RIB，左右对称"
+    rib_number: int = 4
+    mode: str = "symmetry"
+    rib_template_list: List[RibTemplate] = [
+        RibTemplate(rib_name="rib1", operation_template=(RibOperation.NONE,), region=RegionEnum.SIDE),
+        RibTemplate(rib_name="rib2", operation_template=(RibOperation.NONE,), region=RegionEnum.CENTER),
+        RibTemplate(rib_name="rib3", operation_template=(RibOperation.FLIP_LR,), region=RegionEnum.CENTER,
+                    source_type=SourceTypeEnum.INHERIT, inherit_from="rib2"),
+        RibTemplate(rib_name="rib4", operation_template=(RibOperation.FLIP_LR,), region=RegionEnum.SIDE,
+                    source_type=SourceTypeEnum.INHERIT, inherit_from="rib1"),
     ]
 
 
