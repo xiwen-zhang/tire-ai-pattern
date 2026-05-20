@@ -74,7 +74,6 @@ EDITABLE_CONFIG = {
     "big_image": {
         "compliance_score": 0,  # 可编辑：合规性得分
         "rules": [
-            {"name": "rule5", "description": "用户指定对称性输出", "max_score": 1, "score": 1},    # 可编辑
             {"name": "rule13", "description": "海陆比28%-35%", "max_score": 2, "score": 1},     # 可编辑
             {"name": "rule16", "description": "RIB2/3/4连续性", "max_score": 4, "score": 4},     # 可编辑
             {"name": "rule17", "description": "RIB1/2与RIB4/5概率连续", "max_score": 6, "score": 0}, # 可编辑
@@ -134,10 +133,10 @@ from src.models.image_models import (
     RuleEvaluation, ImageScore, ImageLineage
 )
 from src.models.rule_models import (
-    BaseRuleConfig, Rule5Config, Rule6Config, Rule8Config, 
+    BaseRuleConfig, Rule6Config, Rule8Config, 
     Rule10Config, Rule11Config, Rule13Config, Rule14Config, 
     Rule16Config, Rule17Config, Rule18Config, Rule19Config, Rule20Config, Rule22Config,
-    BaseRuleScore, Rule5Score, Rule6Score, Rule8Score,
+    BaseRuleScore, Rule6Score, Rule8Score,
     Rule10Score, Rule11Score, Rule13Score, Rule14Score, 
     Rule16Score, Rule17Score, Rule18Score, Rule19Score, Rule20Score, Rule22Score
 )
@@ -176,7 +175,6 @@ def create_tire_struct(config: dict) -> TireStruct:
     
     # 小图规则评分映射
     rule_config_map = {
-        "rule5": (Rule5Config, Rule5Score),
         "rule6": (Rule6Config, Rule6Score),
         "rule8": (Rule8Config, Rule8Score),
         "rule10": (Rule10Config, Rule10Score),
@@ -219,14 +217,13 @@ def create_tire_struct(config: dict) -> TireStruct:
             "max_intersections": 2,
         },
         "rule16": {
-            "continuity_mode": "any",
-            "groove_width": 30.0,
-            "blend_width": 10,
+            "continuity_mode_list": [],
         },
         "rule17": {
             "edge_continuity_rib1_rib2": 0.5,
             "edge_continuity_rib4_rib5": 0.5,
             "blend_width": 10,
+            "continuity_mode_list": [],
         },
         "rule18": {
             "enable_gray_depth": True,
