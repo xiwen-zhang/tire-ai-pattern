@@ -53,10 +53,15 @@ RIB数量: N
 """
 
 from pathlib import Path
+from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
 from src.utils.image_utils import load_image_to_base64
 
 # ============================================================
 # 【用户编辑区】修改此字典即可自定义配置
+#   所有字符串枚举优先使用 src.models.enums 中的枚举值：
+#     region           → RegionEnum.SIDE / RegionEnum.CENTER
+#     连续性模式        → StitchingSchemeName.CONTINUITY_0 等
+#     装饰位置          → DecorationPositionEnum.LEFT / DecorationPositionEnum.RIGHT
 #   - small_images:   每张小图的 image_base64 与 region
 #                     可以用 load_image_to_base64(Path(...)) 从文件加载
 #                     也可以直接填 "data:image/png;base64,iVBOR..." 字符串
@@ -74,7 +79,7 @@ CONFIG = {
             "image_base64": load_image_to_base64(
                 Path("tests/datasets/stitching/rib1.png"), with_prefix=True
             ),
-            "region": "side",
+            "region": RegionEnum.SIDE,
         },
         # ...
     ],
@@ -138,7 +143,7 @@ run_pipeline1(my_struct)
 | 字段 | 类型 | 必填 | 说明 |
 |---|---|---|---|
 | `image_base64` | `str` | 是 | 图片的 base64 编码（含 `data:image/...;base64,` 前缀） |
-| `region` | `str` | 是 | `"side"` 或 `"center"` |
+| `region` | `RegionEnum` | 是 | `RegionEnum.SIDE` 或 `RegionEnum.CENTER` |
 
 > **如何填写 `image_base64`**：
 > ```python
@@ -175,14 +180,14 @@ run_pipeline1(my_struct)
     ],
 }
 
-# 连续性规则
+# 连续性规则（continuity_mode_list 使用 StitchingSchemeName 枚举）
 {
     "rule": "rule12",
     "max_score": 6,
     "description": "两个RIB间横向钢片及横沟连续性占比是否满足要求",
     "continuity_ratio_upper": 0.7,
     "continuity_ratio_lower": 0.6,
-    "continuity_mode_list": ["continuity_0", "continuity_1"],
+    "continuity_mode_list": [StitchingSchemeName.CONTINUITY_0, StitchingSchemeName.CONTINUITY_1],
 },
 ```
 
@@ -195,6 +200,21 @@ run_pipeline1(my_struct)
 | `{"image_base64": "data:image/png;base64,..."}` | 直接使用 base64 字符串 |
 
 > **注意**：pipeline1 的大图是**输出**，不是输入，因此参考配置中 `big_image` 均设为 `None`。
+
+### 3.5 新增枚举：`DecorationPositionEnum`
+
+装饰位置目前使用裸 `str`（`"left"` / `"right"`），需新增枚举以保持一致：
+
+```python
+# src/models/enums.py 新增
+
+class DecorationPositionEnum(str, Enum):
+    """装饰位置枚举"""
+    LEFT = "left"    # 左侧装饰
+    RIGHT = "right"  # 右侧装饰
+```
+
+> **关联改动**：`rule_models.py` 中 `DecorationItem.position` 字段类型需同步从 `str` 改为 `DecorationPositionEnum`。
 
 ---
 
@@ -267,14 +287,15 @@ def build_tire_struct(config: dict) -> TireStruct:
 
 ```python
 from pathlib import Path
+from src.models.enums import RegionEnum
 from src.utils.image_utils import load_image_to_base64
 
 "small_images": [
-    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib1.png"), with_prefix=True), "region": "side"},
-    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib2.png"), with_prefix=True), "region": "center"},
-    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib3.png"), with_prefix=True), "region": "center"},
-    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib4.png"), with_prefix=True), "region": "center"},
-    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib5.png"), with_prefix=True), "region": "side"},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib1.png"), with_prefix=True), "region": RegionEnum.SIDE},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib2.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib3.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib4.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib5.png"), with_prefix=True), "region": RegionEnum.SIDE},
 ],
 ```
 
@@ -296,10 +317,10 @@ from src.utils.image_utils import load_image_to_base64
 
 ```python
 "small_images": [
-    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib1.png"), with_prefix=True), "region": "side"},
-    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib2.png"), with_prefix=True), "region": "center"},
-    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib3.png"), with_prefix=True), "region": "center"},
-    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib4.png"), with_prefix=True), "region": "side"},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib1.png"), with_prefix=True), "region": RegionEnum.SIDE},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib2.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib3.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib4.png"), with_prefix=True), "region": RegionEnum.SIDE},
 ],
 ```
 
@@ -319,8 +340,10 @@ from src.utils.image_utils import load_image_to_base64
 **所有配置共享装饰**（Rule102）：
 
 ```python
+from src.models.enums import DecorationPositionEnum
+
 "decorations": [
-    {"position": "left", "decoration_width": 300, "decoration_height": 640, "decoration_opacity": 128},
+    {"position": DecorationPositionEnum.LEFT, "decoration_width": 300, "decoration_height": 640, "decoration_opacity": 128},
 ],
 ```
 
@@ -350,25 +373,26 @@ from src.utils.image_utils import load_image_to_base64
     {"rule": "rule2", ...},
 
     # === 连续性规则（这三个规则共同决定可选连续性模式）===
+    # 注意：continuity_mode_list 使用 StitchingSchemeName 枚举值
     {
         "rule": "rule12",
         "max_score": 6,
         "description": "两个RIB间横向钢片及横沟连续性占比是否满足要求",
         "continuity_ratio_upper": 0.7,
         "continuity_ratio_lower": 0.6,
-        "continuity_mode_list": ["continuity_0", "continuity_1"],
+        "continuity_mode_list": [StitchingSchemeName.CONTINUITY_0, StitchingSchemeName.CONTINUITY_1],
     },
     {
         "rule": "rule16",
         "max_score": 4,
         "description": "中心RIB上的横沟或横向钢片可任意组合连续性",
-        "continuity_mode_list": ["continuity_0", "continuity_1"],
+        "continuity_mode_list": [StitchingSchemeName.CONTINUITY_0, StitchingSchemeName.CONTINUITY_1],
     },
     {
         "rule": "rule17",
         "max_score": 6,
         "description": "边缘RIB上的横沟或横向钢片可任意组合连续性",
-        "continuity_mode_list": ["continuity_0"],
+        "continuity_mode_list": [StitchingSchemeName.CONTINUITY_0],
     },
 
     # === 尺寸规则 ===
@@ -380,19 +404,19 @@ from src.utils.image_utils import load_image_to_base64
 
 #### 各配置的差值表
 
-| 配置 | 对称规则 | continuity_mode_list | rib_number |
-|---|---|---|---|
+| 配置 | 对称规则 | continuity_mode_list (StitchingSchemeName) | rib_number |
+|---|---|---|---|---|
 | 1.1 | rule1 | — | 5 |
 | 1.2 | rule2 | — | 5 |
 | 1.3 | rule3 | — | 5 |
-| 1.4 | rule1 | `["continuity_0","continuity_1"]` | 5 |
-| 1.5 | rule2 | `["continuity_0","continuity_1"]` | 5 |
-| 1.6 | rule3 | `["continuity_0","continuity_2"]` | 5 |
+| 1.4 | rule1 | `[CONTINUITY_0, CONTINUITY_1]` | 5 |
+| 1.5 | rule2 | `[CONTINUITY_0, CONTINUITY_1]` | 5 |
+| 1.6 | rule3 | `[CONTINUITY_0, CONTINUITY_2]` | 5 |
 | 1.7 | rule1 | — | 4 |
 | 1.8 | rule1, rule2 | — | 4 |
 | 1.9 | rule1, rule2, rule3 | — | 4 |
-| 1.10 | rule1, rule2, rule3 | `["continuity_3"]` | 4 |
-| 1.11 | rule1, rule2, rule3 | `["continuity_1","continuity_2","continuity_3"]` | 4 |
+| 1.10 | rule1, rule2, rule3 | `[CONTINUITY_3]` | 4 |
+| 1.11 | rule1, rule2, rule3 | `[CONTINUITY_1, CONTINUITY_2, CONTINUITY_3]` (反例) | 4 |
 
 ### 5.4 反例 1.11 说明
 
@@ -411,9 +435,10 @@ from src.utils.image_utils import load_image_to_base64
 
 ## 6. 文件清单
 
+### 6.1 新增文件
+
 ```
 src/config/
-├── __init__.py                              # 现有
 ├── _builder.py                              # [新增] 共享 dict→TireStruct 构建器
 ├── ref_5rib_sym0_no_cont.py                 # [新增] 1.1
 ├── ref_5rib_sym1_no_cont.py                 # [新增] 1.2
@@ -428,6 +453,13 @@ src/config/
 └── ref_4rib_sym456_cont123_bad.py           # [新增] 1.11 反例
 ```
 
+### 6.2 修改现有文件
+
+| 文件 | 改动 |
+|---|---|
+| `src/models/enums.py` | 新增 `DecorationPositionEnum` |
+| `src/models/rule_models.py` | `DecorationItem.position` 类型从 `str` 改为 `DecorationPositionEnum` |
+
 ---
 
 ## 7. 验收标准
@@ -440,7 +472,7 @@ src/config/
 | 2 | `tire_struct` 可直接传给 `run_pipeline1()` 运行 | 1.1-1.10 通过 pipeline1 完整执行 |
 | 3 | 1.11 不导致 pipeline1 崩溃 | 运行不抛异常，continuity_1/2 被静默忽略 |
 | 4 | 预期方案名与实际 pipeline1 输出一致 | 检查 `tire_struct.big_image.lineage.stitching_scheme.stitching_scheme_abstract.name` |
-| 5 | `CONFIG` 是纯 dict，不含 Pydantic 对象 | `isinstance(CONFIG, dict)` 为 True |
+| 5 | `CONFIG` 是 dict，值只包含基础类型、枚举值和函数调用结果，不含 Pydantic 模型对象 | `isinstance(CONFIG, dict)` 为 True，遍历所有叶子节点确认无 Pydantic 实例 |
 | 6 | 用户修改 `CONFIG` 后重新调用 `build_tire_struct(CONFIG)` 可获得更新后的 `TireStruct` | 修改 image_base64 源 / rib_width，验证 tire_struct 反映变更 |
 
 ### 7.2 文档验收
@@ -473,12 +505,12 @@ src/config/
 
 ### 8.2 连续性模板匹配速查
 
-| 方案名 | 模板类 | RIB | continuity_mode_list 值 |
+| 方案名 | 模板类 | RIB | continuity_mode_list 值 (StitchingSchemeName) |
 |---|---|---|---|
-| continuity_0 | Continuity0 | 5 | `"continuity_0"` |
-| continuity_1 | Continuity1 | 5 | `"continuity_1"` |
-| continuity_2 | Continuity2 | 5 | `"continuity_2"` |
-| continuity_3 | Continuity3 | 4 | `"continuity_3"` |
+| continuity_0 | Continuity0 | 5 | `CONTINUITY_0` |
+| continuity_1 | Continuity1 | 5 | `CONTINUITY_1` |
+| continuity_2 | Continuity2 | 5 | `CONTINUITY_2` |
+| continuity_3 | Continuity3 | 4 | `CONTINUITY_3` |
 
 ### 8.3 完整的规则配置字段速查
 
@@ -495,6 +527,22 @@ src/config/
 | rule100 | RIB尺寸 | `rib_number`, `rib_sizes` |
 | rule101 | 主沟尺寸 | `groove_sizes` |
 | rule102 | 装饰边框 | `decorations` |
+
+### 8.4 CONFIG 中使用的枚举速查
+
+所有 CONFIG 文件统一从 `src.models.enums` 导入枚举：
+
+```python
+from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+```
+
+| 枚举 | CONFIG 中的使用位置 | 有效值 |
+|---|---|---|
+| `RegionEnum` | `small_images[].region` | `SIDE`, `CENTER` |
+| `StitchingSchemeName` | `rules_config` 中 `continuity_mode_list` 的子元素 | `CONTINUITY_0` ~ `CONTINUITY_3`, `SYMMETRY_0` ~ `SYMMETRY_6` |
+| `DecorationPositionEnum` | `rules_config` 中 `decorations[].position` | `LEFT`, `RIGHT` |
+
+> `StitchingSchemeName` 继承 `str, Enum`，因此 `StitchingSchemeName.CONTINUITY_0` 的字符串值为 `"continuity_0"`，与 Pydantic 模型中 `List[str]` 类型兼容。
 
 ---
 
