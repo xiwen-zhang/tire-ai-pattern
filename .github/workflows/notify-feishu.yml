@@ -45,10 +45,10 @@ jobs:
             SKIP=false
             TITLE="🔀 新 PR: ${{ github.event.pull_request.title }}"
             BODY="仓库: **${{ github.repository }}**  \n作者: ${{ github.event.pull_request.user.login }}  \n分支: ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}  \n[查看详情](${{ github.event.pull_request.html_url }})"
-            # @ me: use FEISHU_MY_USER_ID secret
-            AT_ME="${{ secrets.FEISHU_MY_USER_ID }}"
+            # @ me: 从映射文件解析 notify-me 的 GitHub 用户 → 飞书 ID
+            AT_ME=$(resolve_at "${{ vars.FEISHU_NOTIFY_ME }}")
             if [ -n "$AT_ME" ]; then
-              BODY="$BODY  \n<at id=$AT_ME></at>"
+              BODY="$BODY  \n$AT_ME"
             fi
 
           elif [ "$EVENT" = "pull_request" ] && [ "$ACTION" = "closed" ] && [ "${{ github.event.pull_request.merged }}" = "true" ]; then
