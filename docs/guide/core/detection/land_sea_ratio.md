@@ -6,14 +6,14 @@
 
 海陆比是评估轮胎花纹排水性能的重要指标。黑色区域代表深沟槽，灰色区域代表浅沟槽或细花纹，两者之和与总面积的比值即为海陆比。
 
-本模块属于算法层（`src/core/detection/`），只负责像素统计和比值计算，不含任何评分或业务配置逻辑。评分逻辑由规则层 `Rule13Executor` 负责。
+本模块属于算法层（`tire_ai_pattern/core/detection/`），只负责像素统计和比值计算，不含任何评分或业务配置逻辑。评分逻辑由规则层 `Rule13Executor` 负责。
 
 ---
 
 ## 函数入口
 
 ```python
-from src.core.detection.land_sea_ratio import compute_land_sea_ratio
+from tire_ai_pattern.core.detection.land_sea_ratio import compute_land_sea_ratio
 ```
 
 ---
@@ -97,7 +97,7 @@ ratio_percent = (black_area + gray_area) / total_area × 100
 
 ```python
 import cv2
-from src.core.detection.land_sea_ratio import compute_land_sea_ratio
+from tire_ai_pattern.core.detection.land_sea_ratio import compute_land_sea_ratio
 
 image = cv2.imread("combine_horizontal/sample.png")
 
@@ -176,7 +176,7 @@ else:
 
 | 项目 | 老架构 | 初次迁移（dev2） | 当前版本（重构后） |
 |---|---|---|---|
-| 模块路径 | `rules.scoring.land_sea_ratio` | `src.core.scoring.land_sea_ratio` | `src.core.detection.land_sea_ratio` |
+| 模块路径 | `rules.scoring.land_sea_ratio` | `tire_ai_pattern.core.scoring.land_sea_ratio` | `tire_ai_pattern.core.detection.land_sea_ratio` |
 | 函数入参 | `(img, conf: dict)` | `(image, target_min, target_max, margin, is_debug)` | `(image, is_debug)` |
 | 函数出参 | `(score: int, details: dict)` | `(score, ratio_percent, vis_name, vis_image)` | `(ratio_percent, vis_name, vis_image)` |
 | 评分逻辑 | 算法层内部 | 算法层内部（`_score()`） | 规则层 `Rule13Executor.exec_score` |

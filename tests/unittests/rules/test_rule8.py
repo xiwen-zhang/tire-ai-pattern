@@ -15,18 +15,18 @@ from unittest import mock
 
 import numpy as np
 
-from src.models.enums import (
+from tire_ai_pattern.models.enums import (
     ImageFormatEnum,
     ImageModeEnum,
     LevelEnum,
     RegionEnum,
     RuleTypeEnum,
 )
-from src.models.image_models import ImageBiz, ImageMeta, BigImage
-from src.models.rule_models import Rule8Config, Rule8Feature, Rule8Score
-from src.rules.executors.rule8 import Rule8Executor
-from src.rules.registry import get_rule_executor
-from src.utils.image_utils import load_image_to_base64, ndarray_to_base64
+from tire_ai_pattern.models.image_models import ImageBiz, ImageMeta, BigImage
+from tire_ai_pattern.models.rule_models import Rule8Config, Rule8Feature, Rule8Score
+from tire_ai_pattern.rules.executors.rule8 import Rule8Executor
+from tire_ai_pattern.rules.registry import get_rule_executor
+from tire_ai_pattern.utils.image_utils import load_image_to_base64, ndarray_to_base64
 
 
 _DATASET_GROOVE = Path("tests/datasets/test_groove_intersection")
@@ -100,7 +100,7 @@ class TestRule8ExecutorRegistration(unittest.TestCase):
 class TestRule8ExecFeature(unittest.TestCase):
     def _patch_algorithm(self, return_value):
         return mock.patch(
-            "src.core.detection.groove_intersection.detect_transverse_grooves",
+            "tire_ai_pattern.core.detection.groove_intersection.detect_transverse_grooves",
             return_value=return_value,
         )
 

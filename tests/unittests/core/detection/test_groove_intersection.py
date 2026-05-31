@@ -2,11 +2,11 @@
 """
 横沟检测算法单元测试（新架构 dev2）
 
-测试目标：src.core.detection.groove_intersection
+测试目标：tire_ai_pattern.core.detection.groove_intersection
 API 注意：detect_transverse_grooves() 使用显式参数，返回显式 tuple。
 
 主要变更（相对 dev 分支）：
-- import 路径：algorithms.detection.* -> src.core.detection.*
+- import 路径：algorithms.detection.* -> tire_ai_pattern.core.detection.*
 - 输入输出：dict 进出 -> 显式参数和显式 tuple 返回
 - 算法层不返回 score，不保存文件，不接收输出目录
 
@@ -63,36 +63,36 @@ class TestTransverseGroovesApi(unittest.TestCase):
     """公开入口 API 和错误边界测试。"""
 
     def _run(self, image, groove_width_px=25, **kwargs):
-        from src.core.detection.groove_intersection import detect_transverse_grooves
+        from tire_ai_pattern.core.detection.groove_intersection import detect_transverse_grooves
         return detect_transverse_grooves(image, groove_width_px, **kwargs)
 
     def test_none_image_raises_input_data_error(self):
-        from src.common.exceptions import InputDataError
+        from tire_ai_pattern.common.exceptions import InputDataError
 
         with self.assertRaises(InputDataError):
             self._run(None)
 
     def test_non_ndarray_image_raises_input_data_error(self):
-        from src.common.exceptions import InputDataError
+        from tire_ai_pattern.common.exceptions import InputDataError
 
         with self.assertRaises(InputDataError):
             self._run("not image")
 
     def test_wrong_ndim_raises_input_data_error(self):
-        from src.common.exceptions import InputDataError
+        from tire_ai_pattern.common.exceptions import InputDataError
 
         gray = np.zeros((128, 128), dtype=np.uint8)
         with self.assertRaises(InputDataError):
             self._run(gray)
 
     def test_invalid_groove_width_px_raises_input_data_error(self):
-        from src.common.exceptions import InputDataError
+        from tire_ai_pattern.common.exceptions import InputDataError
 
         with self.assertRaises(InputDataError):
             self._run(_make_bgr_image(), groove_width_px=0)
 
     def test_non_int_groove_width_px_raises_input_data_error(self):
-        from src.common.exceptions import InputDataError
+        from tire_ai_pattern.common.exceptions import InputDataError
 
         with self.assertRaises(InputDataError):
             self._run(_make_bgr_image(), groove_width_px="25")
@@ -123,16 +123,16 @@ class TestTransverseGroovesApi(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_processing_error_is_wrapped(self):
-        import src.core.detection.groove_intersection as groove_intersection
-        from src.common.exceptions import RuntimeProcessError
+        import tire_ai_pattern.core.detection.groove_intersection as groove_intersection
+        from tire_ai_pattern.common.exceptions import RuntimeProcessError
 
         with mock.patch.object(groove_intersection.cv2, "cvtColor", side_effect=ValueError("boom")):
             with self.assertRaises(RuntimeProcessError):
                 self._run(_make_bgr_image())
 
     def test_debug_error_is_wrapped(self):
-        import src.core.detection.groove_intersection as groove_intersection
-        from src.common.exceptions import RuntimeProcessError
+        import tire_ai_pattern.core.detection.groove_intersection as groove_intersection
+        from tire_ai_pattern.common.exceptions import RuntimeProcessError
 
         with mock.patch.object(groove_intersection, "_draw_debug_image", side_effect=ValueError("boom")):
             with self.assertRaises(RuntimeProcessError):
@@ -144,7 +144,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
     """人工设计的白盒分支测试。"""
 
     def test_analyze_grooves_no_hot_rows(self):
-        from src.core.detection.groove_intersection import _analyze_grooves
+        from tire_ai_pattern.core.detection.groove_intersection import _analyze_grooves
 
         binary = np.zeros((32, 32), dtype=np.uint8)
         positions, count, groove_mask = _analyze_grooves(binary, groove_width_px=8, image_width=32)
@@ -154,7 +154,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_analyze_grooves_single_and_multiple_bands(self):
-        from src.core.detection.groove_intersection import _analyze_grooves
+        from tire_ai_pattern.core.detection.groove_intersection import _analyze_grooves
 
         single = _make_binary_mask(bands=[(50, 80)])
         positions, count, _ = _analyze_grooves(single, groove_width_px=25, image_width=128)
@@ -174,7 +174,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_analyze_grooves_merges_small_row_gap(self):
-        from src.core.detection.groove_intersection import _analyze_grooves
+        from tire_ai_pattern.core.detection.groove_intersection import _analyze_grooves
 
         binary = _make_binary_mask(height=32, width=32, bands=[(5, 10), (12, 18)])
         positions, count, _ = _analyze_grooves(binary, groove_width_px=8, image_width=32)
@@ -184,7 +184,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_analyze_grooves_filters_too_short_band(self):
-        from src.core.detection.groove_intersection import _analyze_grooves
+        from tire_ai_pattern.core.detection.groove_intersection import _analyze_grooves
 
         binary = _make_binary_mask(bands=[(60, 63)])
         _, count, groove_mask = _analyze_grooves(binary, groove_width_px=25, image_width=128)
@@ -194,7 +194,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_count_intersections_no_groove(self):
-        from src.core.detection.groove_intersection import _count_intersections
+        from tire_ai_pattern.core.detection.groove_intersection import _count_intersections
 
         binary = np.zeros((32, 32), dtype=np.uint8)
         groove_mask = np.zeros_like(binary)
@@ -204,7 +204,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_count_intersections_with_groove_but_no_hot_columns(self):
-        from src.core.detection.groove_intersection import _count_intersections
+        from tire_ai_pattern.core.detection.groove_intersection import _count_intersections
 
         binary = np.zeros((32, 32), dtype=np.uint8)
         groove_mask = np.zeros_like(binary)
@@ -215,7 +215,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_count_intersections_with_both_sides(self):
-        from src.core.detection.groove_intersection import _count_intersections
+        from tire_ai_pattern.core.detection.groove_intersection import _count_intersections
 
         binary = np.zeros((32, 32), dtype=np.uint8)
         groove_mask = np.zeros_like(binary)
@@ -229,7 +229,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_count_intersections_with_only_above_side(self):
-        from src.core.detection.groove_intersection import _count_intersections
+        from tire_ai_pattern.core.detection.groove_intersection import _count_intersections
 
         binary = np.zeros((32, 32), dtype=np.uint8)
         groove_mask = np.zeros_like(binary)
@@ -242,7 +242,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_count_intersections_with_only_below_side(self):
-        from src.core.detection.groove_intersection import _count_intersections
+        from tire_ai_pattern.core.detection.groove_intersection import _count_intersections
 
         binary = np.zeros((32, 32), dtype=np.uint8)
         groove_mask = np.zeros_like(binary)
@@ -255,7 +255,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_count_intersections_ignores_edge_columns_and_full_groove(self):
-        from src.core.detection.groove_intersection import _count_intersections
+        from tire_ai_pattern.core.detection.groove_intersection import _count_intersections
 
         binary = np.zeros((32, 32), dtype=np.uint8)
         groove_mask = np.full((32, 32), 255, dtype=np.uint8)
@@ -272,7 +272,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_skeletonize_returns_binary_shape(self):
-        from src.core.detection.groove_intersection import _skeletonize
+        from tire_ai_pattern.core.detection.groove_intersection import _skeletonize
 
         binary = np.zeros((16, 16), dtype=np.uint8)
         binary[4:12, 7:9] = 255
@@ -283,7 +283,7 @@ class TestTransverseGroovesInternalBranches(unittest.TestCase):
         self.assertEqual(rst, expected)
 
     def test_draw_debug_image_adds_overlay_and_text(self):
-        from src.core.detection.groove_intersection import _draw_debug_image
+        from tire_ai_pattern.core.detection.groove_intersection import _draw_debug_image
 
         image = _make_bgr_image(height=32, width=32)
         groove_mask = np.zeros((32, 32), dtype=np.uint8)
@@ -336,7 +336,7 @@ class TestTransverseGroovesRealImages(unittest.TestCase):
                 yield subdir, case["groove_width_px"], image_path
 
     def _run(self, image_path: pathlib.Path, groove_width_px: int):
-        from src.core.detection.groove_intersection import detect_transverse_grooves
+        from tire_ai_pattern.core.detection.groove_intersection import detect_transverse_grooves
 
         return detect_transverse_grooves(_load_color(image_path), groove_width_px)
 
@@ -381,7 +381,7 @@ class TestTransverseGroovesVisualizationEquivalence(unittest.TestCase):
         path.write_bytes(buffer.tobytes())
 
     def _run_debug(self, image_path: pathlib.Path, groove_width_px: int) -> np.ndarray:
-        from src.core.detection.groove_intersection import detect_transverse_grooves
+        from tire_ai_pattern.core.detection.groove_intersection import detect_transverse_grooves
 
         _, _, _, vis_image = detect_transverse_grooves(
             _load_color(image_path),

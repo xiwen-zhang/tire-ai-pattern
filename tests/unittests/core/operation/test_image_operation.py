@@ -5,7 +5,7 @@
 import unittest
 import numpy as np
 import cv2
-from src.core.operation.image_operation import (
+from tire_ai_pattern.core.operation.image_operation import (
     apply_single_rib_operation,
     apply_rib_operations_sequence,
     repeat_vertically,
@@ -13,7 +13,7 @@ from src.core.operation.image_operation import (
     horizontal_concatenate,
     overlay_decoration
 )
-from src.models.enums import RibOperation
+from tire_ai_pattern.models.enums import RibOperation
 
 
 class TestImageOperation(unittest.TestCase):

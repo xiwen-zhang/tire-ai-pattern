@@ -9,16 +9,16 @@
 
 | 步骤 | 内容 | 涉及文件 | 依赖 |
 |---|---|---|---|
-| S1 | 新增 `DecorationPositionEnum` | `src/models/enums.py` | — |
-| S2 | 同步 `DecorationItem.position` 类型 | `src/models/rule_models.py` | S1 |
-| S3 | 创建共享 builder `_builder.py` | `src/config/_builder.py` | S2 |
+| S1 | 新增 `DecorationPositionEnum` | `tire_ai_pattern/models/enums.py` | — |
+| S2 | 同步 `DecorationItem.position` 类型 | `tire_ai_pattern/models/rule_models.py` | S1 |
+| S3 | 创建共享 builder `_builder.py` | `tire_ai_pattern/config/_builder.py` | S2 |
 | S4 | 创建 11 个参考配置文件 | `example/ref_configs/*.py` (11个) | S3 |
 
 ---
 
 ## 2. S1：新增 `DecorationPositionEnum`
 
-**文件**：`src/models/enums.py`
+**文件**：`tire_ai_pattern/models/enums.py`
 
 在 `ImageFormatEnum` 之后、`StitchingSchemeName` 之前插入：
 
@@ -48,7 +48,7 @@ class StitchingSchemeName(str, Enum):
 
 ## 3. S2：同步 `DecorationItem.position` 类型
 
-**文件**：`src/models/rule_models.py`
+**文件**：`tire_ai_pattern/models/rule_models.py`
 
 ### 3.1 修改 import
 
@@ -76,11 +76,11 @@ class DecorationItem(BaseModel):
     position: DecorationPositionEnum = Field(description="装饰位置：left / right")
 ```
 
-**验证**：`python -c "from src.models.rule_models import DecorationItem; print(DecorationItem.__fields__)"` 不报错。
+**验证**：`python -c "from tire_ai_pattern.models.rule_models import DecorationItem; print(DecorationItem.__fields__)"` 不报错。
 
 ---
 
-## 4. S3：创建 `src/config/_builder.py`
+## 4. S3：创建 `tire_ai_pattern/config/_builder.py`
 
 ### 4.1 模块职责
 
@@ -96,13 +96,13 @@ from __future__ import annotations
 import base64
 from typing import Any
 
-from src.common.exceptions import InputTypeError
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
-from src.models.rule_models import BaseRuleConfig
-from src.models.tire_struct import TireStruct
-from src.rules.registry import get_rule
-from src.utils.image_utils import base64_to_ndarray
+from tire_ai_pattern.common.exceptions import InputTypeError
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
+from tire_ai_pattern.models.rule_models import BaseRuleConfig
+from tire_ai_pattern.models.tire_struct import TireStruct
+from tire_ai_pattern.rules.registry import get_rule
+from tire_ai_pattern.utils.image_utils import base64_to_ndarray
 
 
 # ============================================================
@@ -280,8 +280,8 @@ RIB数量: 5
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -324,7 +324,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -341,8 +341,8 @@ RIB数量: 5
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -385,7 +385,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -402,8 +402,8 @@ RIB数量: 5
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -446,7 +446,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -463,8 +463,8 @@ RIB数量: 5
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -527,7 +527,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -544,8 +544,8 @@ RIB数量: 5
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -608,7 +608,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -625,8 +625,8 @@ RIB数量: 5
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -689,7 +689,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -706,8 +706,8 @@ RIB数量: 4
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -747,7 +747,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -764,8 +764,8 @@ RIB数量: 4
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -806,7 +806,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -823,8 +823,8 @@ RIB数量: 4
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -866,7 +866,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -883,8 +883,8 @@ RIB数量: 4
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -946,7 +946,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -968,8 +968,8 @@ RIB数量: 4
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -1043,7 +1043,7 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -1074,10 +1074,10 @@ tire_struct = build_tire_struct(CONFIG)
 
 ```bash
 python -c "
-from src.models.enums import DecorationPositionEnum
+from tire_ai_pattern.models.enums import DecorationPositionEnum
 print(DecorationPositionEnum.LEFT, DecorationPositionEnum.RIGHT)
 
-from src.models.rule_models import DecorationItem
+from tire_ai_pattern.models.rule_models import DecorationItem
 d = DecorationItem(position=DecorationPositionEnum.LEFT, decoration_width=300, decoration_height=640, decoration_opacity=128)
 print(d)
 "
@@ -1087,7 +1087,7 @@ print(d)
 
 ```bash
 python -c "
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 print('_builder.py loaded successfully')
 "
 ```
@@ -1117,7 +1117,7 @@ print('1.9 OK')
 ```python
 # tests/integrations/test_ref_configs.py（参考示例，不必创建）
 from example.ref_configs import cfg_5rib_sym0_no_cont
-from src.piplines.pipline1 import run_pipeline1
+from tire_ai_pattern.piplines.pipline1 import run_pipeline1
 
 result = run_pipeline1(cfg_5rib_sym0_no_cont.tire_struct)
 assert result.flag is True

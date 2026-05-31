@@ -6,7 +6,7 @@
 
 ## 2. 异常类导入
 
-所有异常类位于`src/common/exceptions.py`，使用以下方式导入：
+所有异常类位于`tire_ai_pattern/common/exceptions.py`，使用以下方式导入：
 
 ```python
 from common.exceptions import (

@@ -76,8 +76,8 @@
 
 ### 4.4 文件组织标准
 
-- 数据模型放在 `src/models/`
-- API 入口放在 `src/api/`
+- 数据模型放在 `tire_ai_pattern/models/`
+- API 入口放在 `tire_ai_pattern/api/`
 - 单元测试放在 `tests/unittests/`
 - 集成测试放在 `tests/integrations/`
 - 文件名应体现业务对象或职责，不使用模糊命名。

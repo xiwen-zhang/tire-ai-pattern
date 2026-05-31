@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta
-from src.models.rule_models import Rule3Config
-from src.rules.executors.rule3 import Rule3Executor
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta
+from tire_ai_pattern.models.rule_models import Rule3Config
+from tire_ai_pattern.rules.executors.rule3 import Rule3Executor
 
 
 def test_rule3_exec_feature_accepts_is_debug_argument_without_lineage():

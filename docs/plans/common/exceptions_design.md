@@ -20,7 +20,7 @@ ProjectError
 ```
 
 ### 2.2 文件位置
-- **文件路径**: `src/common/exceptions.py`
+- **文件路径**: `tire_ai_pattern/common/exceptions.py`
 - **导入方式**: `from common.exceptions import [ExceptionClass]`
 
 ## 3. 异常类详细规范

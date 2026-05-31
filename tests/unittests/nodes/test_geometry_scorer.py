@@ -81,7 +81,7 @@ import unittest
 from typing import Dict, Any, List
 from unittest.mock import MagicMock, patch
 
-from src.nodes.geometry_scorer import (
+from tire_ai_pattern.nodes.geometry_scorer import (
     calculate_geometric_scores,
     _calculate_geometric_scores,
     _extract_used_small_image_regions,
@@ -92,12 +92,12 @@ from src.nodes.geometry_scorer import (
     _build_result,
     _get_rule_type,
 )
-from src.common.exceptions import InputDataError
-from src.models.enums import RuleTypeEnum, RegionEnum, LevelEnum, SourceTypeEnum
-from src.models.image_models import BigImage, SmallImage, ImageEvaluation, RuleEvaluation, ImageMeta, ImageBiz, ImageLineage, ImageScore
-from src.models.rule_models import BaseRuleConfig, Rule6Config, Rule8Config, Rule13Config, Rule14Config, Rule20Config, Rule22Config
-from src.models.scheme_models import RibSchemeImpl, StitchingScheme, StitchingSchemeAbstract, MainGrooveScheme, DecorationScheme
-from src.models.tire_struct import TireStruct
+from tire_ai_pattern.common.exceptions import InputDataError
+from tire_ai_pattern.models.enums import RuleTypeEnum, RegionEnum, LevelEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, SmallImage, ImageEvaluation, RuleEvaluation, ImageMeta, ImageBiz, ImageLineage, ImageScore
+from tire_ai_pattern.models.rule_models import BaseRuleConfig, Rule6Config, Rule8Config, Rule13Config, Rule14Config, Rule20Config, Rule22Config
+from tire_ai_pattern.models.scheme_models import RibSchemeImpl, StitchingScheme, StitchingSchemeAbstract, MainGrooveScheme, DecorationScheme
+from tire_ai_pattern.models.tire_struct import TireStruct
 
 # 端到端测试结果输出目录（与 scripts/test_geometry_scorer.py 保持一致）
 OUTPUT_DIR = "./.results/tire_design_images"

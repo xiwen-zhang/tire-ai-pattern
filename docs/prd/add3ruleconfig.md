@@ -20,21 +20,21 @@
 
 ### 3.1 基类调整
 
-#### BaseRuleConfig（`src/models/rule_models.py`）
+#### BaseRuleConfig（`tire_ai_pattern/models/rule_models.py`）
 
 ```diff
 - max_score: int = Field(ge=0, description="最大可得分")
 + max_score: Optional[int] = Field(default=None, ge=0, description="最大可得分，None表示非打分规则")
 ```
 
-#### BaseRuleScore（`src/models/rule_models.py`）
+#### BaseRuleScore（`tire_ai_pattern/models/rule_models.py`）
 
 ```diff
 - score: int = Field(description="得分")
 + score: Optional[int] = Field(default=None, description="得分，None表示不参与评分")
 ```
 
-#### ImageEvaluation._recalculate_total（`src/models/image_models.py`）
+#### ImageEvaluation._recalculate_total（`tire_ai_pattern/models/image_models.py`）
 
 ```diff
   self.current_score = sum(
@@ -186,16 +186,16 @@ ImageLineage
 ### 5.1 模板示例（以 Rule100 为例）
 
 ```python
-# src/rules/executors/rule100.py
+# tire_ai_pattern/rules/executors/rule100.py
 from __future__ import annotations
 
-from src.models.image_models import BaseImage
-from src.models.rule_models import (
+from tire_ai_pattern.models.image_models import BaseImage
+from tire_ai_pattern.models.rule_models import (
     BaseRuleFeature, BaseRuleScore,
     Rule100Config, Rule100Feature, Rule100Score,
 )
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -222,10 +222,10 @@ Rule101Executor / Rule102Executor 同理，仅替换类名。
 ### 5.2 `__init__.py` 注册
 
 ```python
-# src/rules/executors/__init__.py
-from src.rules.executors.rule100 import Rule100Executor
-from src.rules.executors.rule101 import Rule101Executor
-from src.rules.executors.rule102 import Rule102Executor
+# tire_ai_pattern/rules/executors/__init__.py
+from tire_ai_pattern.rules.executors.rule100 import Rule100Executor
+from tire_ai_pattern.rules.executors.rule101 import Rule101Executor
+from tire_ai_pattern.rules.executors.rule102 import Rule102Executor
 
 __all__ = [
     # ... 现有列表 ...
@@ -239,12 +239,12 @@ __all__ = [
 
 ## 6. 节点层注册
 
-在 `src/nodes/base.py` 中导入三个 Config 并加入对应的 `*_CONFIGS` 列表。
+在 `tire_ai_pattern/nodes/base.py` 中导入三个 Config 并加入对应的 `*_CONFIGS` 列表。
 
 三个 Rule 均属于大图生成链路（拼接方案生成阶段），应加入到 `STITCH_SCHEME_GENERATOR_CONFIGS`：
 
 ```python
-from src.models.rule_models import (
+from tire_ai_pattern.models.rule_models import (
     # ... 现有导入 ...
     Rule100Config,
     Rule101Config,
@@ -265,13 +265,13 @@ STITCH_SCHEME_GENERATOR_CONFIGS: list[type[BaseRuleConfig]] = [
 
 | 文件 | 变更类型 | 内容 |
 |---|---|---|
-| `src/models/rule_models.py` | 修改 + 新增 | `BaseRuleConfig.max_score` → `Optional[int]`；`BaseRuleScore.score` → `Optional[int]`；新增 `RibSizeItem`/`GrooveSizeItem`/`DecorationItem`；新增 Rule100/101/102 的 Config/Feature/Score |
-| `src/models/image_models.py` | 修改 | `_recalculate_total()` 增加 `score.score is not None` 过滤 |
-| `src/rules/executors/rule100.py` | 新增 | `Rule100Executor` — 空壳，`score=None` |
-| `src/rules/executors/rule101.py` | 新增 | `Rule101Executor` — 空壳，`score=None` |
-| `src/rules/executors/rule102.py` | 新增 | `Rule102Executor` — 空壳，`score=None` |
-| `src/rules/executors/__init__.py` | 修改 | 导入并导出三个新 Executor |
-| `src/nodes/base.py` | 修改 | 导入三个新 Config，加入 `STITCH_SCHEME_GENERATOR_CONFIGS` |
+| `tire_ai_pattern/models/rule_models.py` | 修改 + 新增 | `BaseRuleConfig.max_score` → `Optional[int]`；`BaseRuleScore.score` → `Optional[int]`；新增 `RibSizeItem`/`GrooveSizeItem`/`DecorationItem`；新增 Rule100/101/102 的 Config/Feature/Score |
+| `tire_ai_pattern/models/image_models.py` | 修改 | `_recalculate_total()` 增加 `score.score is not None` 过滤 |
+| `tire_ai_pattern/rules/executors/rule100.py` | 新增 | `Rule100Executor` — 空壳，`score=None` |
+| `tire_ai_pattern/rules/executors/rule101.py` | 新增 | `Rule101Executor` — 空壳，`score=None` |
+| `tire_ai_pattern/rules/executors/rule102.py` | 新增 | `Rule102Executor` — 空壳，`score=None` |
+| `tire_ai_pattern/rules/executors/__init__.py` | 修改 | 导入并导出三个新 Executor |
+| `tire_ai_pattern/nodes/base.py` | 修改 | 导入三个新 Config，加入 `STITCH_SCHEME_GENERATOR_CONFIGS` |
 
 ---
 

@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import pytest
 
-from src.common.exceptions import InputDataError
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, RuleTypeEnum
-from src.models.image_models import ImageBiz, ImageMeta, SmallImage
-from src.models.rule_models import (
+from tire_ai_pattern.common.exceptions import InputDataError
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, RuleTypeEnum
+from tire_ai_pattern.models.image_models import ImageBiz, ImageMeta, SmallImage
+from tire_ai_pattern.models.rule_models import (
     Rule1Config,
     Rule13Config,
     Rule20Config,
@@ -18,7 +18,7 @@ from src.models.rule_models import (
     Rule11Feature,
     Rule11Score,
 )
-from src.nodes.base import (
+from tire_ai_pattern.nodes.base import (
     BIG_IMAGE_EVALUATOR_CONFIGS,
     DEFAULT_RULE_CONFIGS,
     SMALL_IMAGE_EVALUATOR_CONFIGS,
@@ -139,7 +139,7 @@ def test_validate_no_duplicate_config_types_rejects_duplicate_type():
 def test_evaluate_image_with_configs_builds_rule_evaluations(monkeypatch):
     """验证通用图片评估 helper 会依次调用 RuleRunner 并汇总 current_score。"""
     FakeRuleRunner.reset()
-    monkeypatch.setattr("src.nodes.base.RuleRunner", FakeRuleRunner)
+    monkeypatch.setattr("tire_ai_pattern.nodes.base.RuleRunner", FakeRuleRunner)
 
     evaluation = evaluate_image_with_configs(
         make_small_image(),
@@ -154,7 +154,7 @@ def test_evaluate_image_with_configs_builds_rule_evaluations(monkeypatch):
 def test_evaluate_image_with_configs_passes_debug_flag(monkeypatch):
     """验证通用图片评估 helper 会把 debug 开关传给 RuleRunner。"""
     FakeRuleRunner.reset()
-    monkeypatch.setattr("src.nodes.base.RuleRunner", FakeRuleRunner)
+    monkeypatch.setattr("tire_ai_pattern.nodes.base.RuleRunner", FakeRuleRunner)
 
     evaluate_image_with_configs(
         make_small_image(),

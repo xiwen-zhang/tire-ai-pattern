@@ -8,7 +8,7 @@ import pytest
 import logging
 import os
 
-from src.utils.image_utils import (
+from tire_ai_pattern.utils.image_utils import (
     base64_to_ndarray,
     ndarray_to_base64,
     resize_image,
@@ -16,12 +16,12 @@ from src.utils.image_utils import (
     save_base64_to_image,
     convert_cmyk_to_rgb
 )
-from src.common.exceptions import (
+from tire_ai_pattern.common.exceptions import (
     InputTypeError,
     InputDataError,
     RuntimeProcessError
 )
-from src.utils.logger import get_logger
+from tire_ai_pattern.utils.logger import get_logger
 
 
 # 定义测试数据集路径 - 直接使用相对路径（PYTHONPATH已指向项目根目录）

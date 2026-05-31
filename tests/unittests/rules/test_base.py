@@ -1,9 +1,9 @@
 import pytest
 
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta
-from src.models.rule_models import Rule1Config
-from src.rules.base import RuleExecutor
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta
+from tire_ai_pattern.models.rule_models import Rule1Config
+from tire_ai_pattern.rules.base import RuleExecutor
 
 
 def make_big_image() -> BigImage:

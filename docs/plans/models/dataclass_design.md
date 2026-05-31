@@ -52,7 +52,7 @@
 - **接入层**：统一入口/出口，封装所有输入输出（TireStruct）
 - **节点层**：图像实例化、血缘管理、评估结果存储（SmallImage、BigImage、ImageEvaluation等）
 - **规则层**：规则配置、特征提取、评分计算（RuleConfig、RuleFeature、RuleScore）
-- **基础层**：底层算法实现（不属于 src/models，属于业务逻辑层）
+- **基础层**：底层算法实现（不属于 tire_ai_pattern/models，属于业务逻辑层）
 
 ---
 
@@ -132,7 +132,7 @@ Pipeline-4: 大图拆分
 
 ### 2.1 目录结构（5个文件）
 ```
-src/models/
+tire_ai_pattern/models/
 ├── __init__.py           # 空文件，仅作为包标记
 ├── enums.py              # 所有枚举（7个枚举类）
 ├── tire_struct.py        # 接入层（TireStruct）
@@ -155,10 +155,10 @@ src/models/
 **导入方式：**
 所有导入直接指向文件，不通过 __init__.py：
 ```python
-from src.models.enums import LevelEnum, RegionEnum
-from src.models.tire_struct import TireStruct
-from src.models.image_models import SmallImage, BigImage
-from src.models.rule_models import Rule8Config, get_feature_class
+from tire_ai_pattern.models.enums import LevelEnum, RegionEnum
+from tire_ai_pattern.models.tire_struct import TireStruct
+from tire_ai_pattern.models.image_models import SmallImage, BigImage
+from tire_ai_pattern.models.rule_models import Rule8Config, get_feature_class
 ```
 
 ### 2.2 文件职责边界
@@ -833,7 +833,7 @@ class DecorationScheme(BaseModel):
 
 **核心定位：**
 - 集成 rule_name、RuleConfig、RuleFeature、RuleScore 及对应执行方法
-- 不属于 src/models，属于业务逻辑层
+- 不属于 tire_ai_pattern/models，属于业务逻辑层
 
 **核心方法：**
 1. `exec_feature(image, config) -> RuleNFeature`

@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, SourceTypeEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
-from src.models.rule_models import Rule8Config
-from src.models.tire_struct import TireStruct
-from src.piplines.pipline1 import run_pipeline1
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
+from tire_ai_pattern.models.rule_models import Rule8Config
+from tire_ai_pattern.models.tire_struct import TireStruct
+from tire_ai_pattern.piplines.pipline1 import run_pipeline1
 
 
 def make_meta() -> ImageMeta:
@@ -43,17 +43,17 @@ def test_run_pipeline1_passes_big_image_inputs_to_evaluation_and_scoring(monkeyp
     tire_struct = make_tire_struct()
     calls: list[tuple[str, object, object, object]] = []
 
-    monkeypatch.setattr("src.piplines.pipline1.load_all_executors", lambda: None)
+    monkeypatch.setattr("tire_ai_pattern.piplines.pipline1.load_all_executors", lambda: None)
     monkeypatch.setattr(
-        "src.piplines.pipline1.evaluate_small_images",
+        "tire_ai_pattern.piplines.pipline1.evaluate_small_images",
         lambda small_images, rules_config, is_debug=False: small_images,
     )
     monkeypatch.setattr(
-        "src.piplines.pipline1.generate_stitch_scheme",
+        "tire_ai_pattern.piplines.pipline1.generate_stitch_scheme",
         lambda big_image, small_images, rules_config, scheme_rank: big_image,
     )
     monkeypatch.setattr(
-        "src.piplines.pipline1.stitch_big_image",
+        "tire_ai_pattern.piplines.pipline1.stitch_big_image",
         lambda big_image: big_image,
     )
 
@@ -65,8 +65,8 @@ def test_run_pipeline1_passes_big_image_inputs_to_evaluation_and_scoring(monkeyp
         calls.append(("calculate_geometric_scores", big_image, small_images, rules_config))
         return big_image
 
-    monkeypatch.setattr("src.piplines.pipline1.evaluate_big_image", fake_evaluate_big_image)
-    monkeypatch.setattr("src.piplines.pipline1.calculate_geometric_scores", fake_calculate_geometric_scores)
+    monkeypatch.setattr("tire_ai_pattern.piplines.pipline1.evaluate_big_image", fake_evaluate_big_image)
+    monkeypatch.setattr("tire_ai_pattern.piplines.pipline1.calculate_geometric_scores", fake_calculate_geometric_scores)
 
     result = run_pipeline1(tire_struct)
 

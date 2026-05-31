@@ -18,7 +18,7 @@
 
 ## 2. 核心边界
 
-`src.nodes` 是 pipeline 中的节点编排层。
+`tire_ai_pattern.nodes` 是 pipeline 中的节点编排层。
 
 节点层负责：
 
@@ -117,7 +117,7 @@ Node6 big_image_splitter:
 
 虽然旧 dev 中 `rule8_14` 也能处理 `center_inf / side_inf`，但它没有进入旧 `postprocessor.py` 主流程；本阶段不放入 Node1，避免扩大 Node1 职责。
 
-建议在 `src.nodes.rule_configs` 中独立声明每个 node 的 configs 常量。
+建议在 `tire_ai_pattern.nodes.rule_configs` 中独立声明每个 node 的 configs 常量。
 
 不要使用 `NODE_RULE_CONFIGS[node_name]` 这类中心化动态索引。每个 node 文件显式导入自己要用的 configs 常量。
 
@@ -181,8 +181,8 @@ def select_node_configs(
 node 内使用方式：
 
 ```python
-from src.nodes.rule_configs import SMALL_IMAGE_EVALUATOR_CONFIGS
-from src.nodes.rule_configs import select_node_configs
+from tire_ai_pattern.nodes.rule_configs import SMALL_IMAGE_EVALUATOR_CONFIGS
+from tire_ai_pattern.nodes.rule_configs import select_node_configs
 
 
 configs = select_node_configs(
@@ -229,9 +229,9 @@ input image + configs
 建议抽一个 nodes 内部 helper：
 
 ```python
-from src.models.image_models import BaseImage, ImageEvaluation, RuleEvaluation
-from src.models.rule_models import BaseRuleConfig
-from src.rules.runner import RuleRunner
+from tire_ai_pattern.models.image_models import BaseImage, ImageEvaluation, RuleEvaluation
+from tire_ai_pattern.models.rule_models import BaseRuleConfig
+from tire_ai_pattern.rules.runner import RuleRunner
 
 
 def evaluate_image_with_configs(
@@ -364,7 +364,7 @@ Pipeline-4:
 建议接口：
 
 ```python
-from src.models.tire_struct import TireStruct
+from tire_ai_pattern.models.tire_struct import TireStruct
 
 
 def evaluate_small_images(tire_struct: TireStruct) -> TireStruct:
@@ -435,7 +435,7 @@ Node1 顺序影响：
 建议接口：
 
 ```python
-from src.models.tire_struct import TireStruct
+from tire_ai_pattern.models.tire_struct import TireStruct
 
 
 def evaluate_big_image(tire_struct: TireStruct) -> TireStruct:
@@ -518,7 +518,7 @@ Node5 只做“基于已有信息的评分”，不重新检测图像。
 建议接口：
 
 ```python
-from src.models.tire_struct import TireStruct
+from tire_ai_pattern.models.tire_struct import TireStruct
 
 
 def score_geometry(tire_struct: TireStruct) -> TireStruct:

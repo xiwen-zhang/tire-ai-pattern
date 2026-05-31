@@ -1,8 +1,8 @@
 import pytest
 
-from src.models.rule_models import BaseRuleConfig
-from src.rules.base import RuleExecutor
-from src.rules.registry import (
+from tire_ai_pattern.models.rule_models import BaseRuleConfig
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import (
     RuleExecutorRegistry,
     get_rule_executor,
     register_rule_executor,

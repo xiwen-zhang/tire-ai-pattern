@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from src.models.fake_rules_models import (
+from tire_ai_pattern.models.fake_rules_models import (
     FakeGroovesWidthMm,
     FakeRule6_1,
     FakeRule6_1Config,
@@ -9,7 +9,7 @@ from src.models.fake_rules_models import (
     FakeRule8Config,
     FakeRulesConfig,
 )
-from src.models.fake_tire_struct import FakeTireStruct
+from tire_ai_pattern.models.fake_tire_struct import FakeTireStruct
 
 
 def create_valid_rules_config_dict() -> dict:

@@ -2,20 +2,20 @@
 
 ## 1. 定位
 
-Node3 `big_image_stitcher` 属于节点层（`src.nodes`），负责将 `BigImage` 中已固化的 `ImageLineage` 血缘信息转化为实际大图。
+Node3 `big_image_stitcher` 属于节点层（`tire_ai_pattern.nodes`），负责将 `BigImage` 中已固化的 `ImageLineage` 血缘信息转化为实际大图。
 
 - **输入**：`BigImage`（含 `lineage` 字段，已由 pipeline 在调用前挂载完整的 RIB/主沟/装饰方案）
 - **输出**：`BigImage`（原地更新 `image_base64` 和 `lineage` 的 `after_image` 字段）
-- **核心调用**：`src.processing.image_stiching.generate_large_image_from_lineage()`
+- **核心调用**：`tire_ai_pattern.processing.image_stiching.generate_large_image_from_lineage()`
 - **不消费 RuleConfig**：Node3 不读取 `rules_config`，只执行 lineage 中已固化的拼接方案
 
 获取 `ImageLineage`、更新 `image_base64` 和 `lineage.after_image` 都是 node 层自身的职责。
 
-当前代码是占位实现（`src/nodes/big_image_stitcher.py`），抛出 `NotImplementedError`。
+当前代码是占位实现（`tire_ai_pattern/nodes/big_image_stitcher.py`），抛出 `NotImplementedError`。
 
 相关文件：
-- 节点占位代码：`src/nodes/big_image_stitcher.py`
-- 处理层实现：`src/processing/image_stiching.py`
+- 节点占位代码：`tire_ai_pattern/nodes/big_image_stitcher.py`
+- 处理层实现：`tire_ai_pattern/processing/image_stiching.py`
 - 处理层文档：`docs/guide/processing/image_stiching.md`
 - 节点设计文档：`docs/plans/rules/nodes_design.md`（Section 10, Node3）
 - 集成测试：`tests/integrations/test_large_image_stitching.py`
@@ -79,7 +79,7 @@ lineage = big_image.lineage
 ### 3.3 调用处理层
 
 ```python
-from src.processing.image_stiching import generate_large_image_from_lineage
+from tire_ai_pattern.processing.image_stiching import generate_large_image_from_lineage
 
 updated_lineage, large_image_base64 = generate_large_image_from_lineage(
     lineage,
@@ -119,7 +119,7 @@ big_image.lineage = updated_lineage
 ## 4. 输入校验
 
 ```python
-from src.common.exceptions import InputDataError
+from tire_ai_pattern.common.exceptions import InputDataError
 
 NODE_NAME = "big_image_stitcher"
 
@@ -149,10 +149,10 @@ if big_image.lineage is None:
 
 from __future__ import annotations
 
-from src.common.exceptions import InputDataError
-from src.models.image_models import BigImage
-from src.processing.image_stiching import generate_large_image_from_lineage
-from src.utils.logger import get_logger
+from tire_ai_pattern.common.exceptions import InputDataError
+from tire_ai_pattern.models.image_models import BigImage
+from tire_ai_pattern.processing.image_stiching import generate_large_image_from_lineage
+from tire_ai_pattern.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -209,8 +209,8 @@ def stitch_big_image(
 构造输入 `BigImage` 时，需要提供最小有效字段（`image_base64` 可以是占位值）：
 
 ```python
-from src.models.image_models import BigImage, ImageMeta, ImageBiz
-from src.models.enums import LevelEnum, ImageModeEnum, ImageFormatEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageMeta, ImageBiz
+from tire_ai_pattern.models.enums import LevelEnum, ImageModeEnum, ImageFormatEnum
 
 def _make_input_big_image(lineage: ImageLineage) -> BigImage:
     return BigImage(
@@ -245,7 +245,7 @@ def test_stitch_big_image_success():
 
 | 文件 | 修改内容 |
 |------|----------|
-| `src/nodes/big_image_stitcher.py` | 替换占位函数为完整实现（遵循上述伪代码） |
+| `tire_ai_pattern/nodes/big_image_stitcher.py` | 替换占位函数为完整实现（遵循上述伪代码） |
 | `tests/unittests/nodes/test_big_image_stitcher.py` | 替换占位测试为 8 个实际测试用例 |
 
 ---
@@ -253,15 +253,15 @@ def test_stitch_big_image_success():
 ## 8. 依赖关系
 
 ```
-src.nodes.big_image_stitcher
+tire_ai_pattern.nodes.big_image_stitcher
   │
-  ├─ src.processing.image_stiching.generate_large_image_from_lineage
-  │    ├─ src.core.operation.image_operation（横向拼接、装饰覆盖）
-  │    └─ src.utils.image_utils（编解码、resize）
+  ├─ tire_ai_pattern.processing.image_stiching.generate_large_image_from_lineage
+  │    ├─ tire_ai_pattern.core.operation.image_operation（横向拼接、装饰覆盖）
+  │    └─ tire_ai_pattern.utils.image_utils（编解码、resize）
   │
-  ├─ src.models.image_models（BigImage）
-  ├─ src.common.exceptions（InputDataError）
-  └─ src.utils.logger（日志）
+  ├─ tire_ai_pattern.models.image_models（BigImage）
+  ├─ tire_ai_pattern.common.exceptions（InputDataError）
+  └─ tire_ai_pattern.utils.logger（日志）
 ```
 
 ---
@@ -270,7 +270,7 @@ src.nodes.big_image_stitcher
 
 1. **Node3 不消费 RuleConfig**：所有拼接参数已由 Node2 固化到 `ImageLineage` 中，Node3 只执行。
 
-2. **处理层不做架构变更**：`src/processing/image_stiching.py` 的功能和接口保持不变。
+2. **处理层不做架构变更**：`tire_ai_pattern/processing/image_stiching.py` 的功能和接口保持不变。
 
 3. **BigImage 原地更新**：Node3 遵循与其他 node（如 `big_image_evaluator`）相同的模式 —— 接收对象引用，原地修改后返回同一引用，不创建新对象。
 

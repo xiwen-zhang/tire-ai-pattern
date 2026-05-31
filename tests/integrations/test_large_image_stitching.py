@@ -12,12 +12,12 @@ import cv2
 import numpy as np
 import pytest
 
-from src.models.enums import (
+from tire_ai_pattern.models.enums import (
     RibOperation,
     StitchingSchemeName,
 )
-from src.models.image_models import ImageLineage
-from src.models.scheme_models import (
+from tire_ai_pattern.models.image_models import ImageLineage
+from tire_ai_pattern.models.scheme_models import (
     DecorationImpl,
     DecorationScheme,
     DecorationSchemeAbstract,
@@ -28,7 +28,7 @@ from src.models.scheme_models import (
     StitchingScheme,
     StitchingSchemeAbstract,
 )
-from src.processing.image_stiching import generate_large_image_from_lineage
+from tire_ai_pattern.processing.image_stiching import generate_large_image_from_lineage
 
 
 DATASET_DIR = Path("tests/datasets/stitching")

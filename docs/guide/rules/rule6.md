@@ -1,6 +1,6 @@
 # Rule 6_1 连续性规则说明
 
-`src.rules.executors.rule6` 实现了 Rule 6_1 的规则层逻辑，负责判定轮胎小图花纹是否连续，并输出相应评分。该模块属于规则层（rule layer），只负责规则判定与特征/得分的结构化表达，不直接实现底层图像算法。
+`tire_ai_pattern.rules.executors.rule6` 实现了 Rule 6_1 的规则层逻辑，负责判定轮胎小图花纹是否连续，并输出相应评分。该模块属于规则层（rule layer），只负责规则判定与特征/得分的结构化表达，不直接实现底层图像算法。
 
 ## 适用场景
 
@@ -16,8 +16,8 @@
 ## 快速开始
 
 ```python
-from src.rules.executors.rule6 import Rule6Executor, Rule6Config, Rule6Feature
-from src.models.image_models import BaseImage
+from tire_ai_pattern.rules.executors.rule6 import Rule6Executor, Rule6Config, Rule6Feature
+from tire_ai_pattern.models.image_models import BaseImage
 
 # 构造规则配置
 config = Rule6Config(is_debug=True)
@@ -57,7 +57,7 @@ def exec_score(self, config: Rule6Config, feature: Rule6Feature) -> Rule6Score
 ## 规则层与算法层分工
 
 - 规则层（本模块）：只负责结构化特征、评分、可视化透传，不直接处理图像细节。
-- 算法层（如 `src.core.detection.pattern_continuity`）：只负责图像花纹检测，不关心规则评分。
+- 算法层（如 `tire_ai_pattern.core.detection.pattern_continuity`）：只负责图像花纹检测，不关心规则评分。
 
 ## 调试与可视化
 

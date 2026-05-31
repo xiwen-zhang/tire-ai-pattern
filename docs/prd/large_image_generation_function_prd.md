@@ -117,25 +117,25 @@ def generate_large_image_from_lineage(
 
 ## 4. 技术选型决定
 - **图像处理库**: 选择**OpenCV (cv2)** 
-  - 理由：项目已有 `src/utils/image_utils.py` 完全基于OpenCV，保持技术栈一致性；所有RIB原子操作均可通过cv2实现；避免引入额外依赖
+  - 理由：项目已有 `tire_ai_pattern/utils/image_utils.py` 完全基于OpenCV，保持技术栈一致性；所有RIB原子操作均可通过cv2实现；避免引入额外依赖
   - 具体模块：`import cv2, numpy as np`
 
 ## 5. 最终实现文件结构
-- **数据模型层**: `src/models/scheme_models.py`
+- **数据模型层**: `tire_ai_pattern/models/scheme_models.py`
   - `RibSchemeImpl` / `MainGrooveImpl` / `DecorationImpl`：使用 `before_image`/`after_image` 字段对
   - `RibSchemeImpl.rib_operation` 支持嵌套 RIB 方案
   - `StitchingScheme` / `MainGrooveScheme` / `DecorationScheme`：运行时方案容器
-- **核心算法层**: `src/core/operation/image_operation.py`
+- **核心算法层**: `tire_ai_pattern/core/operation/image_operation.py`
   - 实现纯粹的图像操作算法
   - 输入输出均为基本类型（np.ndarray、base64等）
   - 包含双层RIB操作执行机制
   - 支持 BGRA 透明度混合的装饰覆盖
-- **业务逻辑层**: `src/processing/image_stiching.py`
+- **业务逻辑层**: `tire_ai_pattern/processing/image_stiching.py`
   - 实现 `generate_large_image_from_lineage` 入口函数
   - 处理业务数据类和流程协调
   - 调用核心算法层完成具体操作
   - 支持 `is_debug` 调试日志输出
-- **工具层**: `src/utils/image_utils.py`
+- **工具层**: `tire_ai_pattern/utils/image_utils.py`
   - `base64_to_ndarray` / `ndarray_to_base64`：保留 alpha 通道（cv2.IMREAD_UNCHANGED）
   - `resize_image`：支持 stretch 模式
 - **测试文件**: 

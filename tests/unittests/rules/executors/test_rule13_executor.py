@@ -7,8 +7,8 @@ import cv2
 import numpy as np
 import pytest
 
-from src.common.exceptions import InputDataError, InputTypeError
-from src.models.enums import (
+from tire_ai_pattern.common.exceptions import InputDataError, InputTypeError
+from tire_ai_pattern.models.enums import (
     ImageFormatEnum,
     ImageModeEnum,
     LevelEnum,
@@ -16,9 +16,9 @@ from src.models.enums import (
     SourceTypeEnum,
     StitchingSchemeName,
 )
-from src.models.image_models import BigImage, ImageBiz, ImageLineage, ImageMeta, SmallImage
-from src.models.rule_models import Rule8Feature, Rule13Config, Rule13Feature, Rule13Score
-from src.models.scheme_models import (
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageLineage, ImageMeta, SmallImage
+from tire_ai_pattern.models.rule_models import Rule8Feature, Rule13Config, Rule13Feature, Rule13Score
+from tire_ai_pattern.models.scheme_models import (
     DecorationImpl,
     DecorationScheme,
     DecorationSchemeAbstract,
@@ -26,8 +26,8 @@ from src.models.scheme_models import (
     StitchingScheme,
     StitchingSchemeAbstract,
 )
-from src.rules.executors.rule13 import Rule13Executor
-from src.utils.image_utils import base64_to_ndarray, load_image_to_base64
+from tire_ai_pattern.rules.executors.rule13 import Rule13Executor
+from tire_ai_pattern.utils.image_utils import base64_to_ndarray, load_image_to_base64
 
 
 IMAGE_SIZE = 128
@@ -156,8 +156,8 @@ def test_exec_feature_converts_detector_result_to_feature(monkeypatch):
         )
         return 24.72, "", None
 
-    monkeypatch.setattr("src.rules.executors.rule13.base64_to_ndarray", fake_base64_to_ndarray)
-    monkeypatch.setattr("src.rules.executors.rule13.compute_land_sea_ratio", fake_compute_land_sea_ratio)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule13.base64_to_ndarray", fake_base64_to_ndarray)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule13.compute_land_sea_ratio", fake_compute_land_sea_ratio)
     big_image = make_big_image()
 
     feature = Rule13Executor().exec_feature(big_image, make_rule13_config())
@@ -201,8 +201,8 @@ def test_exec_feature_passes_debug_and_returns_visualization(monkeypatch):
         )
         return 30.0, "land_sea_ratio", debug_image
 
-    monkeypatch.setattr("src.rules.executors.rule13.base64_to_ndarray", fake_base64_to_ndarray)
-    monkeypatch.setattr("src.rules.executors.rule13.compute_land_sea_ratio", fake_compute_land_sea_ratio)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule13.base64_to_ndarray", fake_base64_to_ndarray)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule13.compute_land_sea_ratio", fake_compute_land_sea_ratio)
 
     feature = Rule13Executor().exec_feature(make_big_image(), make_rule13_config(), is_debug=True)
 
@@ -343,8 +343,8 @@ def test_exec_feature_crops_decorations_before_calling_detector(monkeypatch):
         )
         return 30.0, "", None
 
-    monkeypatch.setattr("src.rules.executors.rule13.base64_to_ndarray", fake_base64_to_ndarray)
-    monkeypatch.setattr("src.rules.executors.rule13.compute_land_sea_ratio", fake_compute_land_sea_ratio)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule13.base64_to_ndarray", fake_base64_to_ndarray)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule13.compute_land_sea_ratio", fake_compute_land_sea_ratio)
 
     big_image = make_big_image(lineage=make_lineage(left_width=left_width, right_width=right_width))
     Rule13Executor().exec_feature(big_image, make_rule13_config())
@@ -392,7 +392,7 @@ def test_exec_feature_rejects_decoration_count_not_two(monkeypatch, decoration_w
     big_image = make_big_image(lineage=lineage)
 
     monkeypatch.setattr(
-        "src.rules.executors.rule13.base64_to_ndarray",
+        "tire_ai_pattern.rules.executors.rule13.base64_to_ndarray",
         lambda _b64: np.zeros((IMAGE_SIZE, IMAGE_SIZE, 3), dtype=np.uint8),
     )
 
@@ -404,7 +404,7 @@ def test_exec_feature_rejects_decoration_wider_than_image(monkeypatch):
     """left + right decoration_width must leave at least one column of pattern to score."""
     decoded_image = np.zeros((IMAGE_SIZE, 20, 3), dtype=np.uint8)
     monkeypatch.setattr(
-        "src.rules.executors.rule13.base64_to_ndarray", lambda _b64: decoded_image
+        "tire_ai_pattern.rules.executors.rule13.base64_to_ndarray", lambda _b64: decoded_image
     )
 
     big_image = make_big_image(lineage=make_lineage(left_width=15, right_width=10))
