@@ -141,7 +141,7 @@ tire-ai-pattern/
 │
 ├── tests/                             # 测试代码根目录，验证算法、节点与接口正确性
 │   ├── datasets/                      # 测试专用图片、配置与样例数据
-│   ├── unittests/                     # 单元测试，结构与 src 镜像对应
+│   ├── unittests/                     # 单元测试，结构与 tire_ai_pattern 镜像对应
 │   └── integrations/                  # 集成测试，覆盖跨层流程与接口联调
 │
 ├── docs/                              # 项目文档根目录

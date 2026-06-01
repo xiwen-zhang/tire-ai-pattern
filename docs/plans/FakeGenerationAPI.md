@@ -1554,7 +1554,7 @@ pytest tests/unittests/
 pytest tests/integrations/
 
 # 查看覆盖率
-pytest --cov=src tests/
+pytest --cov=tire_ai_pattern tests/
 ```
 
 ---
