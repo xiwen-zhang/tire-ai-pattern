@@ -73,7 +73,7 @@
 
 ```
 version.json                           # 项目版本文件
-src/
+tire_ai_pattern/
 ├── api/
 │   └── fake_generation.py            # fake API 入口
 │
@@ -100,7 +100,7 @@ tests/
 | 文件 | 职责 |
 |------|------|
 | `version.json` | 项目版本信息，调用方读取进行版本比对 |
-| `src/common/exceptions.py` | 项目统一异常分类与异常信息结构 |
+| `tire_ai_pattern/common/exceptions.py` | 项目统一异常分类与异常信息结构 |
 | `fake_generation.py` | API 入口，输入实例检查，错误映射，响应构造 |
 | `fake_tire_struct.py` | API 顶层输入输出对象 |
 | `fake_image_models.py` | 所有图像相关模型 |
@@ -498,15 +498,15 @@ generate_big_image_with_evaluation({})
 ## 十一、需修改文件清单
 
 ### 必改文件
-- `src/common/exceptions.py`
-- `src/models/fake_tire_struct.py`
-- `src/api/fake_generation.py`
+- `tire_ai_pattern/common/exceptions.py`
+- `tire_ai_pattern/models/fake_tire_struct.py`
+- `tire_ai_pattern/api/fake_generation.py`
 - `tests/integrations/test_fake_generation.py`
 
 ### 暂不修改文件
-- `src/models/fake_image_models.py`
-- `src/models/fake_rules_models.py`
-- `src/models/fake_result_models.py`
+- `tire_ai_pattern/models/fake_image_models.py`
+- `tire_ai_pattern/models/fake_rules_models.py`
+- `tire_ai_pattern/models/fake_result_models.py`
 - `tests/unittests/models/test_fake_image_models.py`
 - `tests/unittests/models/test_fake_rules_models.py`
 
@@ -518,9 +518,9 @@ generate_big_image_with_evaluation({})
 
 ## 十二、推荐实施顺序
 
-1. 先引入 `src/common/exceptions.py`
-2. 再改 `src/models/fake_tire_struct.py`
-3. 再改 `src/api/fake_generation.py`
+1. 先引入 `tire_ai_pattern/common/exceptions.py`
+2. 再改 `tire_ai_pattern/models/fake_tire_struct.py`
+3. 再改 `tire_ai_pattern/api/fake_generation.py`
 4. 再改 `tests/integrations/test_fake_generation.py`
 5. 最后运行测试并核对文档一致性
 

@@ -7,7 +7,7 @@
 ## 2. 文件组织
 
 ### 2.1 图像处理工具函数
-- **文件路径**: `src/utils/image_utils.py`
+- **文件路径**: `tire_ai_pattern/utils/image_utils.py`
 - **包含函数**:
   - `base64_to_ndarray()`
   - `ndarray_to_base64()`

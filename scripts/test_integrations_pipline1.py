@@ -4,15 +4,15 @@ import base64
 from pathlib import Path
 from typing import Any
 
-from src.common.exceptions import InputTypeError
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
-from src.models.image_models import ImageBiz, ImageMeta, SmallImage,BigImage
-from src.models.rule_models import BaseRuleConfig
-from src.models.tire_struct import TireStruct
-from src.rules.registry import get_rule
-from src.utils.image_utils import base64_to_ndarray, load_image_to_base64
-from src.utils.logger import setup_logger
-from src.rules.executors import load_all_executors
+from tire_ai_pattern.common.exceptions import InputTypeError
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
+from tire_ai_pattern.models.image_models import ImageBiz, ImageMeta, SmallImage,BigImage
+from tire_ai_pattern.models.rule_models import BaseRuleConfig
+from tire_ai_pattern.models.tire_struct import TireStruct
+from tire_ai_pattern.rules.registry import get_rule
+from tire_ai_pattern.utils.image_utils import base64_to_ndarray, load_image_to_base64
+from tire_ai_pattern.utils.logger import setup_logger
+from tire_ai_pattern.rules.executors import load_all_executors
 
 setup_logger(level="INFO", console_output=True)
 
@@ -275,7 +275,7 @@ input_data = {
 
 
 def run_pipline1():
-    from src.piplines.pipline1 import run_pipeline1
+    from tire_ai_pattern.piplines.pipline1 import run_pipeline1
     load_all_executors()
     tire_struct = tire_struct_from_input(input_data)
     run_pipeline1(tire_struct=tire_struct)

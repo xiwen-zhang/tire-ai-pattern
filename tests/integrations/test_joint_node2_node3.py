@@ -21,7 +21,7 @@ import cv2
 import numpy as np
 import pytest
 
-from src.models.enums import (
+from tire_ai_pattern.models.enums import (
     ContinuityModeName,
     ImageFormatEnum,
     ImageModeEnum,
@@ -30,7 +30,7 @@ from src.models.enums import (
     SourceTypeEnum,
     StitchingSchemeName,
 )
-from src.models.image_models import (
+from tire_ai_pattern.models.image_models import (
     BigImage,
     ImageBiz,
     ImageEvaluation,
@@ -39,7 +39,7 @@ from src.models.image_models import (
     RuleEvaluation,
     SmallImage,
 )
-from src.models.rule_models import (
+from tire_ai_pattern.models.rule_models import (
     DecorationItem,
     GrooveSizeItem,
     RibSizeItem,
@@ -53,10 +53,10 @@ from src.models.rule_models import (
     Rule16Config,
     Rule17Config,
 )
-from src.nodes.big_image_stitcher import stitch_big_image
-from src.nodes.stitch_scheme_generator import generate_stitch_scheme
-from src.utils.image_utils import base64_to_ndarray, load_image_to_base64, ndarray_to_base64
-from src.utils.logger import get_logger
+from tire_ai_pattern.nodes.big_image_stitcher import stitch_big_image
+from tire_ai_pattern.nodes.stitch_scheme_generator import generate_stitch_scheme
+from tire_ai_pattern.utils.image_utils import base64_to_ndarray, load_image_to_base64, ndarray_to_base64
+from tire_ai_pattern.utils.logger import get_logger
 
 
 logger = get_logger("joint_test")

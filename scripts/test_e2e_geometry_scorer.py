@@ -127,12 +127,12 @@ logging.basicConfig(
 )
 logger = logging.getLogger('tire_geometry_scorer')
 
-from src.models.tire_struct import TireStruct
-from src.models.image_models import (
+from tire_ai_pattern.models.tire_struct import TireStruct
+from tire_ai_pattern.models.image_models import (
     SmallImage, BigImage, ImageMeta, ImageBiz, ImageEvaluation,
     RuleEvaluation, ImageScore, ImageLineage
 )
-from src.models.rule_models import (
+from tire_ai_pattern.models.rule_models import (
     BaseRuleConfig, Rule6Config, Rule8Config, 
     Rule10Config, Rule11Config, Rule13Config, Rule14Config, 
     Rule16Config, Rule17Config, Rule18Config, Rule19Config, Rule20Config, Rule22Config,
@@ -140,16 +140,16 @@ from src.models.rule_models import (
     Rule10Score, Rule11Score, Rule13Score, Rule14Score, 
     Rule16Score, Rule17Score, Rule18Score, Rule19Score, Rule20Score, Rule22Score
 )
-from src.models.scheme_models import (
+from tire_ai_pattern.models.scheme_models import (
     StitchingScheme, StitchingSchemeAbstract, RibSchemeImpl,
     MainGrooveScheme, MainGrooveSchemeAbstract, MainGrooveImpl,
     DecorationScheme, DecorationSchemeAbstract, DecorationImpl
 )
-from src.models.enums import (
+from tire_ai_pattern.models.enums import (
     LevelEnum, RegionEnum, SourceTypeEnum, ImageModeEnum, ImageFormatEnum,
     StitchingSchemeName, RibOperation, RuleTypeEnum
 )
-from src.nodes.geometry_scorer import calculate_geometric_scores
+from tire_ai_pattern.nodes.geometry_scorer import calculate_geometric_scores
 
 
 def image_to_base64(file_path: str) -> str:
@@ -516,7 +516,7 @@ def run_e2e_geometry_scorer(config: dict, output_dir: str = "./.results/tire_des
     Returns:
         dict: 评分结果（_calculate_geometric_scores输出结构）
     """
-    from src.nodes.geometry_scorer import _calculate_geometric_scores
+    from tire_ai_pattern.nodes.geometry_scorer import _calculate_geometric_scores
     
     logger.info("=" * 50)
     logger.info("开始端到端几何评分流程")

@@ -4,12 +4,12 @@ from pathlib import Path
 
 import pytest
 
-from src.common.exceptions import InputTypeError
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta
-from src.models.rule_models import RibSizeItem, Rule100Config
-from src.nodes.big_image_splitter import split_big_image
-from src.utils.image_utils import base64_to_ndarray, load_image_to_base64
+from tire_ai_pattern.common.exceptions import InputTypeError
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta
+from tire_ai_pattern.models.rule_models import RibSizeItem, Rule100Config
+from tire_ai_pattern.nodes.big_image_splitter import split_big_image
+from tire_ai_pattern.utils.image_utils import base64_to_ndarray, load_image_to_base64
 
 
 def _make_big_image(image_path: Path) -> BigImage:

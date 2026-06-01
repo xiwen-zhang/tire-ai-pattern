@@ -6,8 +6,8 @@ RIB数量: 4
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 CONFIG = {
     "scheme_rank": 1,
@@ -106,6 +106,6 @@ CONFIG = {
     ],
 }
 
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)

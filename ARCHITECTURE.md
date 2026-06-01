@@ -25,13 +25,13 @@
 
 本文档覆盖以下目录与分层关系：
 
-- `src.api`
-- `src.nodes`
-- `src.rules`
-- `src.core`
-- `src.utils`
-- `src.models`
-- `src.config`
+- `tire_ai_pattern.api`
+- `tire_ai_pattern.nodes`
+- `tire_ai_pattern.rules`
+- `tire_ai_pattern.core`
+- `tire_ai_pattern.utils`
+- `tire_ai_pattern.models`
+- `tire_ai_pattern.config`
 
 ## 5. Layer Model
 
@@ -39,32 +39,32 @@
 
 ```text
 ┌────────────────────────────────────────────────────────┐
-│ 接入层 (src.api)                                       │
+│ 接入层 (tire_ai_pattern.api)                                       │
 │ generation.py | stitching.py | scoring.py | splitting.py │
 ├────────────────────────────────────────────────────────┤
-│ 节点层 (src.nodes)                                     │
+│ 节点层 (tire_ai_pattern.nodes)                                     │
 │ small_image_evaluator.py | stitch_scheme_generator.py │
 │ big_image_stitcher.py | big_image_evaluator.py        │
 │ geometry_scorer.py | big_image_splitter.py            │
 ├────────────────────────────────────────────────────────┤
-│ 规则层 (src.rules)                                     │
+│ 规则层 (tire_ai_pattern.rules)                                     │
 │ features.rule_x | scores.rule_x | ...                 │
 ├────────────────────────────────────────────────────────┤
-│ 算法层 (src.core)                                      │
+│ 算法层 (tire_ai_pattern.core)                                      │
 │ detection/* | stitching/*                             │
 ├────────────────────────────────────────────────────────┤
 │ 公共支撑层                                             │
-│ src.utils | src.models | src.config                   │
+│ tire_ai_pattern.utils | tire_ai_pattern.models | tire_ai_pattern.config                   │
 └────────────────────────────────────────────────────────┘
 ```
 
 对应目录如下：
 
-- `src.api` -> 接入层
-- `src.nodes` -> 节点层
-- `src.rules` -> 规则层
-- `src.core` -> 算法层
-- `src.utils` / `src.models` / `src.config` -> 公共支撑层
+- `tire_ai_pattern.api` -> 接入层
+- `tire_ai_pattern.nodes` -> 节点层
+- `tire_ai_pattern.rules` -> 规则层
+- `tire_ai_pattern.core` -> 算法层
+- `tire_ai_pattern.utils` / `tire_ai_pattern.models` / `tire_ai_pattern.config` -> 公共支撑层
 
 ## 6. Code Layout
 
@@ -72,7 +72,7 @@
 
 ```text
 tire-ai-pattern/
-├── src/                               # 项目主源码根目录，所有业务代码入口
+├── tire_ai_pattern/                               # 项目主源码根目录，所有业务代码入口
 │   ├── __init__.py
 │   ├── api/                           # 对外接口层，封装标准 pipeline
 │   │   ├── __init__.py
@@ -141,7 +141,7 @@ tire-ai-pattern/
 │
 ├── tests/                             # 测试代码根目录，验证算法、节点与接口正确性
 │   ├── datasets/                      # 测试专用图片、配置与样例数据
-│   ├── unittests/                     # 单元测试，结构与 src 镜像对应
+│   ├── unittests/                     # 单元测试，结构与 tire_ai_pattern 镜像对应
 │   └── integrations/                  # 集成测试，覆盖跨层流程与接口联调
 │
 ├── docs/                              # 项目文档根目录
@@ -159,22 +159,22 @@ tire-ai-pattern/
 
 ## 7. Directory Responsibilities
 
-### 7.1 `src.api`
+### 7.1 `tire_ai_pattern.api`
 
 **定位**：对外接口层，封装标准 pipeline。
 
 **MUST**：
 
 - 对外暴露标准 pipeline 入口
-- 根据业务场景组合 `src.nodes` 中的节点拓扑
+- 根据业务场景组合 `tire_ai_pattern.nodes` 中的节点拓扑
 - 管理 pipeline 的输入输出协议
 - 组织 generation、stitching、scoring、splitting 等业务入口
 
 **SHOULD**：
 
 - 保持入口薄层化
-- 将执行逻辑下沉到 `src.nodes`
-- 将规则实现下沉到 `src.rules`
+- 将执行逻辑下沉到 `tire_ai_pattern.nodes`
+- 将规则实现下沉到 `tire_ai_pattern.rules`
 
 **MUST NOT**：
 
@@ -191,7 +191,7 @@ tire-ai-pattern/
 
 ---
 
-### 7.2 `src.nodes`
+### 7.2 `tire_ai_pattern.nodes`
 
 **定位**：流程节点层，pipeline 拓扑中的可复用执行单元。
 
@@ -207,9 +207,9 @@ tire-ai-pattern/
 
 - 保持节点职责单一、边界清晰
 - 让节点成为 pipeline 编排中的稳定拓扑单元
-- 将规则判断下沉到 `src.rules`
+- 将规则判断下沉到 `tire_ai_pattern.rules`
 - 将底层算法调用收敛到受控路径
-- 将单条业务规则的解释、计算与判定下沉到 `src.rules`
+- 将单条业务规则的解释、计算与判定下沉到 `tire_ai_pattern.rules`
 - 避免在节点层形成多条规则混合实现的隐式规则模块
 
 **MUST NOT**：
@@ -231,7 +231,7 @@ tire-ai-pattern/
 
 ---
 
-### 7.3 `src.rules`
+### 7.3 `tire_ai_pattern.rules`
 
 **定位**：规则层。
 
@@ -270,7 +270,7 @@ tire-ai-pattern/
 
 ---
 
-### 7.4 `src.core`
+### 7.4 `tire_ai_pattern.core`
 
 **定位**：核心算法层。
 
@@ -287,8 +287,8 @@ tire-ai-pattern/
 
 **MUST NOT**：
 
-- 依赖 `src.rules`
-- 依赖 `src.api`
+- 依赖 `tire_ai_pattern.rules`
+- 依赖 `tire_ai_pattern.api`
 - 直接承载业务评分逻辑
 
 **当前已知模块示例**：
@@ -300,7 +300,7 @@ tire-ai-pattern/
 
 ---
 
-### 7.5 `src.utils`
+### 7.5 `tire_ai_pattern.utils`
 
 **定位**：通用工具层，与具体业务规则无关。
 
@@ -314,7 +314,7 @@ tire-ai-pattern/
 - 保持工具函数通用、独立、可复用
 - 避免与具体业务规则强耦合
 - 将工具函数限制为无业务语义的基础能力
-- 当功能包含明确业务判定含义时，优先放入 `src.nodes`、`src.rules` 或 `src.core`
+- 当功能包含明确业务判定含义时，优先放入 `tire_ai_pattern.nodes`、`tire_ai_pattern.rules` 或 `tire_ai_pattern.core`
 
 **MUST NOT**：
 
@@ -331,7 +331,7 @@ tire-ai-pattern/
 
 ---
 
-### 7.6 `src.models`
+### 7.6 `tire_ai_pattern.models`
 
 **定位**：数据模型层，定义业务数据类。
 
@@ -361,7 +361,7 @@ tire-ai-pattern/
 
 ---
 
-### 7.7 `src.config`
+### 7.7 `tire_ai_pattern.config`
 
 **定位**：配置模块。
 
@@ -389,58 +389,58 @@ tire-ai-pattern/
 
 允许的主依赖方向如下：
 
-- `src.api` -> `src.nodes`
-- `src.nodes` -> `src.rules`
-- `src.rules` -> `src.core`
-- `src.api` -> `src.utils`
-- `src.api` -> `src.models`
-- `src.api` -> `src.config`
-- `src.nodes` -> `src.utils`
-- `src.nodes` -> `src.models`
-- `src.nodes` -> `src.config`
-- `src.rules` -> `src.utils`
-- `src.rules` -> `src.models`
-- `src.rules` -> `src.config`
-- `src.core` -> `src.utils`
-- `src.core` -> `src.models`
+- `tire_ai_pattern.api` -> `tire_ai_pattern.nodes`
+- `tire_ai_pattern.nodes` -> `tire_ai_pattern.rules`
+- `tire_ai_pattern.rules` -> `tire_ai_pattern.core`
+- `tire_ai_pattern.api` -> `tire_ai_pattern.utils`
+- `tire_ai_pattern.api` -> `tire_ai_pattern.models`
+- `tire_ai_pattern.api` -> `tire_ai_pattern.config`
+- `tire_ai_pattern.nodes` -> `tire_ai_pattern.utils`
+- `tire_ai_pattern.nodes` -> `tire_ai_pattern.models`
+- `tire_ai_pattern.nodes` -> `tire_ai_pattern.config`
+- `tire_ai_pattern.rules` -> `tire_ai_pattern.utils`
+- `tire_ai_pattern.rules` -> `tire_ai_pattern.models`
+- `tire_ai_pattern.rules` -> `tire_ai_pattern.config`
+- `tire_ai_pattern.core` -> `tire_ai_pattern.utils`
+- `tire_ai_pattern.core` -> `tire_ai_pattern.models`
 
 共享模块可被上层依赖：
 
-- `src.utils`
-- `src.models`
-- `src.config`
+- `tire_ai_pattern.utils`
+- `tire_ai_pattern.models`
+- `tire_ai_pattern.config`
 
 禁止的依赖方向如下：
 
-- `src.core` -> `src.rules`
-- `src.core` -> `src.nodes`
-- `src.core` -> `src.api`
-- `src.rules` -> `src.api`
-- `src.rules` -> `src.nodes`
-- `src.utils` -> `src.core`
-- `src.utils` -> `src.rules`
-- `src.utils` -> `src.nodes`
-- `src.utils` -> `src.api`
-- `src.models` -> `src.core`
-- `src.models` -> `src.rules`
-- `src.models` -> `src.nodes`
-- `src.models` -> `src.api`
-- `src.config` -> `src.core`
-- `src.config` -> `src.rules`
-- `src.config` -> `src.nodes`
-- `src.config` -> `src.api`
+- `tire_ai_pattern.core` -> `tire_ai_pattern.rules`
+- `tire_ai_pattern.core` -> `tire_ai_pattern.nodes`
+- `tire_ai_pattern.core` -> `tire_ai_pattern.api`
+- `tire_ai_pattern.rules` -> `tire_ai_pattern.api`
+- `tire_ai_pattern.rules` -> `tire_ai_pattern.nodes`
+- `tire_ai_pattern.utils` -> `tire_ai_pattern.core`
+- `tire_ai_pattern.utils` -> `tire_ai_pattern.rules`
+- `tire_ai_pattern.utils` -> `tire_ai_pattern.nodes`
+- `tire_ai_pattern.utils` -> `tire_ai_pattern.api`
+- `tire_ai_pattern.models` -> `tire_ai_pattern.core`
+- `tire_ai_pattern.models` -> `tire_ai_pattern.rules`
+- `tire_ai_pattern.models` -> `tire_ai_pattern.nodes`
+- `tire_ai_pattern.models` -> `tire_ai_pattern.api`
+- `tire_ai_pattern.config` -> `tire_ai_pattern.core`
+- `tire_ai_pattern.config` -> `tire_ai_pattern.rules`
+- `tire_ai_pattern.config` -> `tire_ai_pattern.nodes`
+- `tire_ai_pattern.config` -> `tire_ai_pattern.api`
 
 ## 9. Execution Contract
 
 典型执行顺序应为：
 
-1. 请求进入 `src.api`
+1. 请求进入 `tire_ai_pattern.api`
 2. API 层选择 `generation`、`stitching`、`scoring` 或 `splitting` pipeline
-3. pipeline 按业务拓扑调用 `src.nodes` 中的执行节点
-4. 节点调用 `src.rules` 中的特征规则或评分规则
-5. 规则调用 `src.core` 中的底层算法
-6. 各层通过 `src.models` 传递结构化数据，并按需使用 `src.utils`
-7. `src.config` 提供默认 `rules_config` 和默认评分参数
+3. pipeline 按业务拓扑调用 `tire_ai_pattern.nodes` 中的执行节点
+4. 节点调用 `tire_ai_pattern.rules` 中的特征规则或评分规则
+5. 规则调用 `tire_ai_pattern.core` 中的底层算法
+6. 各层通过 `tire_ai_pattern.models` 传递结构化数据，并按需使用 `tire_ai_pattern.utils`
+7. `tire_ai_pattern.config` 提供默认 `rules_config` 和默认评分参数
 8. 最终结果由 API 层统一输出
 
 ## 10. Extension Rules
@@ -451,7 +451,7 @@ tire-ai-pattern/
 
 **应放在**：
 
-- `src.api`
+- `tire_ai_pattern.api`
 
 **适用场景**：
 
@@ -463,8 +463,8 @@ tire-ai-pattern/
 
 **不应放在**：
 
-- `src.rules`
-- `src.core`
+- `tire_ai_pattern.rules`
+- `tire_ai_pattern.core`
 
 ---
 
@@ -472,7 +472,7 @@ tire-ai-pattern/
 
 **应放在**：
 
-- `src.nodes`
+- `tire_ai_pattern.nodes`
 
 **适用场景**：
 
@@ -490,7 +490,7 @@ tire-ai-pattern/
 
 **应放在**：
 
-- `src.rules`
+- `tire_ai_pattern.rules`
 
 **适用场景**：
 
@@ -505,7 +505,7 @@ tire-ai-pattern/
 
 **应放在**：
 
-- `src.core`
+- `tire_ai_pattern.core`
 
 **适用场景**：
 
@@ -519,9 +519,9 @@ tire-ai-pattern/
 
 **应放在**：
 
-- `src.utils`
-- `src.models`
-- `src.config`
+- `tire_ai_pattern.utils`
+- `tire_ai_pattern.models`
+- `tire_ai_pattern.config`
 
 **前提**：
 
@@ -541,14 +541,14 @@ tire-ai-pattern/
 
 **结构约束**：
 
-- `tests/unittests` 应与 `src` 的主要源码目录镜像对应，但不要求与 `src.api` 镜像对应
-- `tests/integrations` 应与 `src.api` 镜像对应，用于覆盖对外 pipeline 入口的联调与流程验证
+- `tests/unittests` 应与 `tire_ai_pattern` 的主要源码目录镜像对应，但不要求与 `tire_ai_pattern.api` 镜像对应
+- `tests/integrations` 应与 `tire_ai_pattern.api` 镜像对应，用于覆盖对外 pipeline 入口的联调与流程验证
 
 **适用原则**：
 
-- `src.nodes`、`src.rules`、`src.core`、`src.models`、`src.utils`、`src.config` 的测试优先进入 `tests/unittests`
-- `src.api.generation`、`src.api.stitching`、`src.api.scoring`、`src.api.splitting` 的测试优先进入 `tests/integrations`
-- 不应在 `tests/unittests` 中重复构建以 `src.api` 为主入口的集成流程验证
+- `tire_ai_pattern.nodes`、`tire_ai_pattern.rules`、`tire_ai_pattern.core`、`tire_ai_pattern.models`、`tire_ai_pattern.utils`、`tire_ai_pattern.config` 的测试优先进入 `tests/unittests`
+- `tire_ai_pattern.api.generation`、`tire_ai_pattern.api.stitching`、`tire_ai_pattern.api.scoring`、`tire_ai_pattern.api.splitting` 的测试优先进入 `tests/integrations`
+- 不应在 `tests/unittests` 中重复构建以 `tire_ai_pattern.api` 为主入口的集成流程验证
 
 ---
 
@@ -573,15 +573,15 @@ tire-ai-pattern/
 当前文档仍缺少以下可执行细节，后续应补充：
 
 - generation、stitching、scoring、splitting 各 pipeline 的完整输入输出定义
-- `src.nodes` 中各执行节点的接口契约与节点拓扑关系
+- `tire_ai_pattern.nodes` 中各执行节点的接口契约与节点拓扑关系
 - `TireStruct`、`SmallImage`、`BigImage`、`RulesConfig` 的正式字段定义
 - `a.json`、`b.json`、`c.json` 的结构约束与更新时机
-- `src.rules` 与 `src.core` 的边界判定示例
+- `tire_ai_pattern.rules` 与 `tire_ai_pattern.core` 的边界判定示例
 - debug 模式下 `.logs` 与 `.results` 的创建与清理规则
 - 配置加载与默认 `rules_config` 的覆盖机制
 - 测试分层策略与数据样例约束
-- `tests/unittests` 与 `src` 的镜像范围约束（除 `src.api` 外）
-- `tests/integrations` 与 `src.api` 的镜像约束
+- `tests/unittests` 与 `tire_ai_pattern` 的镜像范围约束（除 `tire_ai_pattern.api` 外）
+- `tests/integrations` 与 `tire_ai_pattern.api` 的镜像约束
 
 ## 13. Review Checklist
 
@@ -589,12 +589,12 @@ tire-ai-pattern/
 
 - 新代码是否放在正确目录
 - 是否出现跨层反向依赖
-- 是否在 `src.api` 中堆积节点内部执行细节
-- 是否在 `src.nodes` 中堆积单条规则实现
-- 是否将底层算法错误地写进 `src.rules` 或 `src.nodes`
-- 是否将规则实现错误写入 `src.config`
+- 是否在 `tire_ai_pattern.api` 中堆积节点内部执行细节
+- 是否在 `tire_ai_pattern.nodes` 中堆积单条规则实现
+- 是否将底层算法错误地写进 `tire_ai_pattern.rules` 或 `tire_ai_pattern.nodes`
+- 是否将规则实现错误写入 `tire_ai_pattern.config`
 - 是否新增了未经统一定义的数据结构
-- 是否破坏了 `src.api -> src.nodes -> src.rules -> src.core` 的主链路
+- 是否破坏了 `tire_ai_pattern.api -> tire_ai_pattern.nodes -> tire_ai_pattern.rules -> tire_ai_pattern.core` 的主链路
 
 ## 14. Status
 

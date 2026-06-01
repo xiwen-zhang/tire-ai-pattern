@@ -32,7 +32,7 @@ import sys
 import os
 import unittest
 
-from src.core.split.validation import _validate_vertical_parts_to_keep
+from tire_ai_pattern.core.split.validation import _validate_vertical_parts_to_keep
 
 
 # ===================== 4主沟情况（num_segments_to_remove=4） =====================

@@ -1,7 +1,7 @@
 # 轮胎结构工具函数设计方案 v1
 
 ## 2.2 轮胎结构工具函数
-- **文件路径**: `src/utils/tire_utils.py`
+- **文件路径**: `tire_ai_pattern/utils/tire_utils.py`
 - **包含函数**:
   - `default_tire_struct()`
 

@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from src.models.enums import ContinuityModeName, ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta
-from src.models.rule_models import Rule16Config
-from src.rules.executors.rule16 import Rule16Executor
+from tire_ai_pattern.models.enums import ContinuityModeName, ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta
+from tire_ai_pattern.models.rule_models import Rule16Config
+from tire_ai_pattern.rules.executors.rule16 import Rule16Executor
 
 
 def test_rule16_exec_feature_accepts_is_debug_argument_without_lineage():

@@ -55,7 +55,7 @@
 
 ```
 version.json                           # 项目版本文件
-src/
+tire_ai_pattern/
 ├── api/
 │   └── fake_generation.py          # fake API 入口
 │
@@ -1010,7 +1010,7 @@ from ..models.fake_result_models import (
 | 架构要求 | 本次设计 |
 |----------|----------|
 | API 层薄层化 | API 函数只处理 ValidationError 和构造响应 |
-| 模型集中定义 | 所有 fake model 在 `src/models/` 下 |
+| 模型集中定义 | 所有 fake model 在 `tire_ai_pattern/models/` 下 |
 | 不调用 nodes/rules/core | fake API 不调用下层 |
 | 输入输出协议管理 | 通过 `FakeTireStruct` 统一管理 |
 | 测试分层 | API 测试放 `tests/integrations`，模型测试放 `tests/unittests` |
@@ -1064,7 +1064,7 @@ from ..models.fake_result_models import (
 1. 支持 `is_debug=True` 场景
 2. 扩展更多规则（rule9, rule10, ...）
 3. 替换为真实节点实现
-4. 接入 `src.rules` 和 `src.core`
+4. 接入 `tire_ai_pattern.rules` 和 `tire_ai_pattern.core`
 
 ---
 
@@ -1234,14 +1234,14 @@ from ..models.fake_result_models import (
 ```python
 import pytest
 from pydantic import ValidationError
-from src.models.fake_image_models import (
+from tire_ai_pattern.models.fake_image_models import (
     FakeImageMeta,
     FakeSmallImageBiz,
     FakeBigImageBiz,
     FakeSmallImage,
     FakeBigImage,
 )
-from src.models.fake_result_models import FakeEvaluation
+from tire_ai_pattern.models.fake_result_models import FakeEvaluation
 
 
 class TestFakeImageMeta:
@@ -1340,7 +1340,7 @@ class TestFakeSmallImage:
 ```python
 import pytest
 from pydantic import ValidationError
-from src.models.fake_rules_models import (
+from tire_ai_pattern.models.fake_rules_models import (
     FakeGroovesWidthMm,
     FakeRule6_1Config,
     FakeRule8Config,
@@ -1425,7 +1425,7 @@ class TestFakeRule8:
 
 ```python
 import pytest
-from src.api.fake_generation import generate_big_image_with_evaluation
+from tire_ai_pattern.api.fake_generation import generate_big_image_with_evaluation
 
 
 def create_valid_input() -> dict:
@@ -1554,7 +1554,7 @@ pytest tests/unittests/
 pytest tests/integrations/
 
 # 查看覆盖率
-pytest --cov=src tests/
+pytest --cov=tire_ai_pattern tests/
 ```
 
 ---

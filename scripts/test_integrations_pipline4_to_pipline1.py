@@ -7,10 +7,10 @@ from typing import Any
 import cv2
 import numpy as np
 
-from src.models.enums import ContinuityModeName
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta
-from src.models.rule_models import (
+from tire_ai_pattern.models.enums import ContinuityModeName
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta
+from tire_ai_pattern.models.rule_models import (
     DecorationItem,
     GrooveSizeItem,
     RibSizeItem,
@@ -25,11 +25,11 @@ from src.models.rule_models import (
     Rule101Config,
     Rule102Config,
 )
-from src.models.tire_struct import TireStruct
-from src.piplines.pipline1 import run_pipeline1
-from src.piplines.pipline4 import run_pipeline4
-from src.rules.executors import load_all_executors
-from src.utils.image_utils import base64_to_ndarray, load_image_to_base64, save_base64_to_image
+from tire_ai_pattern.models.tire_struct import TireStruct
+from tire_ai_pattern.piplines.pipline1 import run_pipeline1
+from tire_ai_pattern.piplines.pipline4 import run_pipeline4
+from tire_ai_pattern.rules.executors import load_all_executors
+from tire_ai_pattern.utils.image_utils import base64_to_ndarray, load_image_to_base64, save_base64_to_image
 
 
 INPUT_IMAGE = Path("tests/datasets/tire_design_images/images/testcase_001.png")

@@ -7,17 +7,17 @@ import numpy as np
 import cv2
 import base64
 from unittest.mock import patch, MagicMock
-from src.models.image_models import ImageLineage
-from src.models.scheme_models import (
+from tire_ai_pattern.models.image_models import ImageLineage
+from tire_ai_pattern.models.scheme_models import (
     StitchingScheme, StitchingSchemeAbstract,
     RibSchemeImpl, MainGrooveImpl, DecorationImpl,
     MainGrooveScheme, MainGrooveSchemeAbstract,
     DecorationScheme, DecorationSchemeAbstract
 )
-from src.models.enums import (
+from tire_ai_pattern.models.enums import (
     RibOperation, StitchingSchemeName
 )
-from src.processing.image_stiching import generate_large_image_from_lineage
+from tire_ai_pattern.processing.image_stiching import generate_large_image_from_lineage
 
 
 class TestImageStiching(unittest.TestCase):
@@ -105,7 +105,7 @@ class TestImageStiching(unittest.TestCase):
 
     def test_rib_operations_sequence(self):
         """测试RIB操作序列处理"""
-        from src.core.operation.image_operation import apply_rib_operations_sequence
+        from tire_ai_pattern.core.operation.image_operation import apply_rib_operations_sequence
 
         # 测试 resize + left 组合
         operations = (RibOperation.RESIZE_HORIZONTAL_2X, RibOperation.LEFT)
@@ -119,7 +119,7 @@ class TestImageStiching(unittest.TestCase):
 
     def test_single_rib_operations(self):
         """测试单个RIB操作"""
-        from src.core.operation.image_operation import apply_single_rib_operation
+        from tire_ai_pattern.core.operation.image_operation import apply_single_rib_operation
 
         expected_shape = self.test_image.shape
 
@@ -135,7 +135,7 @@ class TestImageStiching(unittest.TestCase):
 
     def test_horizontal_concatenate(self):
         """测试横向拼接"""
-        from src.core.operation.image_operation import horizontal_concatenate
+        from tire_ai_pattern.core.operation.image_operation import horizontal_concatenate
 
         images = [self.test_image, self.test_image]
         result = horizontal_concatenate(images)
@@ -148,7 +148,7 @@ class TestImageStiching(unittest.TestCase):
 
     def test_overlay_decoration(self):
         """测试装饰覆盖"""
-        from src.core.operation.image_operation import overlay_decoration
+        from tire_ai_pattern.core.operation.image_operation import overlay_decoration
 
         left_dec = np.ones((self.image_h, 50, 3), dtype=np.uint8) * 200
         right_dec = np.ones((self.image_h, 50, 3), dtype=np.uint8) * 50

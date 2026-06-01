@@ -2,7 +2,7 @@
 
 ## 1. 目标
 
-本文档定义 `src/models/` 下所有数据类的使用方式，目标是：
+本文档定义 `tire_ai_pattern/models/` 下所有数据类的使用方式，目标是：
 
 - 统一导入方式
 - 明确可变性规则
@@ -20,11 +20,11 @@
 不通过 `__init__.py` 重新导出，所有导入直接指向源文件：
 
 ```python
-from src.models.enums import LevelEnum, RegionEnum
-from src.models.tire_struct import TireStruct
-from src.models.image_models import SmallImage, BigImage, ImageEvaluation
-from src.models.scheme_models import Symmetry0, RibSchemeImpl
-from src.models.rule_models import Rule8Config, get_feature_class
+from tire_ai_pattern.models.enums import LevelEnum, RegionEnum
+from tire_ai_pattern.models.tire_struct import TireStruct
+from tire_ai_pattern.models.image_models import SmallImage, BigImage, ImageEvaluation
+from tire_ai_pattern.models.scheme_models import Symmetry0, RibSchemeImpl
+from tire_ai_pattern.models.rule_models import Rule8Config, get_feature_class
 ```
 
 ### 2.2 可变性由 ConfigDict 控制
@@ -141,10 +141,10 @@ items: List[str] = Field(default_factory=list)
 ### 4.1 构造 Pipeline 输入
 
 ```python
-from src.models.tire_struct import TireStruct
-from src.models.image_models import SmallImage, ImageMeta, ImageBiz
-from src.models.enums import LevelEnum, RegionEnum, SourceTypeEnum, ImageModeEnum, ImageFormatEnum
-from src.models.rule_models import Rule8Config
+from tire_ai_pattern.models.tire_struct import TireStruct
+from tire_ai_pattern.models.image_models import SmallImage, ImageMeta, ImageBiz
+from tire_ai_pattern.models.enums import LevelEnum, RegionEnum, SourceTypeEnum, ImageModeEnum, ImageFormatEnum
+from tire_ai_pattern.models.rule_models import Rule8Config
 
 # 构造小图
 small_images = [
@@ -173,8 +173,8 @@ tire_struct = TireStruct(
 ### 4.2 运行时填充 evaluation
 
 ```python
-from src.models.image_models import ImageEvaluation, RuleEvaluation
-from src.models.rule_models import Rule8Feature, Rule8Score
+from tire_ai_pattern.models.image_models import ImageEvaluation, RuleEvaluation
+from tire_ai_pattern.models.rule_models import Rule8Feature, Rule8Score
 
 # 创建评估容器
 big_image.evaluation = ImageEvaluation(rules=[
@@ -194,7 +194,7 @@ print(big_image.evaluation.current_score)  # 4
 ### 4.3 动态获取规则类
 
 ```python
-from src.models.rule_models import get_feature_class, get_score_class
+from tire_ai_pattern.models.rule_models import get_feature_class, get_score_class
 
 # 根据规则名获取类
 feature_cls = get_feature_class("rule8")   # → Rule8Feature

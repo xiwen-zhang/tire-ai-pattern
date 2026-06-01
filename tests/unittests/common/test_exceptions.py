@@ -1,7 +1,7 @@
 """通用异常类测试 - 覆盖性验证和真实场景测试"""
 
 import pytest
-from src.common.exceptions import (
+from tire_ai_pattern.common.exceptions import (
     ProjectError,
     InputError,
     InputTypeError,

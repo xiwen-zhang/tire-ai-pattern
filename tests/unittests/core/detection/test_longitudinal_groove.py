@@ -13,9 +13,9 @@ import cv2
 import numpy as np
 import pytest
 
-from src.common.exceptions import InputDataError, InputTypeError
-from src.core.detection import longitudinal_groove as lg
-from src.core.detection.longitudinal_groove import detect_longitudinal_grooves
+from tire_ai_pattern.common.exceptions import InputDataError, InputTypeError
+from tire_ai_pattern.core.detection import longitudinal_groove as lg
+from tire_ai_pattern.core.detection.longitudinal_groove import detect_longitudinal_grooves
 
 
 IMAGE_SIZE = 128

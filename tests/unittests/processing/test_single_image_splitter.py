@@ -44,7 +44,7 @@ import numpy as np
 import cv2
 from pathlib import Path
 
-from src.processing.single_image_splitter import process_single_file, DEFAULT_CONFIG
+from tire_ai_pattern.processing.single_image_splitter import process_single_file, DEFAULT_CONFIG
 
 # 定义真实数据集路径
 _DATASET_ROOT = Path("tests/datasets/tire_design_images")

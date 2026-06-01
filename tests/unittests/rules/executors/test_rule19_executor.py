@@ -1,12 +1,12 @@
 import pytest
 
-from src.models.image_models import BaseImage
-from src.models.rule_models import BaseRuleConfig, BaseRuleFeature, BaseRuleScore, Rule19Config
-from src.nodes.base import STITCH_SCHEME_GENERATOR_CONFIGS, select_node_configs
-from src.rules.base import RuleExecutor
-from src.rules import registry as rule_registry
-from src.rules.registry import get_rule_executor, register_rule_executor
-from src.rules.executors.rule19 import Rule19Executor
+from tire_ai_pattern.models.image_models import BaseImage
+from tire_ai_pattern.models.rule_models import BaseRuleConfig, BaseRuleFeature, BaseRuleScore, Rule19Config
+from tire_ai_pattern.nodes.base import STITCH_SCHEME_GENERATOR_CONFIGS, select_node_configs
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules import registry as rule_registry
+from tire_ai_pattern.rules.registry import get_rule_executor, register_rule_executor
+from tire_ai_pattern.rules.executors.rule19 import Rule19Executor
 
 
 def make_rule19_config() -> Rule19Config:
@@ -92,7 +92,7 @@ def test_rule19_exec_feature():
     #         "decoration_border_width": expected_decoration_border_width,
     #     }
     #
-    # monkeypatch.setattr("src.rules.executors.rule19.algorithm_func", fake_algorithm)
+    # monkeypatch.setattr("tire_ai_pattern.rules.executors.rule19.algorithm_func", fake_algorithm)
     #
     # feature = Rule19Executor().exec_feature(image, config)
     #

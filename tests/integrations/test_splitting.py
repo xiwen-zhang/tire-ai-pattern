@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta
-from src.models.tire_struct import TireStruct
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta
+from tire_ai_pattern.models.tire_struct import TireStruct
 
 
 def _make_tire_struct() -> TireStruct:
@@ -23,7 +23,7 @@ def _make_tire_struct() -> TireStruct:
 
 
 def test_run_splitting_pipeline_delegates_to_pipeline4(monkeypatch):
-    from src.api.splitting import run_splitting_pipeline
+    from tire_ai_pattern.api.splitting import run_splitting_pipeline
 
     tire_struct = _make_tire_struct()
     calls = []
@@ -34,7 +34,7 @@ def test_run_splitting_pipeline_delegates_to_pipeline4(monkeypatch):
         input_data.err_msg = None
         return input_data
 
-    monkeypatch.setattr("src.api.splitting.run_pipeline4", fake_run_pipeline4)
+    monkeypatch.setattr("tire_ai_pattern.api.splitting.run_pipeline4", fake_run_pipeline4)
 
     result = run_splitting_pipeline(tire_struct)
 

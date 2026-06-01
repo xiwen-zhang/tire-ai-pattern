@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from src.common.exceptions import InputDataError
-from src.models.enums import (
+from tire_ai_pattern.common.exceptions import InputDataError
+from tire_ai_pattern.models.enums import (
     ContinuityModeName,
     ImageFormatEnum,
     ImageModeEnum,
@@ -13,7 +13,7 @@ from src.models.enums import (
     StitchingSchemeName,
     RibOperation,
 )
-from src.models.image_models import (
+from tire_ai_pattern.models.image_models import (
     BigImage,
     ImageLineage,
     ImageBiz,
@@ -22,7 +22,7 @@ from src.models.image_models import (
     RuleEvaluation,
     SmallImage,
 )
-from src.models.rule_models import (
+from tire_ai_pattern.models.rule_models import (
     BaseRuleConfig,
     DecorationItem,
     GrooveSizeItem,
@@ -37,7 +37,7 @@ from src.models.rule_models import (
     Rule101Config,
     Rule102Config,
 )
-from src.models.scheme_models import (
+from tire_ai_pattern.models.scheme_models import (
     Continuity0,
     Continuity1,
     Continuity2,
@@ -46,9 +46,9 @@ from src.models.scheme_models import (
     Symmetry0,
     Symmetry1,
 )
-from src.models.template_registry import get_stitching_templates
-from src.nodes.base import STITCH_SCHEME_GENERATOR_CONFIGS, select_node_configs
-from src.nodes.stitch_scheme_generator import (
+from tire_ai_pattern.models.template_registry import get_stitching_templates
+from tire_ai_pattern.nodes.base import STITCH_SCHEME_GENERATOR_CONFIGS, select_node_configs
+from tire_ai_pattern.nodes.stitch_scheme_generator import (
     _TemplateCombination,
     _filter_templates,
     _filter_symmetry_templates_by_image_count,
@@ -62,7 +62,7 @@ from src.nodes.stitch_scheme_generator import (
     _CandidateScheme,
     generate_stitch_scheme,
 )
-from src.utils.image_utils import base64_to_ndarray
+from tire_ai_pattern.utils.image_utils import base64_to_ndarray
 
 
 def make_small_image(region: RegionEnum, payload: str, score: int) -> SmallImage:

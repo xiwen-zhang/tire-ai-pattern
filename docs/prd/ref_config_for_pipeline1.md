@@ -31,7 +31,7 @@
 ```
 
 - **`CONFIG`** 是 Python dict。与 JSON dict 最本质的区别：**值可以是函数调用**。例如 `load_image_to_base64(Path("img.png"))` 在 Python 定义时就求值为 base64 字符串，用户可以写函数调用，也可以直接填 base64 字面量
-- **`tire_struct`** 由共享 builder (`src/config/_builder.py`) 从 `CONFIG` 自动构建，builder 拿到的是**已求值后的结果**（base64 字符串、数字等），不需要处理文件路径
+- **`tire_struct`** 由共享 builder (`tire_ai_pattern/config/_builder.py`) 从 `CONFIG` 自动构建，builder 拿到的是**已求值后的结果**（base64 字符串、数字等），不需要处理文件路径
 - 用户修改 `CONFIG` 后，重新调用 `build_tire_struct(CONFIG)` 即可获得新的 `TireStruct`
 
 ### 1.4 非目标
@@ -53,12 +53,12 @@ RIB数量: N
 """
 
 from pathlib import Path
-from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 # ============================================================
 # 【用户编辑区】修改此字典即可自定义配置
-#   所有字符串枚举优先使用 src.models.enums 中的枚举值：
+#   所有字符串枚举优先使用 tire_ai_pattern.models.enums 中的枚举值：
 #     region           → RegionEnum.SIDE / RegionEnum.CENTER
 #     连续性模式        → StitchingSchemeName.CONTINUITY_0 等
 #     装饰位置          → DecorationPositionEnum.LEFT / DecorationPositionEnum.RIGHT
@@ -92,7 +92,7 @@ CONFIG = {
 # ============================================================
 # 【自动生成区】由 builder 根据 CONFIG 自动构建，无需手动编辑
 # ============================================================
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 
 tire_struct = build_tire_struct(CONFIG)
 ```
@@ -109,7 +109,7 @@ tire_struct = build_tire_struct(CONFIG)
 ```python
 # 方式一：测试直接用
 from example.ref_configs import cfg_5rib_sym0_no_cont
-from src.piplines.pipline1 import run_pipeline1
+from tire_ai_pattern.piplines.pipline1 import run_pipeline1
 run_pipeline1(cfg_5rib_sym0_no_cont.tire_struct)
 
 # 方式二：用户参考后修改
@@ -120,7 +120,7 @@ CONFIG["scheme_rank"] = 2                # 换一个方案
 CONFIG["small_images"][0]["image_base64"] = load_image_to_base64(
     Path("/data/my_rib1.png"), with_prefix=True
 )                                              # 换图片
-from src.config._builder import build_tire_struct
+from tire_ai_pattern.config._builder import build_tire_struct
 my_struct = build_tire_struct(CONFIG)
 run_pipeline1(my_struct)
 ```
@@ -207,7 +207,7 @@ run_pipeline1(my_struct)
 装饰位置目前使用裸 `str`（`"left"` / `"right"`），需新增枚举以保持一致：
 
 ```python
-# src/models/enums.py 新增
+# tire_ai_pattern/models/enums.py 新增
 
 class DecorationPositionEnum(str, Enum):
     """装饰位置枚举"""
@@ -219,7 +219,7 @@ class DecorationPositionEnum(str, Enum):
 
 ---
 
-## 4. `src/config/_builder.py` 职责
+## 4. `tire_ai_pattern/config/_builder.py` 职责
 
 这是一个共享模块，供所有参考配置文件调用。职责是**从 CONFIG dict 构建 TireStruct**。
 
@@ -288,8 +288,8 @@ def build_tire_struct(config: dict) -> TireStruct:
 
 ```python
 from pathlib import Path
-from src.models.enums import RegionEnum
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.models.enums import RegionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 "small_images": [
     {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib1.png"), with_prefix=True), "region": RegionEnum.SIDE},
@@ -341,7 +341,7 @@ from src.utils.image_utils import load_image_to_base64
 **所有配置共享装饰**（Rule102）：
 
 ```python
-from src.models.enums import DecorationPositionEnum
+from tire_ai_pattern.models.enums import DecorationPositionEnum
 
 "decorations": [
     {"position": DecorationPositionEnum.LEFT, "decoration_width": 300, "decoration_height": 640, "decoration_opacity": 128},
@@ -453,7 +453,7 @@ example/ref_configs/                         # 参考配置（唯一源），同
 ├── 4rib_sym456_cont3.py
 └── 4rib_sym456_cont123_bad.py
 
-src/config/
+tire_ai_pattern/config/
 └── _builder.py                              # 共享 dict→TireStruct 构建器
 ```
 
@@ -461,8 +461,8 @@ src/config/
 
 | 文件 | 改动 |
 |---|---|
-| `src/models/enums.py` | 新增 `DecorationPositionEnum` |
-| `src/models/rule_models.py` | `DecorationItem.position` 类型从 `str` 改为 `DecorationPositionEnum` |
+| `tire_ai_pattern/models/enums.py` | 新增 `DecorationPositionEnum` |
+| `tire_ai_pattern/models/rule_models.py` | `DecorationItem.position` 类型从 `str` 改为 `DecorationPositionEnum` |
 
 ---
 
@@ -534,10 +534,10 @@ src/config/
 
 ### 8.4 CONFIG 中使用的枚举速查
 
-所有 CONFIG 文件统一从 `src.models.enums` 导入枚举：
+所有 CONFIG 文件统一从 `tire_ai_pattern.models.enums` 导入枚举：
 
 ```python
-from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
 ```
 
 | 枚举 | CONFIG 中的使用位置 | 有效值 |
@@ -553,4 +553,4 @@ from src.models.enums import RegionEnum, StitchingSchemeName, DecorationPosition
 ## 9. 待确认事项
 
 1. **反例 1.11 的 e2e 测试**：是否需要独立的测试用例来验证"连续性模式被静默忽略"的降级行为？
-2. **`__init__.py` 聚合导出**：是否需要在 `src/config/__init__.py` 中统一 `import` 所有参考配置，方便一次性导入？
+2. **`__init__.py` 聚合导出**：是否需要在 `tire_ai_pattern/config/__init__.py` 中统一 `import` 所有参考配置，方便一次性导入？

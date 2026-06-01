@@ -1,6 +1,6 @@
 import pytest
-from src.models.enums import ContinuityModeName
-from src.models.rule_models import (
+from tire_ai_pattern.models.enums import ContinuityModeName
+from tire_ai_pattern.models.rule_models import (
     Rule8Config, Rule8Feature, Rule8Score,
     Rule11Config, Rule11Feature,
     Rule16Config, Rule17Config,
