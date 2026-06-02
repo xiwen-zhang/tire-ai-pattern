@@ -1,6 +1,6 @@
 import pytest
-from src.models.enums import RegionEnum
-from src.models.image_models import SmallImage, ImageMeta, ImageBiz, ImageEvaluation, RuleEvaluation
+from tire_ai_pattern.models.enums import RegionEnum
+from tire_ai_pattern.models.image_models import SmallImage, ImageMeta, ImageBiz, ImageEvaluation, RuleEvaluation
 
 # ===================== 测试数据（模块级常量）=====================
 
@@ -194,7 +194,7 @@ class TestImageEvaluationMethods:
 
     def test_set_score_updates_total(self):
         """设置评分后自动更新总分"""
-        from src.models.rule_models import Rule8Score, Rule11Score
+        from tire_ai_pattern.models.rule_models import Rule8Score, Rule11Score
         input_dict = {"rules": [{"name": "rule8", "config": RULE8_CONFIG_DICT}, {"name": "rule11", "config": RULE11_CONFIG_DICT}]}
         expected_dict = {"current_score": 7}
 
@@ -212,7 +212,7 @@ class TestRuleEvaluationValidation:
 
     def test_validate_name_consistency_valid(self):
         """✅ 校验规则 10：feature 和 score 名称一致"""
-        from src.models.rule_models import Rule8Config, Rule8Feature, Rule8Score
+        from tire_ai_pattern.models.rule_models import Rule8Config, Rule8Feature, Rule8Score
         input_dict = {"name": "rule8", "config": RULE8_CONFIG_DICT}
         expected_dict = {"name": "rule8"}
 
@@ -224,7 +224,7 @@ class TestRuleEvaluationValidation:
 
     def test_validate_name_consistency_feature_mismatch(self):
         """❌ 校验规则 10：feature 名称不一致"""
-        from src.models.rule_models import Rule11Feature
+        from tire_ai_pattern.models.rule_models import Rule11Feature
         input_dict = {"name": "rule8", "config": RULE8_CONFIG_DICT}
 
         evaluation = RuleEvaluation.model_validate(input_dict)
@@ -233,7 +233,7 @@ class TestRuleEvaluationValidation:
 
     def test_validate_name_consistency_score_mismatch(self):
         """❌ 校验规则 10：score 名称不一致"""
-        from src.models.rule_models import Rule11Score
+        from tire_ai_pattern.models.rule_models import Rule11Score
         input_dict = {"name": "rule8", "config": RULE8_CONFIG_DICT}
 
         evaluation = RuleEvaluation.model_validate(input_dict)

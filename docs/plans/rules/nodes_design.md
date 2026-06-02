@@ -18,7 +18,7 @@
 
 ## 2. 核心边界
 
-`src.nodes` 是 pipeline 中的节点编排层。
+`tire_ai_pattern.nodes` 是 pipeline 中的节点编排层。
 
 节点层负责：
 
@@ -117,7 +117,7 @@ Node6 big_image_splitter:
 
 虽然旧 dev 中 `rule8_14` 也能处理 `center_inf / side_inf`，但它没有进入旧 `postprocessor.py` 主流程；本阶段不放入 Node1，避免扩大 Node1 职责。
 
-建议在 `src.nodes.rule_configs` 中独立声明每个 node 的 configs 常量。
+建议在 `tire_ai_pattern.nodes.rule_configs` 中独立声明每个 node 的 configs 常量。
 
 不要使用 `NODE_RULE_CONFIGS[node_name]` 这类中心化动态索引。每个 node 文件显式导入自己要用的 configs 常量。
 
@@ -181,8 +181,8 @@ def select_node_configs(
 node 内使用方式：
 
 ```python
-from src.nodes.rule_configs import SMALL_IMAGE_EVALUATOR_CONFIGS
-from src.nodes.rule_configs import select_node_configs
+from tire_ai_pattern.nodes.rule_configs import SMALL_IMAGE_EVALUATOR_CONFIGS
+from tire_ai_pattern.nodes.rule_configs import select_node_configs
 
 
 configs = select_node_configs(
@@ -229,9 +229,9 @@ input image + configs
 建议抽一个 nodes 内部 helper：
 
 ```python
-from src.models.image_models import BaseImage, ImageEvaluation, RuleEvaluation
-from src.models.rule_models import BaseRuleConfig
-from src.rules.runner import RuleRunner
+from tire_ai_pattern.models.image_models import BaseImage, ImageEvaluation, RuleEvaluation
+from tire_ai_pattern.models.rule_models import BaseRuleConfig
+from tire_ai_pattern.rules.runner import RuleRunner
 
 
 def evaluate_image_with_configs(
@@ -364,7 +364,7 @@ Pipeline-4:
 建议接口：
 
 ```python
-from src.models.tire_struct import TireStruct
+from tire_ai_pattern.models.tire_struct import TireStruct
 
 
 def evaluate_small_images(tire_struct: TireStruct) -> TireStruct:
@@ -435,7 +435,7 @@ Node1 顺序影响：
 建议接口：
 
 ```python
-from src.models.tire_struct import TireStruct
+from tire_ai_pattern.models.tire_struct import TireStruct
 
 
 def evaluate_big_image(tire_struct: TireStruct) -> TireStruct:
@@ -518,7 +518,7 @@ Node5 只做“基于已有信息的评分”，不重新检测图像。
 建议接口：
 
 ```python
-from src.models.tire_struct import TireStruct
+from tire_ai_pattern.models.tire_struct import TireStruct
 
 
 def score_geometry(tire_struct: TireStruct) -> TireStruct:
@@ -588,29 +588,37 @@ Node2 由模板调用生成拼接方案。
 边界：
 
 - 输入 `TireStruct.small_images + rules_config + scheme_rank`。
-- 输出 `StitchingScheme`。
+- 输出 `ImageLineage`。
 - 根据配置生成完整、可执行、可复现的拼接方案。
 - 不执行真实拼图。
 
-Node2 需要按固定顺序消费 rule configs。该顺序不是用户配置列表的原始顺序，而是节点内部的业务顺序：
+Node2 当前设计调整为“先过滤模板，再组合模板，再生成方案，再按排序选择第 N 名”：
 
 ```text
-1. 基础横向模板选择：Rule1Config / Rule2Config / Rule3Config / Rule4Config / Rule5Config
-2. 纵向拼接参数注入：Rule6AConfig
-3. 主沟结构参数注入：Rule7Config
-4. RIB 连续性模板扩展：Rule12Config / Rule16Config / Rule17Config
-5. 装饰后处理方案声明：Rule19Config
-6. 根据 scheme_rank 选择最终 StitchingScheme
+1. 使用 STITCH_SCHEME_GENERATOR_CONFIGS 筛出 Node2 支持的 rules_config。
+2. 通过模板注册表读取可用拼接模板。
+3. 按 rib_number 和启用配置过滤对称性模板。
+4. 按 rib_number 保留连续性模板。
+5. 将过滤后的对称性模板与连续性模板做笛卡尔组合。
+6. 按对称性模板的原始入口 RIB 选择小图，并展开成 5 个 RIB 位置图片。
+7. 候选方案分数等于 5 个 RIB 位置图片评分总和；重复使用同一张图时按出现次数重复计分。
+8. 按方案总分降序排序；同分时使用对称性模板名、连续性模板名与按 RIB 顺序的小图内容哈希生成稳定排序键。
+9. 根据 scheme_rank 选择最终候选方案。
+10. 合并对称性模板与连续性模板，读取 Rule100Config / Rule101Config / Rule102Config，实例化完整 ImageLineage。
 ```
 
 顺序说明：
 
-- `Rule1Config` 到 `Rule5Config` 决定基础横向拼接模板，旧 dev 中对应 `symmetry_type` / 对称策略一类配置。
-- `Rule6AConfig` 决定纵向拼接次数和目标分辨率，应在方案实例化前写入 rib 操作参数。
-- `Rule7Config` 描述主沟宽度 / 数量约束，应先于连续性扩展进入方案上下文。
-- `Rule12Config` / `Rule16Config` / `Rule17Config` 用于扩展 RIB 连续性方案，必须在基础模板确定之后执行。
-- `Rule19Config` 不改变 RIB 组合，但可以声明大图后处理方案，例如装饰边框；是否真实执行由 Node3 根据 scheme 执行。
-- `scheme_rank` 只在候选方案生成完成后生效，用于选择第几名方案。
+- `rib_number` 是硬过滤条件，不满足时模板直接淘汰。
+- 对称性模板决定入口选图，连续性模板只在后续合并阶段决定最终 RIB 的继承关系和操作。
+- 连续性模板不会额外增加选图数量；图片数量过滤以对称性模板的原始入口 RIB 为准。
+- Node2 不给模板重新评分；候选方案分数来自 5 个 RIB 位置图片评分总和。
+- 同分排序必须可复现，同时避免长期偏向固定模板；当前排序不依赖随机种子。
+- `scheme_rank` 只在候选方案排序完成后生效，用于选择第几名方案。
+- 最终 lineage 的每个 RIB 必须按合并后的 `inherit_from` 找到正确来源图片，不能简单使用候选列表中同位置图片。
+- `Rule100Config` 固化 RIB 数量与各 RIB 的节距 / 尺寸。
+- `Rule101Config` 固化主沟尺寸，主沟原始图由 Node2 生成对应尺寸的黑色图。
+- `Rule102Config` 固化装饰尺寸与透明度，装饰原始图由 Node2 生成对应尺寸的黑色图。
 
 Node2 的输出必须足够完整，使 Node3 不再读取 `rules_config`。所有会影响拼图结果的配置，都要在 Node2 阶段固化进 `StitchingScheme` 或 lineage 相关结构。
 
@@ -629,6 +637,9 @@ STITCH_SCHEME_GENERATOR_CONFIGS = [
     Rule16Config,
     Rule17Config,
     Rule19Config,
+    Rule100Config,
+    Rule101Config,
+    Rule102Config,
 ]
 ```
 
@@ -637,6 +648,8 @@ Node2 验证：
 - `small_images` 必须非空。
 - `rules_config` 中同一种 `RuleConfig` 不能重复。
 - 至少需要能确定一个基础横向模板；如果 `Rule1Config` 到 `Rule5Config` 都不存在，应返回明确错误。
+- 必须存在 `Rule100Config` / `Rule101Config` / `Rule102Config`。
+- `Rule100Config.rib_sizes` 必须覆盖最终 lineage 中所有 RIB。
 - `scheme_rank` 如果存在，必须大于等于 1，且不能超过候选方案数量。
 - 模板调用所需字段必须在对应 config 中存在；字段级校验主要交给 Pydantic model。
 - Node2 不验证真实拼图能力，因为真实执行在 Node3。
@@ -644,11 +657,12 @@ Node2 验证：
 Node2 顺序影响：
 
 - Node2 的顺序有业务影响。
-- `Rule1Config` 到 `Rule5Config` 必须先确定基础模板。
-- `Rule6AConfig` / `Rule7Config` 必须在连续性扩展前注入上下文。
-- `Rule12Config` / `Rule16Config` / `Rule17Config` 必须在基础模板之后扩展。
-- `Rule19Config` 只声明后处理方案，不应影响基础 RIB 组合。
-- `scheme_rank` 最后生效。
+- 必须先按 `rib_number` 做硬过滤。
+- 必须先完成模板过滤，再枚举候选拼接方案。
+- 必须先完成对称性入口选图和 5 个 RIB 位置展开，再计算分数。
+- 必须先完成方案评分和稳定排序，再应用 `scheme_rank`。
+- 必须在最终候选确定后，再把 `Rule100Config` / `Rule101Config` / `Rule102Config` 固化到 lineage。
+- Node2 需要记录开始、模板过滤、图片数量统计、排列思路、候选生成、得分统计、最高分模板组合、候选选中、lineage 实例化这些摘要日志，便于排查整体执行状态。
 
 ### Node3: big_image_stitcher
 
@@ -660,8 +674,8 @@ Node3 由模板执行调用完成真实拼图。
 
 边界：
 
-- 输入 Node2 生成的 `StitchingScheme`。
-- 只执行 scheme。
+- 输入 Node2 生成的 `ImageLineage`。
+- 只执行 lineage。
 - 不再根据 `ruleconfig` 扩展拼接方案。
 - 输出 `BigImage`，并写入 `BigImage.lineage.stitching_scheme`。
 

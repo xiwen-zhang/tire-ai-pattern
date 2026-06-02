@@ -1,10 +1,10 @@
 import pytest
 from pydantic import ValidationError
 
-from src.api import fake_generation
-from src.api.fake_generation import generate_big_image_with_evaluation
-from src.common.exceptions import InputTypeError
-from src.models.fake_tire_struct import FakeTireStruct
+from tire_ai_pattern.api import fake_generation
+from tire_ai_pattern.api.fake_generation import generate_big_image_with_evaluation
+from tire_ai_pattern.common.exceptions import InputTypeError
+from tire_ai_pattern.models.fake_tire_struct import FakeTireStruct
 
 
 def create_valid_input() -> dict:

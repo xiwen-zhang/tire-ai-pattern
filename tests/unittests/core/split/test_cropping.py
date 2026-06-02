@@ -42,7 +42,7 @@ import unittest
 import numpy as np
 import cv2
 
-from src.core.split.cropping import (
+from tire_ai_pattern.core.split.cropping import (
     remove_black_and_split_segments,
     remove_side_white,
     remove_edge_gray,

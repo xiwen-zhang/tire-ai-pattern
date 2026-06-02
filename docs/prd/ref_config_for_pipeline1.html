@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>pipeline1 参考配置 - 需求文档</title>
+<style>
+  :root {
+    --ivory:    #FAF9F5;
+    --paper:    #FFFFFF;
+    --slate:    #141413;
+    --clay:     #D97757;
+    --clay-d:   #B85C3E;
+    --oat:      #E3DACC;
+    --olive:    #788C5D;
+    --rust:     #B04A3F;
+    --g100:     #F0EEE6;
+    --g200:     #E6E3DA;
+    --g300:     #D1CFC5;
+    --g500:     #87867F;
+    --g700:     #3D3D3A;
+    --serif: ui-serif, Georgia, "Times New Roman", Times, serif;
+    --sans:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono:  ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+    --radius-panel: 12px;
+    --radius-row:   8px;
+    --border:       1.5px solid var(--g300);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 56px 24px 120px;
+    background: var(--ivory);
+    color: var(--slate);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; }
+
+  /* ---------- headings ---------- */
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--g500);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(32px, 4.6vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    color: var(--slate);
+    margin: 0 0 14px;
+  }
+  h1 em { font-style: italic; color: var(--clay); }
+  .subtitle {
+    color: var(--g500);
+    font-size: 16px;
+    margin: 0 0 40px;
+    max-width: 60ch;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  h2 + hr.rule {
+    border: none;
+    border-top: 1px solid var(--g300);
+    margin: 0 0 22px;
+  }
+  h3 { font-family: var(--sans); font-weight: 600; font-size: 15px; margin: 1.4rem 0 .4rem; }
+  h4 { font-family: var(--sans); font-weight: 600; font-size: 13px; color: var(--g700); margin: 1.2rem 0 .3rem; }
+
+  section { margin-bottom: 52px; }
+
+  p, ul, ol { margin: .5rem 0; }
+  a { color: var(--clay); text-decoration: none; border-bottom: 1px dotted transparent; }
+  a:hover { border-bottom-color: var(--clay); }
+  code, pre { font-family: var(--mono); font-size: .9em; }
+  :not(pre) > code {
+    background: var(--g100);
+    border: 1px solid var(--g300);
+    border-radius: 4px;
+    padding: .05rem .3rem;
+  }
+  pre {
+    background: var(--slate);
+    color: #E8E6DE;
+    border-radius: var(--radius-panel);
+    padding: 18px 20px;
+    overflow: auto;
+    line-height: 1.65;
+  }
+
+  /* ---------- callout ---------- */
+  .callout {
+    border-left: 4px solid var(--clay);
+    background: var(--paper);
+    border-top: var(--border);
+    border-right: var(--border);
+    border-bottom: var(--border);
+    border-radius: 0 var(--radius-panel) var(--radius-panel) 0;
+    padding: 16px 20px;
+    margin: 1rem 0;
+  }
+  .callout.warn { border-left-color: var(--clay-d); }
+  .callout.err  { border-left-color: var(--rust); }
+  .callout.ok   { border-left-color: var(--olive); }
+
+  /* ---------- chips ---------- */
+  .chip {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    background: var(--g100);
+    border: var(--border);
+    color: var(--g700);
+    padding: 3px 9px;
+    border-radius: 999px;
+    vertical-align: middle;
+  }
+  .chip.ok   { background: #E8EEDB; border-color: #C8D3B0; color: #4D5E36; }
+  .chip.warn { background: #F5E4D7; border-color: #E8C6A9; color: #8A4A28; }
+  .chip.err  { background: #F1DBD6; border-color: #E0B2AA; color: #7A2F26; }
+
+  /* ---------- grid / cards ---------- */
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 1rem 0; }
+  .card {
+    background: var(--paper);
+    border: var(--border);
+    border-radius: var(--radius-panel);
+    padding: 20px 22px;
+  }
+  .grid-2 { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; margin: 1rem 0; }
+
+  /* ---------- tables ---------- */
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--paper);
+    border: var(--border);
+    border-radius: var(--radius-panel);
+    overflow: hidden;
+  }
+  thead th {
+    text-align: left;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--g500);
+    background: var(--g100);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--g300);
+  }
+  tbody td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--g100);
+    font-size: 14px;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ---------- details / collapsibles ---------- */
+  details {
+    border: var(--border);
+    border-radius: var(--radius-row);
+    padding: .6rem 1rem;
+    margin: .6rem 0;
+    background: var(--paper);
+  }
+  details[open] { background: var(--g100); }
+  summary { cursor: pointer; font-weight: 600; outline: none; }
+
+  button {
+    font: inherit; cursor: pointer;
+    padding: .5rem .95rem;
+    border-radius: var(--radius-row);
+    border: var(--border); background: var(--paper); color: var(--slate);
+  }
+  button:hover { background: var(--g100); }
+  button.primary { background: var(--clay); color: var(--paper); border-color: var(--clay); }
+  button.primary:hover { background: var(--clay-d); border-color: var(--clay-d); }
+
+  svg { max-width: 100%; height: auto; }
+
+  footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--g300);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--g500);
+  }
+
+  /* ---------- special markers ---------- */
+  .badge-new {
+    display: inline-block;
+    background: var(--olive);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 999px;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+  .badge-counter {
+    background: #F5E4D7;
+    border-color: #E8C6A9;
+    color: #8A4A28;
+    border: 1px solid #E8C6A9;
+  }
+
+  @media (max-width: 720px) { body { padding: 32px 18px 96px; } .grid-2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+  <div class="page">
+
+    <div class="eyebrow">PRD · v2.0 · PIPELINE1 REFERENCE CONFIG</div>
+    <h1>pipeline1 参考配置</h1>
+    <p class="subtitle">在 <code>tire_ai_pattern/config/</code> 下提供 11 个参考配置模块，用户可直接编辑 Python dict 或导入模块的 <code>tire_struct</code> 传给 <code>run_pipeline1()</code></p>
+
+    <div class="callout">
+      <strong>核心理念.</strong> <code>CONFIG</code> 是 Python dict，值可以是函数调用（如 <code>load_image_to_base64(Path("img.png"))</code>），定义时即求值。共享 builder <code>_builder.py</code> 从已求值的 CONFIG 自动构建 <code>TireStruct</code> 实例。
+    </div>
+
+    <!-- ========== 1. 背景与目标 ========== -->
+    <section>
+      <h2>1. 背景与目标</h2>
+      <hr class="rule">
+
+      <div class="grid">
+        <article class="card">
+          <h3>问题 <span class="chip warn">痛点</span></h3>
+          <ul style="color: var(--g500); margin: 0;">
+            <li>e2e 测试每个用例手写 <code>rules_config</code> + 构造 <code>SmallImage</code>，重复代码多</li>
+            <li>外部调用方没有一目了然的示例，不清楚要传哪些字段及其格式</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>目标 <span class="chip ok">解决方案</span></h3>
+          <ul style="color: var(--g500); margin: 0;">
+            <li>提供 11 个参考配置 Python 模块</li>
+            <li>用户可查看/编辑 <code>CONFIG</code> dict 修改参数</li>
+            <li>也可直接导入 <code>tire_struct</code> 传给 <code>run_pipeline1()</code></li>
+          </ul>
+        </article>
+      </div>
+
+      <table>
+        <thead><tr><th>场景</th><th>使用方式</th></tr></thead>
+        <tbody>
+          <tr><td>用户参考 & 修改参数</td><td>查看/编辑模块内的 <code>CONFIG</code> dict</td></tr>
+          <tr><td>直接跑 pipeline1</td><td>导入模块的 <code>tire_struct</code>，直接传给 <code>run_pipeline1()</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========== 2. 模块格式约定 ========== -->
+    <section>
+      <h2>2. 模块格式约定</h2>
+      <hr class="rule">
+
+      <p>每个参考配置文件必须遵守以下结构：</p>
+      <pre><code>"""
+参考配置 X.X：&lt;一行描述&gt;
+方案: &lt;symmetry_name&gt; [+ &lt;continuity_name&gt;]
+RIB数量: N
+"""
+
+from pathlib import Path
+from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
+
+# ============================================================
+# 【用户编辑区】修改此字典即可自定义配置
+#   所有字符串枚举优先使用 tire_ai_pattern.models.enums 中的枚举值：
+#     region           → RegionEnum.SIDE / RegionEnum.CENTER
+#     连续性模式        → StitchingSchemeName.CONTINUITY_0 等
+#     装饰位置          → DecorationPositionEnum.LEFT / DecorationPositionEnum.RIGHT
+#   - small_images:   每张小图的 image_base64 与 region
+#                     可以用 load_image_to_base64(Path(...)) 从文件加载
+#                     也可以直接填 "data:image/png;base64,iVBOR..." 字符串
+#   - big_image:      默认 None，builder 自动创建占位 BigImage
+#   - rules_config:   规则配置列表，"rule" 字段指定规则名
+#   - scheme_rank:    方案排名，1=取最优方案
+#   - is_debug:       可选，默认 False
+# ============================================================
+CONFIG = {
+    "scheme_rank": 1,
+    "is_debug": False,
+    "big_image": None,
+    "small_images": [
+        {
+            "image_base64": load_image_to_base64(
+                Path("tests/datasets/stitching/rib1.png"), with_prefix=True
+            ),
+            "region": RegionEnum.SIDE,
+        },
+        # ...
+    ],
+    "rules_config": [
+        {"rule": "rule1", "description": "rib无对称", "max_score": 10},
+        # ...
+    ],
+}
+
+# ============================================================
+# 【自动生成区】由 builder 根据 CONFIG 自动构建，无需手动编辑
+# ============================================================
+from tire_ai_pattern.config._builder import build_tire_struct
+tire_struct = build_tire_struct(CONFIG)</code></pre>
+
+      <table>
+        <thead><tr><th>导出名</th><th>类型</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td><code>CONFIG</code></td><td><code>dict</code></td><td>用户阅读和编辑的源数据</td></tr>
+          <tr><td><code>tire_struct</code></td><td><code>TireStruct</code></td><td>直接传给 <code>run_pipeline1()</code> 的程序对象</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========== 3. CONFIG 字段说明 ========== -->
+    <section>
+      <h2>3. CONFIG dict 字段说明</h2>
+      <hr class="rule">
+
+      <h3>3.1 顶层字段</h3>
+      <table>
+        <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>默认值</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>small_images</code></td><td><code>list[dict]</code></td><td>是</td><td>—</td><td>小图列表</td></tr>
+          <tr><td><code>rules_config</code></td><td><code>list[dict]</code></td><td>是</td><td>—</td><td>规则配置列表</td></tr>
+          <tr><td><code>scheme_rank</code></td><td><code>int</code></td><td>是</td><td>—</td><td>方案排名，1=最优方案</td></tr>
+          <tr><td><code>big_image</code></td><td><code>dict | None</code></td><td>否</td><td><code>None</code></td><td><code>None</code>=builder 自动创建占位 BigImage</td></tr>
+          <tr><td><code>is_debug</code></td><td><code>bool</code></td><td>否</td><td><code>False</code></td><td>调试开关</td></tr>
+        </tbody>
+      </table>
+
+      <h3>3.2 small_images 元素</h3>
+      <table>
+        <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>image_base64</code></td><td><code>str</code></td><td>是</td><td>图片的 base64 编码（含 <code>data:image/...;base64,</code> 前缀）</td></tr>
+          <tr><td><code>region</code></td><td><code>RegionEnum</code></td><td>是</td><td><code>RegionEnum.SIDE</code> 或 <code>RegionEnum.CENTER</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>3.3 rules_config 元素</h3>
+      <table>
+        <thead><tr><th>字段</th><th>类型</th><th>必填</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>rule</code></td><td><code>str</code></td><td>是</td><td>规则名：<code>"rule1"</code>, <code>"rule2"</code>, <code>"rule100"</code> 等。支持数字简写 <code>1</code>, <code>100</code></td></tr>
+          <tr><td><code>description</code></td><td><code>str</code></td><td>否</td><td>规则描述（rule1/2/3/100/101/102 有默认值，可省略）</td></tr>
+          <tr><td><code>max_score</code></td><td><code>int</code></td><td>否</td><td>最大得分</td></tr>
+          <tr><td><em>(其他)</em></td><td>—</td><td>—</td><td>各规则的特有字段，如 <code>rib_sizes</code>、<code>groove_sizes</code>、<code>continuity_mode_list</code> 等</td></tr>
+        </tbody>
+      </table>
+
+      <p>示例：</p>
+      <pre><code># 简单规则
+{"rule": "rule1", "description": "rib无对称", "max_score": 10}
+
+# 纯配置规则（含嵌套列表）
+{
+    "rule": "rule100",
+    "rib_number": 5,
+    "rib_sizes": [
+        {"rib_name": "rib1", "num_pitchs": 5, "rib_width": 400, "rib_height": 640},
+        # ...
+    ],
+}
+
+# 连续性规则（continuity_mode_list 使用 StitchingSchemeName 枚举）
+{
+    "rule": "rule12",
+    "max_score": 6,
+    "description": "两个RIB间横向钢片及横沟连续性占比是否满足要求",
+    "continuity_ratio_upper": 0.7,
+    "continuity_ratio_lower": 0.6,
+    "continuity_mode_list": [StitchingSchemeName.CONTINUITY_0, StitchingSchemeName.CONTINUITY_1],
+},</code></pre>
+
+      <h3>3.4 big_image 字段</h3>
+      <table>
+        <thead><tr><th>值</th><th>builder 行为</th></tr></thead>
+        <tbody>
+          <tr><td><code>None</code> 或缺失</td><td>创建标准占位 BigImage（用于 pipeline1 输入）</td></tr>
+          <tr><td><code>{"image_base64": load_image_to_base64(...)}</code></td><td>加载真实大图（用于 pipeline2/3/4 输入）</td></tr>
+          <tr><td><code>{"image_base64": "data:image/png;base64,..."}</code></td><td>直接使用 base64 字符串</td></tr>
+        </tbody>
+      </table>
+      <p style="color: var(--g500); font-size: 14px;">pipeline1 的大图是<strong>输出</strong>，不是输入，因此参考配置中 <code>big_image</code> 均设为 <code>None</code>。</p>
+
+      <h3>3.5 新增枚举：DecorationPositionEnum <span class="chip ok" style="font-size:10px;">新增</span></h3>
+      <p>装饰位置目前使用裸 <code>str</code>（<code>"left"</code> / <code>"right"</code>），需新增枚举以保持一致：</p>
+      <pre><code># tire_ai_pattern/models/enums.py 新增
+
+class DecorationPositionEnum(str, Enum):
+    """装饰位置枚举"""
+    LEFT = "left"    # 左侧装饰
+    RIGHT = "right"  # 右侧装饰</code></pre>
+      <p style="color: var(--g500); font-size: 14px;"><strong>关联改动</strong>：<code>rule_models.py</code> 中 <code>DecorationItem.position</code> 字段类型需同步从 <code>str</code> 改为 <code>DecorationPositionEnum</code>。</p>
+    </section>
+
+    <!-- ========== 4. _builder.py 职责 ========== -->
+    <section>
+      <h2>4. _builder.py 职责</h2>
+      <hr class="rule">
+
+      <p>这是一个共享模块，供所有参考配置文件调用，唯一公开函数：</p>
+      <pre><code>def build_tire_struct(config: dict) -> TireStruct:</code></pre>
+
+      <h3>处理流程</h3>
+      <ol>
+        <li><strong>解析 small_images</strong>: <code>image_base64</code> → <code>base64_to_ndarray()</code> → 推断宽/高/通道/格式 → <code>SmallImage</code></li>
+        <li><strong>解析 rules_config</strong>: <code>{"rule": "rule1", ...}</code> → <code>get_rule("rule1")</code> → <code>Rule1Config(**rest)</code></li>
+        <li><strong>解析 big_image</strong>: <code>None</code> → 创建占位 BigImage；有值 → 构造 BigImage</li>
+        <li><strong>组装 TireStruct</strong>: 汇总所有解析结果</li>
+      </ol>
+
+      <div class="callout ok">
+        <strong>与现有代码的关系.</strong> <code>_builder.py</code> 本质上是将 <code>tests/integrations/test_pipline1.py</code> 中的 <code>tire_struct_from_input()</code>、<code>_small_image_from_input()</code>、<code>_rule_config_from_input()</code> 等函数提取为独立模块，并做了两个增强：<code>big_image</code> 支持 <code>None</code> → 自动创建占位 BigImage；合并为一个公开函数 <code>build_tire_struct()</code>。
+      </div>
+    </section>
+
+    <!-- ========== 5. 11 个参考配置详表 ========== -->
+    <section>
+      <h2>5. 11 个参考配置详表</h2>
+      <hr class="rule">
+
+      <h3>5.1 总览矩阵</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>文件名</th><th>RIB</th><th>对称规则</th><th>连续性规则</th><th>连续模式</th><th>预期方案</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1.1</td><td><code>ref_5rib_sym0_no_cont.py</code></td><td>5</td><td>rule1</td><td>—</td><td>—</td><td>Symmetry0</td></tr>
+          <tr><td>1.2</td><td><code>ref_5rib_sym1_no_cont.py</code></td><td>5</td><td>rule2</td><td>—</td><td>—</td><td>Symmetry1</td></tr>
+          <tr><td>1.3</td><td><code>ref_5rib_sym2_no_cont.py</code></td><td>5</td><td>rule3</td><td>—</td><td>—</td><td>Symmetry2</td></tr>
+          <tr><td>1.4</td><td><code>ref_5rib_sym0_cont1.py</code></td><td>5</td><td>rule1</td><td>rule12,16,17</td><td>continuity_1</td><td>Symmetry0 + Continuity1</td></tr>
+          <tr><td>1.5</td><td><code>ref_5rib_sym1_cont1.py</code></td><td>5</td><td>rule2</td><td>rule12,16,17</td><td>continuity_1</td><td>Symmetry1 + Continuity1</td></tr>
+          <tr><td>1.6</td><td><code>ref_5rib_sym2_cont2.py</code></td><td>5</td><td>rule3</td><td>rule12,16,17</td><td>continuity_2</td><td>Symmetry2 + Continuity2</td></tr>
+          <tr><td>1.7</td><td><code>ref_4rib_sym4_no_cont.py</code></td><td>4</td><td>rule1</td><td>—</td><td>—</td><td>Symmetry4</td></tr>
+          <tr><td>1.8</td><td><code>ref_4rib_sym4_sym5_no_cont.py</code></td><td>4</td><td>rule1, rule2</td><td>—</td><td>—</td><td>Symmetry4 或 5</td></tr>
+          <tr><td>1.9</td><td><code>ref_4rib_sym456_no_cont.py</code></td><td>4</td><td>rule1,2,3</td><td>—</td><td>—</td><td>Symmetry4/5/6</td></tr>
+          <tr><td>1.10</td><td><code>ref_4rib_sym456_cont3.py</code></td><td>4</td><td>rule1,2,3</td><td>rule12,16,17</td><td>continuity_3</td><td>Symmetry4/5/6 + Continuity3</td></tr>
+          <tr><td>1.11</td><td><code>ref_4rib_sym456_cont123_bad.py</code> <span class="chip err">反例</span></td><td>4</td><td>rule1,2,3</td><td>rule12,16,17</td><td>continuity_1,2,3</td><td><strong>反例</strong></td></tr>
+        </tbody>
+      </table>
+
+      <h3>5.2 统一默认参数</h3>
+
+      <h4>5-rib 小图清单（2 SIDE + 3 CENTER）</h4>
+      <pre><code>from pathlib import Path
+from tire_ai_pattern.models.enums import RegionEnum
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
+
+"small_images": [
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib1.png"), with_prefix=True), "region": RegionEnum.SIDE},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib2.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib3.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib4.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib5.png"), with_prefix=True), "region": RegionEnum.SIDE},
+],</code></pre>
+
+      <h4>5-rib RIB 尺寸（Rule100）</h4>
+      <table>
+        <thead><tr><th>RIB</th><th>num_pitchs</th><th>rib_width</th><th>rib_height</th></tr></thead>
+        <tbody>
+          <tr><td>rib1</td><td>5</td><td>400</td><td>640</td></tr>
+          <tr><td>rib2</td><td>5</td><td>200</td><td>640</td></tr>
+          <tr><td>rib3</td><td>5</td><td>200</td><td>640</td></tr>
+          <tr><td>rib4</td><td>5</td><td>200</td><td>640</td></tr>
+          <tr><td>rib5</td><td>5</td><td>400</td><td>640</td></tr>
+        </tbody>
+      </table>
+      <p style="color: var(--g500); font-size: 14px;">5-rib 主沟（Rule101）：4 个，各 <code>groove_width=20</code>, <code>groove_height=640</code></p>
+
+      <h4>4-rib 小图清单（2 SIDE + 2 CENTER）</h4>
+      <pre><code>"small_images": [
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib1.png"), with_prefix=True), "region": RegionEnum.SIDE},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib2.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib3.png"), with_prefix=True), "region": RegionEnum.CENTER},
+    {"image_base64": load_image_to_base64(Path("tests/datasets/stitching/rib4.png"), with_prefix=True), "region": RegionEnum.SIDE},
+],</code></pre>
+
+      <h4>4-rib RIB 尺寸（Rule100）</h4>
+      <table>
+        <thead><tr><th>RIB</th><th>num_pitchs</th><th>rib_width</th><th>rib_height</th></tr></thead>
+        <tbody>
+          <tr><td>rib1</td><td>5</td><td>400</td><td>640</td></tr>
+          <tr><td>rib2</td><td>5</td><td>200</td><td>640</td></tr>
+          <tr><td>rib3</td><td>5</td><td>200</td><td>640</td></tr>
+          <tr><td>rib4</td><td>5</td><td>400</td><td>640</td></tr>
+        </tbody>
+      </table>
+      <p style="color: var(--g500); font-size: 14px;">4-rib 主沟（Rule101）：3 个，各 <code>groove_width=20</code>, <code>groove_height=640</code></p>
+
+      <h4>所有配置共享装饰（Rule102）</h4>
+      <pre><code>from tire_ai_pattern.models.enums import DecorationPositionEnum
+
+"decorations": [
+    {"position": DecorationPositionEnum.LEFT, "decoration_width": 300, "decoration_height": 640, "decoration_opacity": 128},
+],</code></pre>
+    </section>
+
+    <!-- ========== 5.3 & 5.4 ========== -->
+    <section>
+      <h2>5.3 各配置的 rules_config 差异</h2>
+      <hr class="rule">
+
+      <h3>差值表</h3>
+      <table>
+        <thead>
+          <tr><th>配置</th><th>对称规则</th><th>continuity_mode_list (StitchingSchemeName)</th><th>rib_number</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1.1</td><td>rule1</td><td>—</td><td>5</td></tr>
+          <tr><td>1.2</td><td>rule2</td><td>—</td><td>5</td></tr>
+          <tr><td>1.3</td><td>rule3</td><td>—</td><td>5</td></tr>
+          <tr><td>1.4</td><td>rule1</td><td><code>[CONTINUITY_0, CONTINUITY_1]</code></td><td>5</td></tr>
+          <tr><td>1.5</td><td>rule2</td><td><code>[CONTINUITY_0, CONTINUITY_1]</code></td><td>5</td></tr>
+          <tr><td>1.6</td><td>rule3</td><td><code>[CONTINUITY_0, CONTINUITY_2]</code></td><td>5</td></tr>
+          <tr><td>1.7</td><td>rule1</td><td>—</td><td>4</td></tr>
+          <tr><td>1.8</td><td>rule1, rule2</td><td>—</td><td>4</td></tr>
+          <tr><td>1.9</td><td>rule1, rule2, rule3</td><td>—</td><td>4</td></tr>
+          <tr><td>1.10</td><td>rule1, rule2, rule3</td><td><code>[CONTINUITY_3]</code></td><td>4</td></tr>
+          <tr><td>1.11</td><td>rule1, rule2, rule3</td><td><code>[CONTINUITY_1, CONTINUITY_2, CONTINUITY_3]</code> (反例)</td><td>4</td></tr>
+        </tbody>
+      </table>
+
+      <details>
+        <summary>基础 rules_config 骨架（5-rib 无连续性变体）</summary>
+        <pre><code>[
+    # === 对称性规则（按需选择 1 个或多个）===
+    {"rule": "rule1", "description": "rib无对称", "max_score": 10},
+
+    # === 尺寸规则（必选）===
+    {"rule": "rule100", "rib_number": 5, "rib_sizes": [...5个RIB...]},
+    {"rule": "rule101", "groove_sizes": [...4个主沟...]},
+    {"rule": "rule102", "decorations": [...1个装饰...]},
+]</code></pre>
+      </details>
+
+      <details>
+        <summary>连续性规则组（有连续性时追加）</summary>
+        <pre><code>[
+    # === 对称性规则 ===
+    {"rule": "rule2", ...},
+
+    # === 连续性规则（这三个规则共同决定可选连续性模式）===
+    # 注意：continuity_mode_list 使用 StitchingSchemeName 枚举值
+    {
+        "rule": "rule12",
+        "max_score": 6,
+        "description": "两个RIB间横向钢片及横沟连续性占比是否满足要求",
+        "continuity_ratio_upper": 0.7,
+        "continuity_ratio_lower": 0.6,
+        "continuity_mode_list": [StitchingSchemeName.CONTINUITY_0, StitchingSchemeName.CONTINUITY_1],
+    },
+    {
+        "rule": "rule16",
+        "max_score": 4,
+        "description": "中心RIB上的横沟或横向钢片可任意组合连续性",
+        "continuity_mode_list": [StitchingSchemeName.CONTINUITY_0, StitchingSchemeName.CONTINUITY_1],
+    },
+    {
+        "rule": "rule17",
+        "max_score": 6,
+        "description": "边缘RIB上的横沟或横向钢片可任意组合连续性",
+        "continuity_mode_list": [StitchingSchemeName.CONTINUITY_0],
+    },
+
+    # === 尺寸规则 ===
+    {"rule": "rule100", "rib_number": 5, ...},
+    {"rule": "rule101", ...},
+    {"rule": "rule102", ...},
+]</code></pre>
+      </details>
+
+      <h3>5.4 反例 1.11 说明 <span class="chip err">反例</span></h3>
+      <div class="callout warn">
+        <strong>ref_4rib_sym456_cont123_bad.py</strong> 的 <code>continuity_mode_list</code> 包含了 <code>"continuity_1"</code> 和 <code>"continuity_2"</code>。
+        <ul style="margin-bottom:0;">
+          <li><code>continuity_1</code> / <code>continuity_2</code> 是 <strong>5-rib 的连续性模板</strong>（<code>Continuity1</code> / <code>Continuity2</code> 的 <code>rib_number=5</code>）</li>
+          <li>当 <code>Rule100Config.rib_number=4</code> 时，这些模板的 rib_number 不匹配，会被系统<strong>静默忽略</strong></li>
+          <li>实际可用的连续性只有 <code>continuity_3</code></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ========== 6. 文件清单 ========== -->
+    <section>
+      <h2>6. 文件清单</h2>
+      <hr class="rule">
+      <h3>6.1 新增文件</h3>
+      <pre><code>tire_ai_pattern/config/
+├── _builder.py                              # [新增] 共享 dict→TireStruct 构建器
+├── ref_5rib_sym0_no_cont.py                 # [新增] 1.1
+├── ref_5rib_sym1_no_cont.py                 # [新增] 1.2
+├── ref_5rib_sym2_no_cont.py                 # [新增] 1.3
+├── ref_5rib_sym0_cont1.py                   # [新增] 1.4
+├── ref_5rib_sym1_cont1.py                   # [新增] 1.5
+├── ref_5rib_sym2_cont2.py                   # [新增] 1.6
+├── ref_4rib_sym4_no_cont.py                 # [新增] 1.7
+├── ref_4rib_sym4_sym5_no_cont.py            # [新增] 1.8
+├── ref_4rib_sym456_no_cont.py               # [新增] 1.9
+├── ref_4rib_sym456_cont3.py                 # [新增] 1.10
+└── ref_4rib_sym456_cont123_bad.py           # [新增] 1.11 反例</code></pre>
+
+      <h3>6.2 修改现有文件</h3>
+      <table>
+        <thead><tr><th>文件</th><th>改动</th></tr></thead>
+        <tbody>
+          <tr><td><code>tire_ai_pattern/models/enums.py</code></td><td>新增 <code>DecorationPositionEnum</code></td></tr>
+          <tr><td><code>tire_ai_pattern/models/rule_models.py</code></td><td><code>DecorationItem.position</code> 类型从 <code>str</code> 改为 <code>DecorationPositionEnum</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========== 7. 验收标准 ========== -->
+    <section>
+      <h2>7. 验收标准</h2>
+      <hr class="rule">
+
+      <h3>7.1 功能验收</h3>
+      <table>
+        <thead><tr><th>#</th><th>验收项</th><th>验证方式</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>每个配置文件的 <code>tire_struct</code> 可成功构造</td><td>在测试中 <code>from tire_ai_pattern.config.xxx import tire_struct</code></td></tr>
+          <tr><td>2</td><td><code>tire_struct</code> 可直接传给 <code>run_pipeline1()</code> 运行</td><td>1.1-1.10 通过 pipeline1 完整执行</td></tr>
+          <tr><td>3</td><td>1.11 不导致 pipeline1 崩溃</td><td>运行不抛异常，continuity_1/2 被静默忽略</td></tr>
+          <tr><td>4</td><td>预期方案名与实际 pipeline1 输出一致</td><td>检查 <code>tire_struct.big_image.lineage...name</code></td></tr>
+          <tr><td>5</td><td><code>CONFIG</code> 是 dict，值只包含基础类型、枚举值和函数调用结果，不含 Pydantic 模型对象</td><td><code>isinstance(CONFIG, dict)</code> 为 True，遍历所有叶子节点确认无 Pydantic 实例</td></tr>
+          <tr><td>6</td><td>用户修改后重建可得更新后的 <code>TireStruct</code></td><td>修改 image_base64 源 / rib_width，验证 tire_struct 反映变更</td></tr>
+        </tbody>
+      </table>
+
+      <h3>7.2 文档验收</h3>
+      <table>
+        <thead><tr><th>#</th><th>验收项</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>每个配置文件顶部有准确的 docstring（方案名、RIB 数）</td></tr>
+          <tr><td>2</td><td><code>CONFIG</code> 上方有中文注释说明各字段含义</td></tr>
+          <tr><td>3</td><td>自动生成区用注释分隔（<code># ==========【自动生成区】==========</code>）</td></tr>
+          <tr><td>4</td><td>反例文件顶部有"反例"字样和说明</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ========== 8. 附录 ========== -->
+    <section>
+      <h2>8. 附录</h2>
+      <hr class="rule">
+
+      <h3>8.1 对称性模板匹配速查</h3>
+      <table>
+        <thead><tr><th>方案名</th><th>模板类</th><th>RIB</th><th>激活规则</th><th>描述</th></tr></thead>
+        <tbody>
+          <tr><td>symmetry_0</td><td>Symmetry0</td><td>5</td><td>rule1</td><td>无对称</td></tr>
+          <tr><td>symmetry_1</td><td>Symmetry1</td><td>5</td><td>rule2</td><td>中心旋转180°</td></tr>
+          <tr><td>symmetry_2</td><td>Symmetry2</td><td>5</td><td>rule3</td><td>左右镜像</td></tr>
+          <tr><td>symmetry_4</td><td>Symmetry4</td><td>4</td><td>rule1</td><td>无对称</td></tr>
+          <tr><td>symmetry_5</td><td>Symmetry5</td><td>4</td><td>rule2</td><td>中心旋转180°</td></tr>
+          <tr><td>symmetry_6</td><td>Symmetry6</td><td>4</td><td>rule3</td><td>左右镜像</td></tr>
+        </tbody>
+      </table>
+      <p style="color: var(--g500); font-size: 14px;">rule1 同时激活 symmetry_0 和 symmetry_4，实际由 <code>Rule100Config.rib_number</code> 决定匹配哪个。rule2/rule3 同理。</p>
+
+      <h3>8.2 连续性模板匹配速查</h3>
+      <table>
+        <thead><tr><th>方案名</th><th>模板类</th><th>RIB</th><th>continuity_mode_list 值 (StitchingSchemeName)</th></tr></thead>
+        <tbody>
+          <tr><td>continuity_0</td><td>Continuity0</td><td>5</td><td><code>CONTINUITY_0</code></td></tr>
+          <tr><td>continuity_1</td><td>Continuity1</td><td>5</td><td><code>CONTINUITY_1</code></td></tr>
+          <tr><td>continuity_2</td><td>Continuity2</td><td>5</td><td><code>CONTINUITY_2</code></td></tr>
+          <tr><td>continuity_3</td><td>Continuity3</td><td>4</td><td><code>CONTINUITY_3</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>8.3 完整的规则配置字段速查</h3>
+      <table>
+        <thead><tr><th>规则</th><th>用途</th><th>特有字段</th></tr></thead>
+        <tbody>
+          <tr><td>rule1</td><td>无对称</td><td><code>description</code>, <code>max_score</code></td></tr>
+          <tr><td>rule2</td><td>中心对称</td><td><code>description</code>, <code>max_score</code></td></tr>
+          <tr><td>rule3</td><td>左右对称</td><td><code>description</code>, <code>max_score</code></td></tr>
+          <tr><td>rule12</td><td>连续性占比</td><td><code>max_score</code>, <code>continuity_ratio_upper</code>, <code>continuity_ratio_lower</code>, <code>continuity_mode_list</code></td></tr>
+          <tr><td>rule16</td><td>中心RIB连续性</td><td><code>max_score</code>, <code>continuity_mode_list</code></td></tr>
+          <tr><td>rule17</td><td>边缘RIB连续性</td><td><code>max_score</code>, <code>continuity_mode_list</code></td></tr>
+          <tr><td>rule100</td><td>RIB尺寸</td><td><code>rib_number</code>, <code>rib_sizes</code></td></tr>
+          <tr><td>rule101</td><td>主沟尺寸</td><td><code>groove_sizes</code></td></tr>
+          <tr><td>rule102</td><td>装饰边框</td><td><code>decorations</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>8.4 CONFIG 中使用的枚举速查</h3>
+      <p>所有 CONFIG 文件统一从 <code>tire_ai_pattern.models.enums</code> 导入枚举：</p>
+      <pre><code>from tire_ai_pattern.models.enums import RegionEnum, StitchingSchemeName, DecorationPositionEnum</code></pre>
+      <table>
+        <thead><tr><th>枚举</th><th>CONFIG 中的使用位置</th><th>有效值</th></tr></thead>
+        <tbody>
+          <tr><td><code>RegionEnum</code></td><td><code>small_images[].region</code></td><td><code>SIDE</code>, <code>CENTER</code></td></tr>
+          <tr><td><code>StitchingSchemeName</code></td><td><code>rules_config</code> 中 <code>continuity_mode_list</code> 的子元素</td><td><code>CONTINUITY_0</code> ~ <code>CONTINUITY_3</code>, <code>SYMMETRY_0</code> ~ <code>SYMMETRY_6</code></td></tr>
+          <tr><td><code>DecorationPositionEnum</code></td><td><code>rules_config</code> 中 <code>decorations[].position</code></td><td><code>LEFT</code>, <code>RIGHT</code></td></tr>
+        </tbody>
+      </table>
+      <p style="color: var(--g500); font-size: 14px;"><code>StitchingSchemeName</code> 继承 <code>str, Enum</code>，因此 <code>StitchingSchemeName.CONTINUITY_0</code> 的字符串值为 <code>"continuity_0"</code>，与 Pydantic 模型中 <code>List[str]</code> 类型兼容。</p>
+    </section>
+
+    <!-- ========== 9. 待确认事项 ========== -->
+    <section>
+      <h2>9. 待确认事项</h2>
+      <hr class="rule">
+
+      <ol>
+        <li><strong>反例 1.11 的 e2e 测试</strong>：是否需要独立的测试用例来验证"连续性模式被静默忽略"的降级行为？</li>
+        <li><strong><code>__init__.py</code> 聚合导出</strong>：是否需要在 <code>tire_ai_pattern/config/__init__.py</code> 中统一 <code>import</code> 所有参考配置，方便一次性导入？</li>
+      </ol>
+    </section>
+
+    <footer>
+      Generated with the html-over-markdown skill.
+    </footer>
+
+  </div>
+</body>
+</html>

@@ -246,7 +246,7 @@
       <div class="grid">
         <article class="card">
           <h3>技术选型决策 <span class="chip">cv2</span></h3>
-          <p style="color: var(--g500);">统一使用OpenCV (cv2)，项目已有的<code>src/utils/image_utils.py</code>完全基于cv2，所有RIB原子操作均可通过cv2实现。</p>
+          <p style="color: var(--g500);">统一使用OpenCV (cv2)，项目已有的<code>tire_ai_pattern/utils/image_utils.py</code>完全基于cv2，所有RIB原子操作均可通过cv2实现。</p>
         </article>
         <article class="card">
           <h3>数据格式 <span class="chip">np.ndarray</span></h3>
@@ -265,15 +265,15 @@
 
       <div class="grid">
         <article class="card">
-          <h3>入口层 <span class="chip">src/processing/</span></h3>
+          <h3>入口层 <span class="chip">tire_ai_pattern/processing/</span></h3>
           <p style="color: var(--g500);">业务逻辑层，处理业务数据类，协调处理流程。</p>
         </article>
         <article class="card">
-          <h3>核心算法层 <span class="chip">src/core/</span></h3>
+          <h3>核心算法层 <span class="chip">tire_ai_pattern/core/</span></h3>
           <p style="color: var(--g500);">纯算法层，实现纯粹的图像操作算法，输入输出为基本类型。</p>
         </article>
         <article class="card">
-          <h3>工具层 <span class="chip">src/utils/</span></h3>
+          <h3>工具层 <span class="chip">tire_ai_pattern/utils/</span></h3>
           <p style="color: var(--g500);">提供基础图像转换和处理工具（已存在）。</p>
         </article>
       </div>
@@ -289,17 +289,17 @@
         <tbody>
           <tr>
             <td>入口函数</td>
-            <td><code>src/processing/image_processing.py</code></td>
+            <td><code>tire_ai_pattern/processing/image_processing.py</code></td>
             <td>对外暴露的接口函数</td>
           </tr>
           <tr>
             <td>业务处理函数</td>
-            <td><code>src/processing/image_processing.py</code></td>
+            <td><code>tire_ai_pattern/processing/image_processing.py</code></td>
             <td>处理业务数据类，协调处理流程</td>
           </tr>
           <tr>
             <td>核心算法</td>
-            <td><code>src/core/image_operation.py</code></td>
+            <td><code>tire_ai_pattern/core/image_operation.py</code></td>
             <td>实现纯粹的图像操作算法</td>
           </tr>
           <tr>
@@ -439,11 +439,11 @@
 
       <div class="callout">
         <strong>层级调用关系.</strong>
-        <pre><code>src/processing/image_processing.py (入口和业务逻辑)
+        <pre><code>tire_ai_pattern/processing/image_processing.py (入口和业务逻辑)
     ↓ 调用
-src/core/image_operation.py (纯算法实现)
+tire_ai_pattern/core/image_operation.py (纯算法实现)
     ↓ 调用
-src/utils/image_utils.py (基础工具 - 已存在)
+tire_ai_pattern/utils/image_utils.py (基础工具 - 已存在)
     ↓ 依赖
 OpenCV (cv2) - 图像处理库
 numpy - 数组处理库</code></pre>
@@ -452,7 +452,7 @@ numpy - 数组处理库</code></pre>
       <details>
         <summary>详细调用关系图</summary>
         <pre><code>┌─────────────────────────────────────────────────────────────────┐
-│                  src/processing/image_processing.py             │
+│                  tire_ai_pattern/processing/image_processing.py             │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐  │
 │  │ generate_large_image_from_lineage()                     │  │
@@ -481,7 +481,7 @@ numpy - 数组处理库</code></pre>
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    src/core/image_operation.py                  │
+│                    tire_ai_pattern/core/image_operation.py                  │
 │                                                                 │
 │  ┌─────────────────────────────────────────────────────────┐  │
 │  │ apply_rib_operations_sequence()                         │  │
@@ -505,7 +505,7 @@ numpy - 数组处理库</code></pre>
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    src/utils/image_utils.py                     │
+│                    tire_ai_pattern/utils/image_utils.py                     │
 │                                                                 │
 │  ┌─────────────────────┐  ┌─────────────────────┐          │
 │  │ base64_to_ndarray   │  │ ndarray_to_base64   │          │
@@ -523,7 +523,7 @@ numpy - 数组处理库</code></pre>
       <h2>5. 测试策略</h2>
       <hr class="rule">
 
-      <h3>核心算法测试（src/core/）</h3>
+      <h3>核心算法测试（tire_ai_pattern/core/）</h3>
       <ul>
         <li><strong>单个操作测试</strong>: 测试每个RIB原子操作的正确性</li>
         <li><strong>操作序列测试</strong>: 测试组合操作如<code>("resize_horizontal_2x", "left")</code></li>
@@ -531,7 +531,7 @@ numpy - 数组处理库</code></pre>
         <li><strong>性能测试</strong>: 验证大图像处理的内存使用</li>
       </ul>
 
-      <h3>业务逻辑测试（src/processing/）</h3>
+      <h3>业务逻辑测试（tire_ai_pattern/processing/）</h3>
       <ul>
         <li><strong>RIB预处理</strong>: 测试各种操作组合和跳过逻辑</li>
         <li><strong>主沟预处理</strong>: 测试resize功能</li>
@@ -551,14 +551,14 @@ numpy - 数组处理库</code></pre>
       <hr class="rule">
 
       <ol>
-        <li>创建<code>src/core/image_operation.py</code>文件，实现纯算法函数
+        <li>创建<code>tire_ai_pattern/core/image_operation.py</code>文件，实现纯算法函数
           <ul>
             <li>实现<code>apply_single_rib_operation</code>（单个操作执行器）</li>
             <li>实现<code>apply_rib_operations_sequence</code>（操作序列执行器）</li>
             <li>实现其他辅助算法函数</li>
           </ul>
         </li>
-        <li>创建<code>src/processing/image_processing.py</code>文件，实现业务处理函数</li>
+        <li>创建<code>tire_ai_pattern/processing/image_processing.py</code>文件，实现业务处理函数</li>
         <li>实现入口函数<code>generate_large_image_from_lineage</code></li>
         <li>编写核心算法单元测试</li>
         <li>编写业务逻辑单元测试</li>

@@ -2,7 +2,7 @@
 
 ## 1. 目标
 
-为 `src/utils/logger.py` 提供完整的测试覆盖，验证：
+为 `tire_ai_pattern/utils/logger.py` 提供完整的测试覆盖，验证：
 - 日志记录器的正确配置和创建
 - 文件和控制台输出功能
 - 日志级别控制
@@ -21,7 +21,7 @@ import logging
 import tempfile
 import os
 from pathlib import Path
-from src.utils.logger import setup_logger, get_logger, LoggerMixin, default_logger
+from tire_ai_pattern.utils.logger import setup_logger, get_logger, LoggerMixin, default_logger
 ```
 
 ## 4. 测试数据

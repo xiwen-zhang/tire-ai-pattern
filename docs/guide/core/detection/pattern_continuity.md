@@ -1,8 +1,8 @@
 # 图案连续性检测算法
 
-`src.core.detection.pattern_continuity` 提供 Rule 6_1 使用的底层图像检测能力，用于判断一张轮胎小图的上边缘纹理与下边缘纹理是否能够连续对齐。
+`tire_ai_pattern.core.detection.pattern_continuity` 提供 Rule 6_1 使用的底层图像检测能力，用于判断一张轮胎小图的上边缘纹理与下边缘纹理是否能够连续对齐。
 
-该模块属于 `src.core` 算法层，只负责从灰度图中提取边缘端点并判断连续性。它不负责评分、不删除图片、不保存可视化文件，也不处理任务目录、`task_id` 或 pipeline 调度。
+该模块属于 `tire_ai_pattern.core` 算法层，只负责从灰度图中提取边缘端点并判断连续性。它不负责评分、不删除图片、不保存可视化文件，也不处理任务目录、`task_id` 或 pipeline 调度。
 
 ## 适用场景
 
@@ -27,7 +27,7 @@
 import cv2
 import numpy as np
 
-from src.core.detection.pattern_continuity import detect_pattern_continuity
+from tire_ai_pattern.core.detection.pattern_continuity import detect_pattern_continuity
 
 buf = np.fromfile("small_tire.png", dtype=np.uint8)
 image = cv2.imdecode(buf, cv2.IMREAD_GRAYSCALE)
@@ -343,7 +343,7 @@ for image_path in Path("tests/datasets/test_pattern_continuity/center_inf").glob
 - 输入只接受单张灰度图和少量影响检测结果的参数。
 - 输出只包含连续性结论和可选 debug 图。
 - 不返回内部端点明细，避免规则层依赖算法实现细节。
-- 不产生评分，评分应由 `src.rules` 层完成。
+- 不产生评分，评分应由 `tire_ai_pattern.rules` 层完成。
 - 不保存图片，文件路径和结果目录应由调用方管理。
 
 这种设计可以让算法层稳定复用，同时减少与规则层、节点层和 API 层的耦合。

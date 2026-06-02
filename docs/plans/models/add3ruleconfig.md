@@ -10,7 +10,7 @@
 
 ---
 
-## 步骤 1：调整基类 — `src/models/rule_models.py`
+## 步骤 1：调整基类 — `tire_ai_pattern/models/rule_models.py`
 
 ### 1.1 更新 `BaseRuleConfig.max_score`
 
@@ -48,7 +48,7 @@ class BaseRuleScore(BaseModel):
 
 ---
 
-## 步骤 2：新增子模型 — `src/models/rule_models.py`
+## 步骤 2：新增子模型 — `tire_ai_pattern/models/rule_models.py`
 
 在文件末尾（第十八部分之前或之后的合适位置）新增三个 Item 类：
 
@@ -81,7 +81,7 @@ class DecorationItem(BaseModel):
 
 ---
 
-## 步骤 3：新增 Rule100/101/102 — `src/models/rule_models.py`
+## 步骤 3：新增 Rule100/101/102 — `tire_ai_pattern/models/rule_models.py`
 
 在同一区块继续新增：
 
@@ -152,18 +152,18 @@ class Rule102Score(BaseRuleScore):
 
 ## 步骤 4：新建 Executor 文件
 
-### 4.1 `src/rules/executors/rule100.py`
+### 4.1 `tire_ai_pattern/rules/executors/rule100.py`
 
 ```python
 from __future__ import annotations
 
-from src.models.image_models import BaseImage
-from src.models.rule_models import (
+from tire_ai_pattern.models.image_models import BaseImage
+from tire_ai_pattern.models.rule_models import (
     BaseRuleFeature, BaseRuleScore,
     Rule100Config, Rule100Feature, Rule100Score,
 )
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -185,18 +185,18 @@ class Rule100Executor(RuleExecutor):
         return Rule100Score(score=None)
 ```
 
-### 4.2 `src/rules/executors/rule101.py`
+### 4.2 `tire_ai_pattern/rules/executors/rule101.py`
 
 ```python
 from __future__ import annotations
 
-from src.models.image_models import BaseImage
-from src.models.rule_models import (
+from tire_ai_pattern.models.image_models import BaseImage
+from tire_ai_pattern.models.rule_models import (
     BaseRuleFeature, BaseRuleScore,
     Rule101Config, Rule101Feature, Rule101Score,
 )
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -218,18 +218,18 @@ class Rule101Executor(RuleExecutor):
         return Rule101Score(score=None)
 ```
 
-### 4.3 `src/rules/executors/rule102.py`
+### 4.3 `tire_ai_pattern/rules/executors/rule102.py`
 
 ```python
 from __future__ import annotations
 
-from src.models.image_models import BaseImage
-from src.models.rule_models import (
+from tire_ai_pattern.models.image_models import BaseImage
+from tire_ai_pattern.models.rule_models import (
     BaseRuleFeature, BaseRuleScore,
     Rule102Config, Rule102Feature, Rule102Score,
 )
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -253,14 +253,14 @@ class Rule102Executor(RuleExecutor):
 
 ---
 
-## 步骤 5：注册 Executor — `src/rules/executors/__init__.py`
+## 步骤 5：注册 Executor — `tire_ai_pattern/rules/executors/__init__.py`
 
 ### 5.1 在文件顶部导入区域追加：
 
 ```python
-from src.rules.executors.rule100 import Rule100Executor
-from src.rules.executors.rule101 import Rule101Executor
-from src.rules.executors.rule102 import Rule102Executor
+from tire_ai_pattern.rules.executors.rule100 import Rule100Executor
+from tire_ai_pattern.rules.executors.rule101 import Rule101Executor
+from tire_ai_pattern.rules.executors.rule102 import Rule102Executor
 ```
 
 ### 5.2 在 `__all__` 列表末尾追加：
@@ -273,9 +273,9 @@ from src.rules.executors.rule102 import Rule102Executor
 
 ---
 
-## 步骤 6：节点层注册 — `src/nodes/base.py`
+## 步骤 6：节点层注册 — `tire_ai_pattern/nodes/base.py`
 
-### 6.1 在 `from src.models.rule_models import (...)` 导入块中追加：
+### 6.1 在 `from tire_ai_pattern.models.rule_models import (...)` 导入块中追加：
 
 ```python
     Rule100Config,
@@ -293,7 +293,7 @@ from src.rules.executors.rule102 import Rule102Executor
 
 ---
 
-## 步骤 7：修复 `_recalculate_total` — `src/models/image_models.py`
+## 步骤 7：修复 `_recalculate_total` — `tire_ai_pattern/models/image_models.py`
 
 找到 `ImageEvaluation._recalculate_total` 方法（约第 142 行），修改过滤条件：
 
@@ -307,7 +307,7 @@ from src.rules.executors.rule102 import Rule102Executor
 
 ---
 
-## 步骤 8：更新文件头部注释 — `src/models/rule_models.py`
+## 步骤 8：更新文件头部注释 — `tire_ai_pattern/models/rule_models.py`
 
 在文件顶部摘要注释中追加新规则编号说明：
 
@@ -325,17 +325,17 @@ from src.rules.executors.rule102 import Rule102Executor
 
 | 序号 | 文件 | 操作 | 说明 |
 |---|---|---|---|
-| 1 | `src/models/rule_models.py` | 修改 | `BaseRuleConfig.max_score` → `Optional[int] = None` |
-| 2 | `src/models/rule_models.py` | 修改 | `BaseRuleScore.score` → `Optional[int] = None` |
-| 3 | `src/models/rule_models.py` | 新增 | `RibSizeItem` / `GrooveSizeItem` / `DecorationItem` |
-| 4 | `src/models/rule_models.py` | 新增 | `Rule100/101/102 Config/Feature/Score`（共 9 个类） |
-| 5 | `src/models/rule_models.py` | 修改 | 文件头部注释追加新规则摘要 |
-| 6 | `src/models/image_models.py` | 修改 | `_recalculate_total()` 增加 `score.score is not None` |
-| 7 | `src/rules/executors/rule100.py` | 新建 | `Rule100Executor` |
-| 8 | `src/rules/executors/rule101.py` | 新建 | `Rule101Executor` |
-| 9 | `src/rules/executors/rule102.py` | 新建 | `Rule102Executor` |
-| 10 | `src/rules/executors/__init__.py` | 修改 | 导入并导出 3 个新 Executor |
-| 11 | `src/nodes/base.py` | 修改 | 导入 + `STITCH_SCHEME_GENERATOR_CONFIGS` 追加 |
+| 1 | `tire_ai_pattern/models/rule_models.py` | 修改 | `BaseRuleConfig.max_score` → `Optional[int] = None` |
+| 2 | `tire_ai_pattern/models/rule_models.py` | 修改 | `BaseRuleScore.score` → `Optional[int] = None` |
+| 3 | `tire_ai_pattern/models/rule_models.py` | 新增 | `RibSizeItem` / `GrooveSizeItem` / `DecorationItem` |
+| 4 | `tire_ai_pattern/models/rule_models.py` | 新增 | `Rule100/101/102 Config/Feature/Score`（共 9 个类） |
+| 5 | `tire_ai_pattern/models/rule_models.py` | 修改 | 文件头部注释追加新规则摘要 |
+| 6 | `tire_ai_pattern/models/image_models.py` | 修改 | `_recalculate_total()` 增加 `score.score is not None` |
+| 7 | `tire_ai_pattern/rules/executors/rule100.py` | 新建 | `Rule100Executor` |
+| 8 | `tire_ai_pattern/rules/executors/rule101.py` | 新建 | `Rule101Executor` |
+| 9 | `tire_ai_pattern/rules/executors/rule102.py` | 新建 | `Rule102Executor` |
+| 10 | `tire_ai_pattern/rules/executors/__init__.py` | 修改 | 导入并导出 3 个新 Executor |
+| 11 | `tire_ai_pattern/nodes/base.py` | 修改 | 导入 + `STITCH_SCHEME_GENERATOR_CONFIGS` 追加 |
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## 1. 概述
 
-`src/utils/logger.py` 提供了项目标准化的日志系统，包含以下核心功能：
+`tire_ai_pattern/utils/logger.py` 提供了项目标准化的日志系统，包含以下核心功能：
 - 配置化的日志记录器创建
 - 文件和控制台双重输出支持
 - 日志级别控制（DEBUG, INFO, WARNING, ERROR, CRITICAL）
@@ -16,7 +16,7 @@
 ```python
 setup_logger(
     name: str = "giti_tire",
-    level: str = "INFO", 
+    level: str = "DEBUG", 
     log_file: Optional[str] = None,
     console_output: bool = True
 ) -> logging.Logger
@@ -30,7 +30,7 @@ setup_logger(
 
 **使用示例**：
 ```python
-from src.utils.logger import setup_logger
+from tire_ai_pattern.utils.logger import setup_logger
 
 # 基本使用
 logger = setup_logger()
@@ -58,7 +58,7 @@ get_logger(name: str = "giti_tire") -> logging.Logger
 
 **使用示例**：
 ```python
-from src.utils.logger import get_logger
+from tire_ai_pattern.utils.logger import get_logger
 
 logger = get_logger("my_module")
 logger.info("This is an info message")
@@ -70,7 +70,7 @@ logger.info("This is an info message")
 
 **使用方式**：
 ```python
-from src.utils.logger import LoggerMixin
+from tire_ai_pattern.utils.logger import LoggerMixin
 
 class MyClass(LoggerMixin):
     def do_something(self):
@@ -87,7 +87,7 @@ class MyClass(LoggerMixin):
 模块在导入时自动创建一个名为 `"tire-ai-pattern"` 的默认日志记录器：
 
 ```python
-from src.utils.logger import default_logger
+from tire_ai_pattern.utils.logger import default_logger
 
 default_logger.info("Using default logger")
 ```
@@ -99,7 +99,7 @@ default_logger.info("Using default logger")
 在应用主入口配置全局日志：
 
 ```python
-from src.utils.logger import setup_logger
+from tire_ai_pattern.utils.logger import setup_logger
 
 # 配置全局日志
 logger = setup_logger(
@@ -116,8 +116,8 @@ logger.info("Application started")
 在各个模块中获取专用日志记录器：
 
 ```python
-# src/api/generation.py
-from src.utils.logger import get_logger
+# tire_ai_pattern/api/generation.py
+from tire_ai_pattern.utils.logger import get_logger
 
 logger = get_logger(__name__)
 
@@ -132,8 +132,8 @@ def generate_image():
 在类中继承 `LoggerMixin`：
 
 ```python
-# src/core/processor.py  
-from src.utils.logger import LoggerMixin
+# tire_ai_pattern/core/processor.py  
+from tire_ai_pattern.utils.logger import LoggerMixin
 
 class ImageProcessor(LoggerMixin):
     def process(self, image_data):
@@ -153,8 +153,8 @@ class ImageProcessor(LoggerMixin):
 结合异常处理使用日志：
 
 ```python
-from src.utils.logger import get_logger
-from src.common.exceptions import RuntimeProcessError
+from tire_ai_pattern.utils.logger import get_logger
+from tire_ai_pattern.common.exceptions import RuntimeProcessError
 
 logger = get_logger(__name__)
 

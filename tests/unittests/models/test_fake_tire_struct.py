@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from src.models.fake_tire_struct import FakeTireStruct
+from tire_ai_pattern.models.fake_tire_struct import FakeTireStruct
 
 
 def create_valid_input() -> dict:

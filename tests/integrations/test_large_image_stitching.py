@@ -12,12 +12,12 @@ import cv2
 import numpy as np
 import pytest
 
-from src.models.enums import (
+from tire_ai_pattern.models.enums import (
     RibOperation,
     StitchingSchemeName,
 )
-from src.models.image_models import ImageLineage
-from src.models.scheme_models import (
+from tire_ai_pattern.models.image_models import ImageLineage
+from tire_ai_pattern.models.scheme_models import (
     DecorationImpl,
     DecorationScheme,
     DecorationSchemeAbstract,
@@ -28,7 +28,7 @@ from src.models.scheme_models import (
     StitchingScheme,
     StitchingSchemeAbstract,
 )
-from src.processing.image_stiching import generate_large_image_from_lineage
+from tire_ai_pattern.processing.image_stiching import generate_large_image_from_lineage
 
 
 DATASET_DIR = Path("tests/datasets/stitching")
@@ -72,13 +72,12 @@ def _build_lineage_with_black_decoration() -> ImageLineage:
         rib_path = DATASET_DIR / f"rib{i}.png"
         rib_img = cv2.imread(str(rib_path))
         assert rib_img is not None, f"无法加载 {rib_path}"
-        resized = _resize_image(rib_img, config["width"], config["height"])
 
         rib_impl = RibSchemeImpl(
             rib_source=config["source"],
             rib_operation=(RibOperation.NONE,),
             rib_name=f"rib{i}",
-            before_image=_ndarray_to_base64(resized),
+            before_image=_ndarray_to_base64(rib_img),
             num_pitchs=5,
             rib_height=config["height"],
             rib_width=config["width"],

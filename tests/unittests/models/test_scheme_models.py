@@ -1,6 +1,6 @@
 import pytest
-from src.models.scheme_models import RibTemplate, Symmetry0, RibSchemeImpl, DecorationImpl
-from src.models.enums import RibOperation
+from tire_ai_pattern.models.scheme_models import RibTemplate, Symmetry0, RibSchemeImpl, DecorationImpl
+from tire_ai_pattern.models.enums import RibOperation
 
 
 # ===================== 模板类 frozen 测试 =====================

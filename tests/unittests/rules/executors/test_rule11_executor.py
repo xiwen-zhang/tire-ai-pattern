@@ -6,12 +6,12 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from src.common.exceptions import InputDataError, InputTypeError
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, SourceTypeEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
-from src.models.rule_models import Rule6Feature, Rule11Config, Rule11Feature, Rule11Score
-from src.rules.executors.rule11 import Rule11Executor
-from src.utils.image_utils import load_image_to_base64
+from tire_ai_pattern.common.exceptions import InputDataError, InputTypeError
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
+from tire_ai_pattern.models.rule_models import Rule6Feature, Rule11Config, Rule11Feature, Rule11Score
+from tire_ai_pattern.rules.executors.rule11 import Rule11Executor
+from tire_ai_pattern.utils.image_utils import load_image_to_base64
 
 
 IMAGE_SIZE = 128
@@ -98,8 +98,8 @@ def test_exec_feature_converts_detector_result_to_feature(monkeypatch):
         calls["detector"].append({"received_decoded_image": image_array is decoded_image, **kwargs})
         return 2, [39.5, 85.5], [4.0, 4.0], None, None
 
-    monkeypatch.setattr("src.rules.executors.rule11.base64_to_ndarray", fake_base64_to_ndarray)
-    monkeypatch.setattr("src.rules.executors.rule11.detect_longitudinal_grooves", fake_detect_longitudinal_grooves)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule11.base64_to_ndarray", fake_base64_to_ndarray)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule11.detect_longitudinal_grooves", fake_detect_longitudinal_grooves)
     small_image = make_small_image(RegionEnum.CENTER)
 
     feature = Rule11Executor().exec_feature(small_image, make_rule11_config())
@@ -139,8 +139,8 @@ def test_exec_feature_uses_detector_defaults(monkeypatch):
         calls["detector"].append({"shape": image_array.shape, **kwargs})
         return 7, [], [], None, None
 
-    monkeypatch.setattr("src.rules.executors.rule11.base64_to_ndarray", fake_base64_to_ndarray)
-    monkeypatch.setattr("src.rules.executors.rule11.detect_longitudinal_grooves", fake_detect_longitudinal_grooves)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule11.base64_to_ndarray", fake_base64_to_ndarray)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule11.detect_longitudinal_grooves", fake_detect_longitudinal_grooves)
     small_image = make_small_image(RegionEnum.SIDE)
     config = make_rule11_config(
         groove_width=5.0,
@@ -187,8 +187,8 @@ def test_exec_feature_passes_debug_and_returns_visualization(monkeypatch):
         calls["detector"].append({"received_decoded_image": image_array is decoded_image, **kwargs})
         return 1, [64.0], [4.0], None, debug_image
 
-    monkeypatch.setattr("src.rules.executors.rule11.base64_to_ndarray", fake_base64_to_ndarray)
-    monkeypatch.setattr("src.rules.executors.rule11.detect_longitudinal_grooves", fake_detect_longitudinal_grooves)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule11.base64_to_ndarray", fake_base64_to_ndarray)
+    monkeypatch.setattr("tire_ai_pattern.rules.executors.rule11.detect_longitudinal_grooves", fake_detect_longitudinal_grooves)
 
     feature = Rule11Executor().exec_feature(make_small_image(RegionEnum.CENTER), make_rule11_config(), is_debug=True)
 
