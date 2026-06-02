@@ -91,9 +91,9 @@ def _base64_to_ndarray(image_base64: str) -> np.ndarray:
 ### 2.2 SmallImage 构建
 
 ```python
-from src.models.image_models import SmallImage, ImageBiz, ImageEvaluation, ImageMeta, RuleEvaluation
-from src.models.enums import RegionEnum, ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
-from src.models.rule_models import Rule1Config, Rule1Score
+from tire_ai_pattern.models.image_models import SmallImage, ImageBiz, ImageEvaluation, ImageMeta, RuleEvaluation
+from tire_ai_pattern.models.enums import RegionEnum, ImageFormatEnum, ImageModeEnum, LevelEnum, SourceTypeEnum
+from tire_ai_pattern.models.rule_models import Rule1Config, Rule1Score
 
 def make_real_small_image(
     region: RegionEnum,
@@ -140,7 +140,7 @@ def make_real_small_image(
 ### 2.3 BigImage 占位
 
 ```python
-from src.models.image_models import BigImage
+from tire_ai_pattern.models.image_models import BigImage
 
 def make_big_image_placeholder() -> BigImage:
     """构建占位 BigImage，image_base64 无实际意义，由 Node2/Node3 后续更新。"""
@@ -165,7 +165,7 @@ def make_big_image_placeholder() -> BigImage:
 ### 3.1 用例 1 配置（匹配 test_stitch_scheme_generator.py 模式）
 
 ```python
-from src.models.rule_models import (
+from tire_ai_pattern.models.rule_models import (
     Rule1Config, Rule2Config, Rule100Config, Rule101Config, Rule102Config,
     RibSizeItem, GrooveSizeItem, DecorationItem,
 )
@@ -396,7 +396,7 @@ import cv2
 import numpy as np
 import pytest
 
-from src.models.enums import (
+from tire_ai_pattern.models.enums import (
     ImageFormatEnum,
     ImageModeEnum,
     LevelEnum,
@@ -404,7 +404,7 @@ from src.models.enums import (
     SourceTypeEnum,
     StitchingSchemeName,
 )
-from src.models.image_models import (
+from tire_ai_pattern.models.image_models import (
     BigImage,
     ImageBiz,
     ImageEvaluation,
@@ -413,7 +413,7 @@ from src.models.image_models import (
     RuleEvaluation,
     SmallImage,
 )
-from src.models.rule_models import (
+from tire_ai_pattern.models.rule_models import (
     DecorationItem,
     GrooveSizeItem,
     RibSizeItem,
@@ -424,9 +424,9 @@ from src.models.rule_models import (
     Rule101Config,
     Rule102Config,
 )
-from src.nodes.big_image_stitcher import stitch_big_image
-from src.nodes.stitch_scheme_generator import generate_stitch_scheme
-from src.utils.logger import get_logger
+from tire_ai_pattern.nodes.big_image_stitcher import stitch_big_image
+from tire_ai_pattern.nodes.stitch_scheme_generator import generate_stitch_scheme
+from tire_ai_pattern.utils.logger import get_logger
 
 
 logger = get_logger("joint_test")

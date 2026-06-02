@@ -2,7 +2,7 @@
 
 ## 1. 目标
 
-为 `src/utils/image_utils.py` 提供完整的测试覆盖，验证：
+为 `tire_ai_pattern/utils/image_utils.py` 提供完整的测试覆盖，验证：
 - 所有图像处理函数的正确性和鲁棒性
 - 异常处理符合项目统一异常体系规范
 - 日志记录符合标准化日志模块要求
@@ -24,7 +24,7 @@ from PIL import Image
 import tempfile
 import pytest
 
-from src.utils.image_utils import (
+from tire_ai_pattern.utils.image_utils import (
     base64_to_ndarray,
     ndarray_to_base64, 
     resize_image,
@@ -32,7 +32,7 @@ from src.utils.image_utils import (
     save_base64_to_image,
     convert_cmyk_to_rgb
 )
-from src.common.exceptions import (
+from tire_ai_pattern.common.exceptions import (
     InputTypeError,
     InputDataError, 
     RuntimeProcessError
@@ -194,7 +194,7 @@ INVALID_FILE_PATHS = [
 
 ### 6.2 日志记录验证
 
-- 使用`src.utils.logger.get_logger()`获取日志记录器
+- 使用`tire_ai_pattern.utils.logger.get_logger()`获取日志记录器
 - 不支持格式的文件加载时记录WARNING级别日志
 - 日志消息格式符合项目标准：`%(asctime)s - %(name)s - %(levelname)s - %(message)s`
 - 避免使用print()语句
@@ -218,7 +218,7 @@ INVALID_FILE_PATHS = [
 大模型生成测试代码后必须验证：
 - ✅ 测试文件路径正确 (`tests/unittests/utils/test_image_utils.py`)
 - ✅ 所有测试类和方法已实现
-- ✅ 导入路径正确 (`from src.utils.image_utils import ...`)
+- ✅ 导入路径正确 (`from tire_ai_pattern.utils.image_utils import ...`)
 - ✅ 异常类型使用项目统一异常体系
 - ✅ 日志记录使用标准化日志模块
 - ✅ 使用临时目录进行文件测试，避免污染项目目录

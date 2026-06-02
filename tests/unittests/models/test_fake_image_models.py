@@ -1,14 +1,14 @@
 import pytest
 from pydantic import ValidationError
 
-from src.models.fake_image_models import (
+from tire_ai_pattern.models.fake_image_models import (
     FakeBigImage,
     FakeBigImageBiz,
     FakeImageMeta,
     FakeSmallImage,
     FakeSmallImageBiz,
 )
-from src.models.fake_result_models import FakeEvaluation, FakeLineage, FakeScoreResult
+from tire_ai_pattern.models.fake_result_models import FakeEvaluation, FakeLineage, FakeScoreResult
 
 
 class TestFakeImageMeta:

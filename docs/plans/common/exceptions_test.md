@@ -2,7 +2,7 @@
 
 ## 1. 目标
 
-为项目通用异常类 (`src/common/exceptions.py`) 提供完整的测试覆盖，验证：
+为项目通用异常类 (`tire_ai_pattern/common/exceptions.py`) 提供完整的测试覆盖，验证：
 - 异常继承体系正确
 - 所有异常类的字段和消息格式符合规范
 - RuntimeProcessError 能正确包装真实 Python 执行错误
@@ -16,7 +16,7 @@
 ## 3. 导入规范
 
 ```python
-from src.common.exceptions import (
+from tire_ai_pattern.common.exceptions import (
     ProjectError,
     InputError,
     InputTypeError,
@@ -191,7 +191,7 @@ SAMPLE_PYTHON_ERRORS = [
 大模型生成测试代码后必须验证：
 - ✅ 测试文件路径正确 (`tests/unittests/common/test_exceptions.py`)
 - ✅ 所有测试类和方法已实现
-- ✅ 导入路径正确 (`from src.common.exceptions import ...`)
+- ✅ 导入路径正确 (`from tire_ai_pattern.common.exceptions import ...`)
 - ✅ 真实执行场景测试包含故意触发 Python 错误的代码
 - ✅ 参数化测试覆盖 7 种以上 Python 异常类型
 - ✅ 集成测试验证 API 层职责分离

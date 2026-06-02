@@ -1,7 +1,7 @@
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
-from src.models.image_models import ImageBiz, ImageMeta, SmallImage
-from src.models.rule_models import BaseRuleConfig, BaseRuleFeature, BaseRuleScore
-from src.rules.runner import RuleRunner
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
+from tire_ai_pattern.models.image_models import ImageBiz, ImageMeta, SmallImage
+from tire_ai_pattern.models.rule_models import BaseRuleConfig, BaseRuleFeature, BaseRuleScore
+from tire_ai_pattern.rules.runner import RuleRunner
 
 
 class RulexConfig(BaseRuleConfig):
@@ -50,7 +50,7 @@ class RulexExecutor:
 def test_exec_feature_uses_config_name_for_lookup(monkeypatch):
     """验证 RuleRunner.exec_feature 使用 config.name 查找并调用 executor。"""
     executor = RulexExecutor()
-    monkeypatch.setattr("src.rules.runner.get_rule_executor", lambda rule_name: executor)
+    monkeypatch.setattr("tire_ai_pattern.rules.runner.get_rule_executor", lambda rule_name: executor)
     image = make_small_image()
     config = RulexConfig()
 
@@ -63,7 +63,7 @@ def test_exec_feature_uses_config_name_for_lookup(monkeypatch):
 def test_exec_feature_passes_debug_flag(monkeypatch):
     """验证 RuleRunner.exec_feature 会把 debug 开关透传给 executor。"""
     executor = RulexExecutor()
-    monkeypatch.setattr("src.rules.runner.get_rule_executor", lambda rule_name: executor)
+    monkeypatch.setattr("tire_ai_pattern.rules.runner.get_rule_executor", lambda rule_name: executor)
     image = make_small_image()
     config = RulexConfig()
 
@@ -76,7 +76,7 @@ def test_exec_feature_passes_debug_flag(monkeypatch):
 def test_exec_score_uses_config_name_for_lookup(monkeypatch):
     """验证 RuleRunner.exec_score 使用 config.name 查找并调用 executor。"""
     executor = RulexExecutor()
-    monkeypatch.setattr("src.rules.runner.get_rule_executor", lambda rule_name: executor)
+    monkeypatch.setattr("tire_ai_pattern.rules.runner.get_rule_executor", lambda rule_name: executor)
     config = RulexConfig()
     feature = RulexFeature(value=3)
 

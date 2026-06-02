@@ -1,7 +1,7 @@
 import pytest
 
-from src.common.exceptions import InputDataError
-from src.models.enums import (
+from tire_ai_pattern.common.exceptions import InputDataError
+from tire_ai_pattern.models.enums import (
     ImageFormatEnum,
     ImageModeEnum,
     LevelEnum,
@@ -9,8 +9,8 @@ from src.models.enums import (
     SourceTypeEnum,
     StitchingSchemeName,
 )
-from src.models.image_models import BigImage, ImageBiz, ImageLineage, ImageMeta
-from src.models.scheme_models import (
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageLineage, ImageMeta
+from tire_ai_pattern.models.scheme_models import (
     DecorationScheme,
     DecorationSchemeAbstract,
     MainGrooveImpl,
@@ -20,7 +20,7 @@ from src.models.scheme_models import (
     StitchingScheme,
     StitchingSchemeAbstract,
 )
-from src.nodes.big_image_stitcher import stitch_big_image
+from tire_ai_pattern.nodes.big_image_stitcher import stitch_big_image
 
 from tests.integrations.test_large_image_stitching import (
     _build_lineage_with_black_decoration,

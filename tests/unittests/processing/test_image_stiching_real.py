@@ -9,17 +9,17 @@ import numpy as np
 import cv2
 import base64
 from pathlib import Path
-from src.models.image_models import ImageLineage
-from src.models.scheme_models import (
+from tire_ai_pattern.models.image_models import ImageLineage
+from tire_ai_pattern.models.scheme_models import (
     StitchingScheme, StitchingSchemeAbstract,
     RibSchemeImpl, MainGrooveImpl, DecorationImpl,
     MainGrooveScheme, MainGrooveSchemeAbstract,
     DecorationScheme, DecorationSchemeAbstract
 )
-from src.models.enums import (
+from tire_ai_pattern.models.enums import (
     RibOperation, StitchingSchemeName
 )
-from src.processing.image_stiching import generate_large_image_from_lineage
+from tire_ai_pattern.processing.image_stiching import generate_large_image_from_lineage
 
 
 class TestImageStichingReal(unittest.TestCase):

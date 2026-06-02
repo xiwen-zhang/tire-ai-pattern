@@ -10,9 +10,9 @@ import os
 import glob
 from PIL import Image
 
-from src.utils.logger import get_logger
+from tire_ai_pattern.utils.logger import get_logger
 
-from src.nodes.single_image_splitter import process_single_file, DEFAULT_CONFIG
+from tire_ai_pattern.processing.single_image_splitter import process_single_file, DEFAULT_CONFIG
 
 logger = get_logger(__name__)
 

@@ -60,7 +60,7 @@
 
 ```
 version.json                           # 项目版本文件
-src/
+tire_ai_pattern/
 ├── api/
 │   └── fake_generation.py            # fake API 入口
 │

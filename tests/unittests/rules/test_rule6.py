@@ -2,7 +2,7 @@
 """
 Rule6 执行器单元测试
 
-测试目标：src.rules.executors.rule6.Rule6Executor
+测试目标：tire_ai_pattern.rules.executors.rule6.Rule6Executor
 
 最重要的测试验证逻辑（按 .results/rule层重构与迁移需求.md 第 10 节验收标准）：
 1. 注册：Rule6Executor 可通过 Rule6Config.name 从注册表读取。
@@ -29,17 +29,17 @@ from unittest import mock
 
 import numpy as np
 
-from src.models.enums import (
+from tire_ai_pattern.models.enums import (
     ImageFormatEnum,
     ImageModeEnum,
     LevelEnum,
     RegionEnum,
 )
-from src.models.image_models import ImageBiz, ImageMeta, SmallImage
-from src.models.rule_models import Rule6Config, Rule6Feature, Rule6Score
-from src.rules.executors.rule6 import Rule6Executor
-from src.rules.registry import get_rule_executor
-from src.utils.image_utils import ndarray_to_base64
+from tire_ai_pattern.models.image_models import ImageBiz, ImageMeta, SmallImage
+from tire_ai_pattern.models.rule_models import Rule6Config, Rule6Feature, Rule6Score
+from tire_ai_pattern.rules.executors.rule6 import Rule6Executor
+from tire_ai_pattern.rules.registry import get_rule_executor
+from tire_ai_pattern.utils.image_utils import ndarray_to_base64
 
 
 def _make_small_image(height: int = 16, width: int = 16) -> SmallImage:
@@ -91,7 +91,7 @@ class TestRule6ExecFeature(unittest.TestCase):
     def _patch_algorithm(self, return_value):
         """替换 Rule6Executor 内部 import 的 detect_pattern_continuity。"""
         return mock.patch(
-            "src.core.detection.pattern_continuity.detect_pattern_continuity",
+            "tire_ai_pattern.core.detection.pattern_continuity.detect_pattern_continuity",
             return_value=return_value,
         )
 

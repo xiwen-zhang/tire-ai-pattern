@@ -1,7 +1,7 @@
 import pytest
-from src.models.tire_struct import TireStruct
-from src.models.image_models import SmallImage, BigImage
-from src.models.enums import ImageModeEnum, ImageFormatEnum
+from tire_ai_pattern.models.tire_struct import TireStruct
+from tire_ai_pattern.models.image_models import SmallImage, BigImage
+from tire_ai_pattern.models.enums import ImageModeEnum, ImageFormatEnum
 
 # ===================== 测试数据（模块级常量）=====================
 

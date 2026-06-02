@@ -26,17 +26,17 @@
 仅允许关注以下文件：
 
 ### 2.1 允许修改的模型文件
-- `src/models/fake_image_models.py`
-- `src/models/fake_result_models.py`
-- `src/models/fake_rules_models.py`
-- `src/models/fake_tire_struct.py`
+- `tire_ai_pattern/models/fake_image_models.py`
+- `tire_ai_pattern/models/fake_result_models.py`
+- `tire_ai_pattern/models/fake_rules_models.py`
+- `tire_ai_pattern/models/fake_tire_struct.py`
 
 ### 2.2 允许新增的测试文件
 - `tests/unittests/models/test_fake_result_models.py`
 - `tests/unittests/models/test_fake_tire_struct.py`
 
 ### 2.3 当前不动
-- `src/api/fake_generation.py`
+- `tire_ai_pattern/api/fake_generation.py`
 - 非 fake 前缀文件
 - `version.json`
 
@@ -44,7 +44,7 @@
 
 ## 三、现状问题清单
 
-### 3.1 `src/models/fake_image_models.py`
+### 3.1 `tire_ai_pattern/models/fake_image_models.py`
 当前直接使用 `ValueError("...")`：
 
 - `FakeImageMeta.validate_positive`
@@ -52,14 +52,14 @@
 - `FakeBigImageBiz.validate_image_id`
 - `FakeBaseImage.validate_image_base64`
 
-### 3.2 `src/models/fake_result_models.py`
+### 3.2 `tire_ai_pattern/models/fake_result_models.py`
 当前直接使用 `ValueError("...")`：
 
 - `FakeFeatureResult.validate_rule_name`
 - `FakeScoreResult.validate_rule_name`
 - `FakeScoreResult.validate_score_range`
 
-### 3.3 `src/models/fake_rules_models.py`
+### 3.3 `tire_ai_pattern/models/fake_rules_models.py`
 当前直接使用 `ValueError("...")`：
 
 - `FakeGroovesWidthMm.validate_positive`
@@ -68,7 +68,7 @@
 - `FakeRule6_1.validate_rule_name`
 - `FakeRule8.validate_rule_name`
 
-### 3.4 `src/models/fake_tire_struct.py`
+### 3.4 `tire_ai_pattern/models/fake_tire_struct.py`
 当前虽然已经引入 `InputDataError`，但构建时仍然是：
 
 ```python
@@ -79,7 +79,7 @@ raise ValueError(str(error))
 
 ## 四、具体改法
 
-### 4.1 修改 `src/models/fake_image_models.py`
+### 4.1 修改 `tire_ai_pattern/models/fake_image_models.py`
 
 #### 4.1.1 修改目标
 把直接抛出的 `ValueError("...")` 改成统一先构造 `InputDataError`，再 `raise ValueError(str(error))`。
@@ -195,7 +195,7 @@ if not v:
 
 ---
 
-### 4.2 修改 `src/models/fake_result_models.py`
+### 4.2 修改 `tire_ai_pattern/models/fake_result_models.py`
 
 #### 4.2.1 修改目标
 把直接抛出的 `ValueError("...")` 改成先构造 `InputDataError`，再 `raise ValueError(str(error))`。
@@ -277,7 +277,7 @@ if self.score_value > self.score_max:
 
 ---
 
-### 4.3 修改 `src/models/fake_rules_models.py`
+### 4.3 修改 `tire_ai_pattern/models/fake_rules_models.py`
 
 #### 4.3.1 修改目标
 把直接抛出的 `ValueError("...")` 改成先构造 `InputDataError`，再 `raise ValueError(str(error))`。
@@ -415,7 +415,7 @@ if self.rule_name != "rule8":
 
 ---
 
-### 4.4 修改 `src/models/fake_tire_struct.py`
+### 4.4 修改 `tire_ai_pattern/models/fake_tire_struct.py`
 
 #### 4.4.1 修改目标
 保持现有 `_get_request_validation_error()` 逻辑不变，仅保持它继续产出 `InputDataError`。
@@ -454,7 +454,7 @@ def validate_request_on_build(self) -> "FakeTireStruct":
 import pytest
 from pydantic import ValidationError
 
-from src.models.fake_result_models import (
+from tire_ai_pattern.models.fake_result_models import (
     FakeEvaluation,
     FakeFeatureResult,
     FakeLineage,
@@ -495,7 +495,7 @@ from src.models.fake_result_models import (
 import pytest
 from pydantic import ValidationError
 
-from src.models.fake_tire_struct import FakeTireStruct
+from tire_ai_pattern.models.fake_tire_struct import FakeTireStruct
 ```
 
 #### 5.2.2 文件内先定义一个合法输入 helper
@@ -580,10 +580,10 @@ validate_request()
 
 后续 AI 真正执行时，按下面顺序：
 
-1. 修改 `src/models/fake_image_models.py`
-2. 修改 `src/models/fake_result_models.py`
-3. 修改 `src/models/fake_rules_models.py`
-4. `src/models/fake_tire_struct.py` 保持现有逻辑，仅复核是否无需调整
+1. 修改 `tire_ai_pattern/models/fake_image_models.py`
+2. 修改 `tire_ai_pattern/models/fake_result_models.py`
+3. 修改 `tire_ai_pattern/models/fake_rules_models.py`
+4. `tire_ai_pattern/models/fake_tire_struct.py` 保持现有逻辑，仅复核是否无需调整
 5. 新增 `tests/unittests/models/test_fake_result_models.py`
 6. 新增 `tests/unittests/models/test_fake_tire_struct.py`
 7. 运行以下测试：
@@ -603,7 +603,7 @@ validate_request()
 2. `fake_result_models.py` 有独立单元测试
 3. `fake_tire_struct.py` 有独立单元测试
 4. 原有集成测试仍通过
-5. 不修改 `src/api/fake_generation.py`
+5. 不修改 `tire_ai_pattern/api/fake_generation.py`
 6. 不修改非 fake 前缀文件
 7. 不修改 `version.json`
 

@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from src.models.fake_result_models import (
+from tire_ai_pattern.models.fake_result_models import (
     FakeEvaluation,
     FakeFeatureResult,
     FakeLineage,

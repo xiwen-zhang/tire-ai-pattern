@@ -1,6 +1,6 @@
 # Rule 8 横沟数量规则说明
 
-`src.rules.executors.rule8` 实现了 Rule 8 的规则层逻辑，负责统计轮胎小图中的横沟数量，并输出相应评分。该模块属于规则层（rule layer），只负责规则判定与特征/得分的结构化表达，不直接实现底层图像算法。
+`tire_ai_pattern.rules.executors.rule8` 实现了 Rule 8 的规则层逻辑，负责统计轮胎小图中的横沟数量，并输出相应评分。该模块属于规则层（rule layer），只负责规则判定与特征/得分的结构化表达，不直接实现底层图像算法。
 
 ## 适用场景
 
@@ -16,10 +16,10 @@
 ## 快速开始
 
 ```python
-from src.rules.executors.rule8 import Rule8Executor
-from src.models.rule_models import Rule8Config
-from src.models.enums import RuleTypeEnum
-from src.models.image_models import BaseImage
+from tire_ai_pattern.rules.executors.rule8 import Rule8Executor
+from tire_ai_pattern.models.rule_models import Rule8Config
+from tire_ai_pattern.models.enums import RuleTypeEnum
+from tire_ai_pattern.models.image_models import BaseImage
 
 # 构造规则配置
 config = Rule8Config(
@@ -69,7 +69,7 @@ def exec_score(self, config: Rule8Config, feature: Rule8Feature) -> Rule8Score
 ## 规则层与算法层分工
 
 - 规则层（本模块）：只负责结构化特征、评分和参数选择，不直接处理图像细节。
-- 算法层（`src.core.detection.groove_intersection`）：只负责横沟检测与交点统计，不关心 Rule 8 评分。
+- 算法层（`tire_ai_pattern.core.detection.groove_intersection`）：只负责横沟检测与交点统计，不关心 Rule 8 评分。
 
 ## 参数选择说明
 
@@ -81,7 +81,7 @@ def exec_score(self, config: Rule8Config, feature: Rule8Feature) -> Rule8Score
 
 - 当前 `Rule8Executor` 不透传算法层的 debug 可视化结果。
 - `Rule8Feature.vis_names / vis_images` 在当前实现中保持为 `None`。
-- 如需可视化排查，应直接在算法层 `src.core.detection.groove_intersection` 中开启和验证 debug 输出。
+- 如需可视化排查，应直接在算法层 `tire_ai_pattern.core.detection.groove_intersection` 中开启和验证 debug 输出。
 
 ## 单元测试建议
 

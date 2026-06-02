@@ -1,8 +1,8 @@
 # 横沟检测算法
 
-`src.core.detection.groove_intersection` 提供横沟交点检测能力，用于统计一张轮胎小图中的横向粗线条数量，并输出横沟与纵向线条的交叉点数量。
+`tire_ai_pattern.core.detection.groove_intersection` 提供横沟交点检测能力，用于统计一张轮胎小图中的横向粗线条数量，并输出横沟与纵向线条的交叉点数量。
 
-该模块属于 `src.core` 算法层，只负责从内存中的 BGR 图像生成检测结果。它不负责规则评分、不保存文件、不读写 `.results/`，也不处理业务流程调度。
+该模块属于 `tire_ai_pattern.core` 算法层，只负责从内存中的 BGR 图像生成检测结果。它不负责规则评分、不保存文件、不读写 `.results/`，也不处理业务流程调度。
 
 ## 适用场景
 
@@ -27,7 +27,7 @@
 import cv2
 import numpy as np
 
-from src.core.detection.groove_intersection import detect_transverse_grooves
+from tire_ai_pattern.core.detection.groove_intersection import detect_transverse_grooves
 
 buf = np.fromfile("small_tire.png", dtype=np.uint8)
 image = cv2.imdecode(buf, cv2.IMREAD_COLOR)

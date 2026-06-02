@@ -4,7 +4,7 @@
 
 | 属性 | 值 |
 |------|-----|
-| **适用模块** | `src/nodes/geometry_scorer.py` |
+| **适用模块** | `tire_ai_pattern/nodes/geometry_scorer.py` |
 | **目标读者** | PM、架构师、开发工程师、测试工程师 |
 
 ---
@@ -18,9 +18,6 @@
 **核心职责**：
 - 输入：大图、小图列表、血缘信息、规则配置
 - 输出：各项规则得分、归一化总分（x/100）
-
-**补充函数**：
-- `score_geometry`：基于已有 feature 重新计算规则得分并刷新总分。适用于用户调整 `rules_config` 中的阈值或参数后，复用已有 feature 重新评分的场景。
 
 ### 1.2 业务价值
 
@@ -81,9 +78,9 @@ Pipeline-3: update_big_image_score
 │  └─────────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────────┘
           │
-          ├─→ src.models.ImageEvaluation (数据模型)
-          ├─→ src.models.BaseRuleConfig (规则配置)
-          └─→ src.models.BigImage/SmallImage (图像数据)
+          ├─→ tire_ai_pattern.models.ImageEvaluation (数据模型)
+          ├─→ tire_ai_pattern.models.BaseRuleConfig (规则配置)
+          └─→ tire_ai_pattern.models.BigImage/SmallImage (图像数据)
 ```
 
 ### 3.2 文件职责划分
@@ -99,16 +96,16 @@ Pipeline-3: update_big_image_score
 
 ```
 geometry_scorer.py
-    ├── src.models.ImageEvaluation
+    ├── tire_ai_pattern.models.ImageEvaluation
     │   ├── rules: List[RuleEvaluation]
     │   └── current_score: int
-    ├── src.models.BaseRuleConfig
+    ├── tire_ai_pattern.models.BaseRuleConfig
     │   ├── name: str
     │   └── max_score: int
-    ├── src.models.BigImage
+    ├── tire_ai_pattern.models.BigImage
     │   ├── evaluation: ImageEvaluation
     │   └── lineage: ImageLineage
-    └── src.models.SmallImage
+    └── tire_ai_pattern.models.SmallImage
         └── evaluation: ImageEvaluation
 ```
 
@@ -402,13 +399,13 @@ def _calculate_geometric_scores(
 ### 8.1 在 Pipeline-1 中的调用      
 
 ```python
-# src/api/generation.py
+# tire_ai_pattern/api/generation.py
 
 def generate_big_image_with_evaluation(tire_struct: TireStruct) -> TireStruct:
     # ... 节点1-4执行 ...
     
     # 节点5：几何合理性评分
-    from src.nodes.geometry_scorer import calculate_geometric_scores
+    from tire_ai_pattern.nodes.geometry_scorer import calculate_geometric_scores
     
     # 传入大图、小图列表和规则配置，结果自动更新到 big_image.scores.compliance
     tire_struct.big_image = calculate_geometric_scores(
@@ -424,10 +421,10 @@ def generate_big_image_with_evaluation(tire_struct: TireStruct) -> TireStruct:
 ### 8.2 在 Pipeline-3 中的调用
 
 ```python
-# src/api/scoring.py
+# tire_ai_pattern/api/scoring.py
 
 def update_big_image_score(tire_struct: TireStruct) -> TireStruct:
-    from src.nodes.geometry_scorer import calculate_geometric_scores
+    from tire_ai_pattern.nodes.geometry_scorer import calculate_geometric_scores
     
     # 传入大图、小图列表和规则配置，结果自动更新到 big_image.scores.compliance
     tire_struct.big_image = calculate_geometric_scores(

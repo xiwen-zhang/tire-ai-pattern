@@ -2,12 +2,12 @@
 """
 图案连续性检测算法单元测试（新架构 dev2）
 
-测试目标：src.core.detection.pattern_continuity
+测试目标：tire_ai_pattern.core.detection.pattern_continuity
 API 注意：detect_pattern_continuity() 使用显式参数，返回显式 tuple。
 PatternContinuityConfig 仅作为算法内部配置数据类，不作为函数入参。
 
 主要变更（相对 dev 分支）：
-- import 路径：algorithms.detection.* → src.core.detection.*
+- import 路径：algorithms.detection.* → tire_ai_pattern.core.detection.*
 - 输入输出：dict 进出 → 显式参数和显式 tuple 返回
 
 最重要的测试验证逻辑：
@@ -140,20 +140,20 @@ class TestPatternContinuityFull(unittest.TestCase):
     """
 
     def _run(self, img, **kwargs):
-        from src.core.detection.pattern_continuity import detect_pattern_continuity
+        from tire_ai_pattern.core.detection.pattern_continuity import detect_pattern_continuity
         return detect_pattern_continuity(img, **kwargs)
 
     # ── 输入验证 ────────────────────────────────────────────────────
 
     def test_none_image_returns_err(self):
         """传入 None 应抛出 InputDataError"""
-        from src.common.exceptions import InputDataError
+        from tire_ai_pattern.common.exceptions import InputDataError
         with self.assertRaises(InputDataError):
             self._run(None)
 
     def test_wrong_ndim_returns_err(self):
         """传入 3D BGR 图像应抛出 InputDataError"""
-        from src.common.exceptions import InputDataError
+        from tire_ai_pattern.common.exceptions import InputDataError
         img3d = np.zeros((128, 128, 3), dtype=np.uint8)
         with self.assertRaises(InputDataError):
             self._run(img3d)
@@ -207,15 +207,15 @@ class TestPatternContinuityFull(unittest.TestCase):
 
     def test_too_short_image_raises_input_error(self):
         """高度不足时应由底层检测抛出 InputDataError"""
-        from src.common.exceptions import InputDataError
+        from tire_ai_pattern.common.exceptions import InputDataError
         img = _gray_image(h=4, w=32, value=255)
         with self.assertRaises(InputDataError):
             self._run(img)
 
     def test_edge_detection_unexpected_error_is_wrapped(self):
         """边缘检测的未知异常应包装为 RuntimeProcessError"""
-        import src.core.detection.pattern_continuity as pc
-        from src.common.exceptions import RuntimeProcessError
+        import tire_ai_pattern.core.detection.pattern_continuity as pc
+        from tire_ai_pattern.common.exceptions import RuntimeProcessError
 
         img = _gray_image()
         with mock.patch.object(pc, "_detect_with_method_b", side_effect=ValueError("boom")):
@@ -224,8 +224,8 @@ class TestPatternContinuityFull(unittest.TestCase):
 
     def test_match_error_is_wrapped(self):
         """端点匹配异常应包装为 RuntimeProcessError"""
-        import src.core.detection.pattern_continuity as pc
-        from src.common.exceptions import RuntimeProcessError
+        import tire_ai_pattern.core.detection.pattern_continuity as pc
+        from tire_ai_pattern.common.exceptions import RuntimeProcessError
 
         img = _gray_image()
         with mock.patch.object(pc, "_match_ends", side_effect=ValueError("boom")):
@@ -234,8 +234,8 @@ class TestPatternContinuityFull(unittest.TestCase):
 
     def test_debug_visualization_error_is_wrapped(self):
         """debug 可视化异常应包装为 RuntimeProcessError"""
-        import src.core.detection.pattern_continuity as pc
-        from src.common.exceptions import RuntimeProcessError
+        import tire_ai_pattern.core.detection.pattern_continuity as pc
+        from tire_ai_pattern.common.exceptions import RuntimeProcessError
 
         img = _gray_image()
         with mock.patch.object(pc, "_visualize_detection", side_effect=ValueError("boom")):
@@ -263,7 +263,7 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_method_a_extracts_fine_and_coarse_ends(self):
         """方法 A 应同时识别细线点和粗线区间"""
-        from src.core.detection.pattern_continuity import (
+        from tire_ai_pattern.core.detection.pattern_continuity import (
             PatternContinuityConfig,
             _detect_with_method_a,
         )
@@ -282,8 +282,8 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_method_a_too_short_image_raises_input_error(self):
         """方法 A 高度不足时应走 InputDataError 分支"""
-        from src.common.exceptions import InputDataError
-        from src.core.detection.pattern_continuity import (
+        from tire_ai_pattern.common.exceptions import InputDataError
+        from tire_ai_pattern.core.detection.pattern_continuity import (
             PatternContinuityConfig,
             _detect_with_method_a,
         )
@@ -294,8 +294,8 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_method_a_unexpected_error_is_wrapped(self):
         """方法 A 内部未知异常应包装为 RuntimeProcessError"""
-        import src.core.detection.pattern_continuity as pc
-        from src.common.exceptions import RuntimeProcessError
+        import tire_ai_pattern.core.detection.pattern_continuity as pc
+        from tire_ai_pattern.common.exceptions import RuntimeProcessError
 
         img = _gray_image(h=12, w=12, value=255)
         with mock.patch.object(pc, "_extract_ends_from_region", side_effect=ValueError("boom")):
@@ -304,7 +304,7 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_extract_region_filters_short_noise(self):
         """短于 min_line_width 的像素段应被当成噪声过滤"""
-        from src.core.detection.pattern_continuity import (
+        from tire_ai_pattern.core.detection.pattern_continuity import (
             PatternContinuityConfig,
             _extract_ends_from_region,
         )
@@ -317,8 +317,8 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_method_b_threshold_error_is_wrapped(self):
         """OpenCV 二值化异常应包装为 RuntimeProcessError"""
-        import src.core.detection.pattern_continuity as pc
-        from src.common.exceptions import RuntimeProcessError
+        import tire_ai_pattern.core.detection.pattern_continuity as pc
+        from tire_ai_pattern.common.exceptions import RuntimeProcessError
 
         img = _gray_image(h=12, w=12, value=255)
         with mock.patch.object(pc.cv2, "threshold", side_effect=ValueError("boom")):
@@ -327,8 +327,8 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_method_b_unexpected_error_is_wrapped(self):
         """方法 B 轮廓提取未知异常应包装为 RuntimeProcessError"""
-        import src.core.detection.pattern_continuity as pc
-        from src.common.exceptions import RuntimeProcessError
+        import tire_ai_pattern.core.detection.pattern_continuity as pc
+        from tire_ai_pattern.common.exceptions import RuntimeProcessError
 
         img = _gray_image(h=12, w=12, value=255)
         with mock.patch.object(pc, "_extract_ends_from_contours", side_effect=ValueError("boom")):
@@ -337,7 +337,7 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_extract_contours_fine_coarse_and_noise(self):
         """轮廓提取应覆盖细线、粗线和噪声过滤分支"""
-        from src.core.detection.pattern_continuity import (
+        from tire_ai_pattern.core.detection.pattern_continuity import (
             PatternContinuityConfig,
             _extract_ends_from_contours,
         )
@@ -364,7 +364,7 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_actual_can_match_all_type_pairs(self):
         """实际匹配函数应覆盖所有线型组合和未知类型兜底"""
-        from src.core.detection.pattern_continuity import PatternContinuityConfig, _can_match
+        from tire_ai_pattern.core.detection.pattern_continuity import PatternContinuityConfig, _can_match
 
         cfg = PatternContinuityConfig(fine_match_distance=4)
         self.assertTrue(_can_match((10, 10, 'fine'), (14, 14, 'fine'), cfg))
@@ -377,7 +377,7 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_actual_match_skips_already_matched_bottom(self):
         """多个 top 竞争同一 bottom 时，应只匹配一次并留下未匹配 top"""
-        from src.core.detection.pattern_continuity import PatternContinuityConfig, _match_ends
+        from tire_ai_pattern.core.detection.pattern_continuity import PatternContinuityConfig, _match_ends
 
         matches, unmatched_top, unmatched_bottom = _match_ends(
             [(10, 10, 'fine'), (11, 11, 'fine')],
@@ -391,7 +391,7 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_visualize_detection_draws_all_key_branches(self):
         """debug 图应覆盖细线/粗线、未匹配高亮和匹配连线绘制"""
-        from src.core.detection.pattern_continuity import (
+        from tire_ai_pattern.core.detection.pattern_continuity import (
             PatternContinuityConfig,
             _visualize_detection,
         )
@@ -412,7 +412,7 @@ class TestPatternContinuityInternalBranches(unittest.TestCase):
 
     def test_generate_colors_count(self):
         """颜色生成应返回指定数量的 RGB 颜色"""
-        from src.core.detection.pattern_continuity import _generate_colors
+        from tire_ai_pattern.core.detection.pattern_continuity import _generate_colors
 
         colors = _generate_colors(3)
         self.assertEqual(len(colors), 3)
@@ -454,7 +454,7 @@ class TestPatternContinuityRealImages(unittest.TestCase):
     """
 
     def _run(self, path: pathlib.Path):
-        from src.core.detection.pattern_continuity import (
+        from tire_ai_pattern.core.detection.pattern_continuity import (
             detect_pattern_continuity,
         )
         buf = np.fromfile(str(path), dtype=np.uint8)
@@ -614,7 +614,7 @@ class TestPatternContinuityVisualizationEquivalence(unittest.TestCase):
 
     def _run_debug(self, gray_path: pathlib.Path) -> np.ndarray:
         """读取灰度图并运行 detect_pattern_continuity(is_debug=True)，返回染色图"""
-        from src.core.detection.pattern_continuity import detect_pattern_continuity
+        from tire_ai_pattern.core.detection.pattern_continuity import detect_pattern_continuity
         img = self._load_gray(gray_path)
         _, _, vis_image = detect_pattern_continuity(img, is_debug=True)
         return vis_image

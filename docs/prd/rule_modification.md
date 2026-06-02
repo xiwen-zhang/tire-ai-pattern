@@ -1,7 +1,7 @@
 # 规则调整需求文档
 
 > 涉及规则：Rule1-5、Rule12、Rule16、Rule17
-> 变更范围：`src/models/rule_models.py`（模型定义）、`src/rules/executors/`（执行器）、`src/nodes/base.py`（节点注册）
+> 变更范围：`tire_ai_pattern/models/rule_models.py`（模型定义）、`tire_ai_pattern/rules/executors/`（执行器）、`tire_ai_pattern/nodes/base.py`（节点注册）
 
 ---
 
@@ -71,7 +71,7 @@ class Rule1Feature(BaseRuleFeature):
     is_active: bool = Field(description="是否生效")
 ```
 
-### 3.3 模型定义（`src/models/rule_models.py`）
+### 3.3 模型定义（`tire_ai_pattern/models/rule_models.py`）
 
 ```python
 class Rule1Config(BaseRuleConfig):
@@ -81,16 +81,16 @@ class Rule1Config(BaseRuleConfig):
     rule_type: RuleTypeEnum = RuleTypeEnum.BIG_IMAGE
 ```
 
-### 3.4 Executor 实现（`src/rules/executors/rule1.py`）
+### 3.4 Executor 实现（`tire_ai_pattern/rules/executors/rule1.py`）
 
 ```python
 from __future__ import annotations
 
-from src.models.image_models import BaseImage, BigImage
-from src.models.rule_models import Rule1Config, Rule1Feature, Rule1Score
-from src.models.enums import StitchingSchemeName
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.models.image_models import BaseImage, BigImage
+from tire_ai_pattern.models.rule_models import Rule1Config, Rule1Feature, Rule1Score
+from tire_ai_pattern.models.enums import StitchingSchemeName
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -145,7 +145,7 @@ class Rule2Feature(BaseRuleFeature):
     is_active: bool = Field(description="是否生效")
 ```
 
-### 4.3 模型定义（`src/models/rule_models.py`）
+### 4.3 模型定义（`tire_ai_pattern/models/rule_models.py`）
 
 ```python
 class Rule2Config(BaseRuleConfig):
@@ -155,16 +155,16 @@ class Rule2Config(BaseRuleConfig):
     rule_type: RuleTypeEnum = RuleTypeEnum.BIG_IMAGE
 ```
 
-### 4.4 Executor 实现（`src/rules/executors/rule2.py`）
+### 4.4 Executor 实现（`tire_ai_pattern/rules/executors/rule2.py`）
 
 ```python
 from __future__ import annotations
 
-from src.models.image_models import BaseImage, BigImage
-from src.models.rule_models import Rule2Config, Rule2Feature, Rule2Score
-from src.models.enums import StitchingSchemeName
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.models.image_models import BaseImage, BigImage
+from tire_ai_pattern.models.rule_models import Rule2Config, Rule2Feature, Rule2Score
+from tire_ai_pattern.models.enums import StitchingSchemeName
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -211,7 +211,7 @@ class Rule3Feature(BaseRuleFeature):
     is_active: bool = Field(description="是否生效")
 ```
 
-### 5.3 模型定义（`src/models/rule_models.py`）
+### 5.3 模型定义（`tire_ai_pattern/models/rule_models.py`）
 
 ```python
 class Rule3Config(BaseRuleConfig):
@@ -221,16 +221,16 @@ class Rule3Config(BaseRuleConfig):
     rule_type: RuleTypeEnum = RuleTypeEnum.BIG_IMAGE
 ```
 
-### 5.4 Executor 实现（`src/rules/executors/rule3.py`）
+### 5.4 Executor 实现（`tire_ai_pattern/rules/executors/rule3.py`）
 
 ```python
 from __future__ import annotations
 
-from src.models.image_models import BaseImage, BigImage
-from src.models.rule_models import Rule3Config, Rule3Feature, Rule3Score
-from src.models.enums import StitchingSchemeName
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.models.image_models import BaseImage, BigImage
+from tire_ai_pattern.models.rule_models import Rule3Config, Rule3Feature, Rule3Score
+from tire_ai_pattern.models.enums import StitchingSchemeName
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -266,7 +266,7 @@ class Rule3Executor(RuleExecutor):
 | `max_score` | `8` | `None` |
 | 整体 | 正常启用 | **注释掉**（Config/Feature/Score 整段注释） |
 
-### 6.2 模型定义（`src/models/rule_models.py`）
+### 6.2 模型定义（`tire_ai_pattern/models/rule_models.py`）
 
 ```python
 # class Rule4Config(BaseRuleConfig):
@@ -285,21 +285,21 @@ class Rule3Executor(RuleExecutor):
 #     pass
 ```
 
-### 6.3 Executor 处理（`src/rules/executors/rule4.py`）
+### 6.3 Executor 处理（`tire_ai_pattern/rules/executors/rule4.py`）
 
 整体注释掉：
 
 ```python
-# from src.models.rule_models import Rule4Config
-# from src.rules.base import RuleExecutor
-# from src.rules.registry import register_rule_executor
+# from tire_ai_pattern.models.rule_models import Rule4Config
+# from tire_ai_pattern.rules.base import RuleExecutor
+# from tire_ai_pattern.rules.registry import register_rule_executor
 #
 # @register_rule_executor
 # class Rule4Executor(RuleExecutor):
 #     rule_cls = Rule4Config
 ```
 
-### 6.4 节点注册（`src/nodes/base.py`）
+### 6.4 节点注册（`tire_ai_pattern/nodes/base.py`）
 
 从 `STITCH_SCHEME_GENERATOR_CONFIGS` 中移除（或注释掉）`Rule4Config`：
 
@@ -319,7 +319,7 @@ class Rule3Executor(RuleExecutor):
 | `max_score` | `1` | `None` |
 | 整体 | 正常启用 | **注释掉**（Config/Feature/Score 整段注释） |
 
-### 7.2 模型定义（`src/models/rule_models.py`）
+### 7.2 模型定义（`tire_ai_pattern/models/rule_models.py`）
 
 ```python
 # class Rule5Config(BaseRuleConfig):
@@ -338,21 +338,21 @@ class Rule3Executor(RuleExecutor):
 #     pass
 ```
 
-### 7.3 Executor 处理（`src/rules/executors/rule5.py`）
+### 7.3 Executor 处理（`tire_ai_pattern/rules/executors/rule5.py`）
 
 整体注释掉：
 
 ```python
-# from src.models.rule_models import Rule5Config
-# from src.rules.base import RuleExecutor
-# from src.rules.registry import register_rule_executor
+# from tire_ai_pattern.models.rule_models import Rule5Config
+# from tire_ai_pattern.rules.base import RuleExecutor
+# from tire_ai_pattern.rules.registry import register_rule_executor
 #
 # @register_rule_executor
 # class Rule5Executor(RuleExecutor):
 #     rule_cls = Rule5Config
 ```
 
-### 7.4 节点注册（`src/nodes/base.py`）
+### 7.4 节点注册（`tire_ai_pattern/nodes/base.py`）
 
 从 `STITCH_SCHEME_GENERATOR_CONFIGS` 中移除（或注释掉）`Rule5Config`：
 
@@ -388,7 +388,7 @@ class Rule12Feature(BaseRuleFeature):
     continuity_ratio: float = Field(description="连续性占比")
 ```
 
-### 8.3 模型定义（`src/models/rule_models.py`）
+### 8.3 模型定义（`tire_ai_pattern/models/rule_models.py`）
 
 ```python
 class Rule12Config(BaseRuleConfig):
@@ -400,16 +400,16 @@ class Rule12Config(BaseRuleConfig):
     continuity_mode_list: List[str] = Field(description="连续性模式列表")
 ```
 
-### 8.4 Executor 实现（`src/rules/executors/rule12.py`）
+### 8.4 Executor 实现（`tire_ai_pattern/rules/executors/rule12.py`）
 
 ```python
 from __future__ import annotations
 
-from src.models.image_models import BaseImage
-from src.models.rule_models import Rule12Config, Rule12Feature, Rule12Score
-from src.models.enums import StitchingSchemeName
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.models.image_models import BaseImage
+from tire_ai_pattern.models.rule_models import Rule12Config, Rule12Feature, Rule12Score
+from tire_ai_pattern.models.enums import StitchingSchemeName
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -458,7 +458,7 @@ class Rule12Executor(RuleExecutor):
 | `blend_width` | `int` | **删除** |
 | — | — | **新增** `continuity_mode_list: List[str]` |
 
-### 9.2 模型定义（`src/models/rule_models.py`）
+### 9.2 模型定义（`tire_ai_pattern/models/rule_models.py`）
 
 ```python
 class Rule16Config(BaseRuleConfig):
@@ -468,16 +468,16 @@ class Rule16Config(BaseRuleConfig):
     continuity_mode_list: List[str] = Field(description="连续性模式列表")
 ```
 
-### 9.3 Executor 实现（`src/rules/executors/rule16.py`）
+### 9.3 Executor 实现（`tire_ai_pattern/rules/executors/rule16.py`）
 
 ```python
 from __future__ import annotations
 
-from src.models.image_models import BaseImage, BigImage
-from src.models.rule_models import Rule16Config, Rule16Feature, Rule16Score
-from src.models.enums import StitchingSchemeName
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.models.image_models import BaseImage, BigImage
+from tire_ai_pattern.models.rule_models import Rule16Config, Rule16Feature, Rule16Score
+from tire_ai_pattern.models.enums import StitchingSchemeName
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -523,7 +523,7 @@ class Rule16Executor(RuleExecutor):
 | `blend_width` | `int` | **删除** |
 | — | — | **新增** `continuity_mode_list: List[str]` |
 
-### 10.2 模型定义（`src/models/rule_models.py`）
+### 10.2 模型定义（`tire_ai_pattern/models/rule_models.py`）
 
 ```python
 class Rule17Config(BaseRuleConfig):
@@ -544,16 +544,16 @@ class Rule17Feature(BaseRuleFeature):
     is_continuous: bool = Field(description="是否连续")
 ```
 
-### 10.4 Executor 实现（`src/rules/executors/rule17.py`）
+### 10.4 Executor 实现（`tire_ai_pattern/rules/executors/rule17.py`）
 
 ```python
 from __future__ import annotations
 
-from src.models.image_models import BaseImage, BigImage
-from src.models.rule_models import Rule17Config, Rule17Feature, Rule17Score
-from src.models.enums import StitchingSchemeName
-from src.rules.base import RuleExecutor
-from src.rules.registry import register_rule_executor
+from tire_ai_pattern.models.image_models import BaseImage, BigImage
+from tire_ai_pattern.models.rule_models import Rule17Config, Rule17Feature, Rule17Score
+from tire_ai_pattern.models.enums import StitchingSchemeName
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import register_rule_executor
 
 
 @register_rule_executor
@@ -593,19 +593,19 @@ class Rule17Executor(RuleExecutor):
 
 | 文件 | 变更类型 | 内容 |
 |------|----------|------|
-| `src/models/rule_models.py` | 修改 | Rule1-3Config: 改 description/max_score/加 rule_type；Rule4-5Config: 改 description/max_score、注释整段；Rule12Config: 改 description/max_score、删 3 字段、加 3 字段；Rule16Config: 改 description/max_score、删 3 字段、加 continuity_mode_list；Rule17Config: 改 description/max_score、删 3 字段、加 continuity_mode_list |
-| `src/models/rule_models.py` | 修改 | Rule1-3Feature: 加 is_active 字段；Rule5Feature: 注释；Rule12Feature: is_continuous(bool→float) 改名 continuity_ratio；Rule17Feature: 改字段 |
-| `src/models/rule_models.py` | 修改 | Rule4-5Score: 注释 |
-| `src/rules/executors/rule1.py` | 修改 | 实现 exec_feature + exec_score |
-| `src/rules/executors/rule2.py` | 修改 | 实现 exec_feature + exec_score |
-| `src/rules/executors/rule3.py` | 修改 | 实现 exec_feature + exec_score |
-| `src/rules/executors/rule4.py` | 修改 | 注释整文件 |
-| `src/rules/executors/rule5.py` | 修改 | 注释整文件 |
-| `src/rules/executors/rule12.py` | 修改 | 实现 exec_feature + exec_score |
-| `src/rules/executors/rule16.py` | 修改 | 实现 exec_feature + exec_score |
-| `src/rules/executors/rule17.py` | 修改 | 实现 exec_feature（含 TODO）+ exec_score |
-| `src/nodes/base.py` | 修改 | `STITCH_SCHEME_GENERATOR_CONFIGS` 移除 Rule4Config/Rule5Config |
-| `src/rules/executors/__init__.py` | 修改 | 注释掉 `from src.rules.executors.rule4 import Rule4Executor` 和 `from src.rules.executors.rule5 import Rule5Executor` |
+| `tire_ai_pattern/models/rule_models.py` | 修改 | Rule1-3Config: 改 description/max_score/加 rule_type；Rule4-5Config: 改 description/max_score、注释整段；Rule12Config: 改 description/max_score、删 3 字段、加 3 字段；Rule16Config: 改 description/max_score、删 3 字段、加 continuity_mode_list；Rule17Config: 改 description/max_score、删 3 字段、加 continuity_mode_list |
+| `tire_ai_pattern/models/rule_models.py` | 修改 | Rule1-3Feature: 加 is_active 字段；Rule5Feature: 注释；Rule12Feature: is_continuous(bool→float) 改名 continuity_ratio；Rule17Feature: 改字段 |
+| `tire_ai_pattern/models/rule_models.py` | 修改 | Rule4-5Score: 注释 |
+| `tire_ai_pattern/rules/executors/rule1.py` | 修改 | 实现 exec_feature + exec_score |
+| `tire_ai_pattern/rules/executors/rule2.py` | 修改 | 实现 exec_feature + exec_score |
+| `tire_ai_pattern/rules/executors/rule3.py` | 修改 | 实现 exec_feature + exec_score |
+| `tire_ai_pattern/rules/executors/rule4.py` | 修改 | 注释整文件 |
+| `tire_ai_pattern/rules/executors/rule5.py` | 修改 | 注释整文件 |
+| `tire_ai_pattern/rules/executors/rule12.py` | 修改 | 实现 exec_feature + exec_score |
+| `tire_ai_pattern/rules/executors/rule16.py` | 修改 | 实现 exec_feature + exec_score |
+| `tire_ai_pattern/rules/executors/rule17.py` | 修改 | 实现 exec_feature（含 TODO）+ exec_score |
+| `tire_ai_pattern/nodes/base.py` | 修改 | `STITCH_SCHEME_GENERATOR_CONFIGS` 移除 Rule4Config/Rule5Config |
+| `tire_ai_pattern/rules/executors/__init__.py` | 修改 | 注释掉 `from tire_ai_pattern.rules.executors.rule4 import Rule4Executor` 和 `from tire_ai_pattern.rules.executors.rule5 import Rule5Executor` |
 
 ---
 
@@ -642,5 +642,5 @@ class Rule17Executor(RuleExecutor):
 ## 13. 需求边界
 
 - **负责**：Config 字段增删改、Feature 字段增删改、Executor 的 exec_feature/exec_score 实现、节点注册列表更新
-- **不负责**：核心检测算法实现（由 `src/core/detection/` 负责）、上下游 API 接口适配、测试用例编写
+- **不负责**：核心检测算法实现（由 `tire_ai_pattern/core/detection/` 负责）、上下游 API 接口适配、测试用例编写
 - Rule17 当前 `_EDGE_CONTINUITY_LIST` 为空，等待后续 `StitchingSchemeName` 枚举扩展后填充

@@ -1,0 +1,26 @@
+from __future__ import annotations
+
+from tire_ai_pattern.models.image_models import BaseImage
+from tire_ai_pattern.models.rule_models import BaseRuleConfig, BaseRuleFeature, BaseRuleScore
+from tire_ai_pattern.rules.registry import get_rule_executor
+
+
+class RuleRunner:
+    """Dispatch rule execution by ``config.name``."""
+
+    @staticmethod
+    def exec_feature(
+        image: BaseImage,
+        config: BaseRuleConfig,
+        is_debug: bool = False,
+    ) -> BaseRuleFeature:
+        executor = get_rule_executor(config.name)
+        return executor.exec_feature(image, config, is_debug=is_debug)
+
+    @staticmethod
+    def exec_score(
+        config: BaseRuleConfig,
+        feature: BaseRuleFeature,
+    ) -> BaseRuleScore:
+        executor = get_rule_executor(config.name)
+        return executor.exec_score(config, feature)

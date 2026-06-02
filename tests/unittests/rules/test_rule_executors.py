@@ -1,9 +1,9 @@
 import pytest
-import src.rules.executors as executors
+import tire_ai_pattern.rules.executors as executors
 
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta
-from src.models.rule_models import (
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta
+from tire_ai_pattern.models.rule_models import (
     Rule1Config,
     Rule2Config,
     Rule3Config,
@@ -28,9 +28,9 @@ from src.models.rule_models import (
     Rule21Config,
     Rule22Config,
 )
-from src.rules.base import RuleExecutor
-from src.rules.registry import get_rule_executor
-from src.rules.executors.rule19 import Rule19Executor
+from tire_ai_pattern.rules.base import RuleExecutor
+from tire_ai_pattern.rules.registry import get_rule_executor
+from tire_ai_pattern.rules.executors.rule19 import Rule19Executor
 
 
 executors.load_all_executors()

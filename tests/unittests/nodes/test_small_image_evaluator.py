@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, SourceTypeEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
-from src.models.rule_models import (
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
+from tire_ai_pattern.models.rule_models import (
     Rule6Config,
     Rule6Feature,
     Rule6Score,
@@ -15,7 +15,7 @@ from src.models.rule_models import (
     Rule11Feature,
     Rule11Score,
 )
-from src.nodes.small_image_evaluator import evaluate_small_images
+from tire_ai_pattern.nodes.small_image_evaluator import evaluate_small_images
 
 
 def make_meta(width: int = 10, height: int = 20) -> ImageMeta:
@@ -96,7 +96,7 @@ class FailingRuleRunner(FakeRuleRunner):
 def test_evaluate_small_images_writes_independent_evaluations_in_node_order(monkeypatch):
     """验证小图节点接收小图列表并返回已写入独立评估的小图列表。"""
     FakeRuleRunner.reset()
-    monkeypatch.setattr("src.nodes.base.RuleRunner", FakeRuleRunner)
+    monkeypatch.setattr("tire_ai_pattern.nodes.base.RuleRunner", FakeRuleRunner)
     small_images = [make_small_image(), make_small_image(RegionEnum.SIDE)]
     rules_config = [make_rule11_config(), Rule8Config(groove_width_center=1, groove_width_side=1), Rule6Config()]
 
@@ -126,7 +126,7 @@ def test_evaluate_small_images_writes_independent_evaluations_in_node_order(monk
 def test_evaluate_small_images_does_not_handle_runner_exception(monkeypatch):
     """验证小图节点不捕获 RuleRunner 异常，底层异常会直接向上抛出。"""
     FailingRuleRunner.reset()
-    monkeypatch.setattr("src.nodes.base.RuleRunner", FailingRuleRunner)
+    monkeypatch.setattr("tire_ai_pattern.nodes.base.RuleRunner", FailingRuleRunner)
 
     with pytest.raises(RuntimeError, match="boom"):
         evaluate_small_images([make_small_image()], [Rule6Config()])

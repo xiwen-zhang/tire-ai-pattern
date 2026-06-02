@@ -138,7 +138,7 @@ def test_deep_serialization():
 
 ```python
 import pytest
-from src.models.tire_struct import TireStruct
+from tire_ai_pattern.models.tire_struct import TireStruct
 
 # ===================== 测试数据（模块级常量）=====================
 
@@ -323,7 +323,7 @@ class TestTireStructDeepSerializationNegative:
 
 ```python
 import pytest
-from src.models.image_models import SmallImage, ImageMeta, ImageBiz, ImageEvaluation, RuleEvaluation
+from tire_ai_pattern.models.image_models import SmallImage, ImageMeta, ImageBiz, ImageEvaluation, RuleEvaluation
 
 # ===================== 测试数据（模块级常量）=====================
 
@@ -517,7 +517,7 @@ class TestImageEvaluationMethods:
 
     def test_set_score_updates_total(self):
         """设置评分后自动更新总分"""
-        from src.models.rule_models import Rule8Score, Rule11Score
+        from tire_ai_pattern.models.rule_models import Rule8Score, Rule11Score
         input_dict = {"rules": [{"name": "rule8", "config": RULE8_CONFIG_DICT}, {"name": "rule11", "config": RULE11_CONFIG_DICT}]}
         expected_dict = {"current_score": 7}
         
@@ -562,7 +562,7 @@ class TestRuleEvaluationValidation:
 
 ```python
 import pytest
-from src.models.scheme_models import RibTemplate, Symmetry0, RibSchemeImpl, DecorationImpl
+from tire_ai_pattern.models.scheme_models import RibTemplate, Symmetry0, RibSchemeImpl, DecorationImpl
 
 
 # ===================== 模板类 frozen 测试 =====================
@@ -691,7 +691,7 @@ class TestDecorationImplValidation:
 
 ```python
 import pytest
-from src.models.rule_models import (
+from tire_ai_pattern.models.rule_models import (
     Rule8Config, Rule8Feature, Rule8Score,
     Rule11Config, Rule11Feature,
     get_feature_class, get_score_class
@@ -713,7 +713,7 @@ class TestFieldConstraints:
 
     def test_rule17_edge_continuity_valid(self):
         """✅ 校验规则 14：edge_continuity = 0.5"""
-        from src.models.rule_models import Rule17Config
+        from tire_ai_pattern.models.rule_models import Rule17Config
         input_dict = RULE17_CONFIG_DICT
         expected_dict = {"edge_continuity_rib1_rib2": 0.5}
         
@@ -722,7 +722,7 @@ class TestFieldConstraints:
 
     def test_rule17_edge_continuity_over(self):
         """❌ 校验规则 14：edge_continuity > 1"""
-        from src.models.rule_models import Rule17Config
+        from tire_ai_pattern.models.rule_models import Rule17Config
         input_dict = {**RULE17_CONFIG_DICT, "edge_continuity_rib1_rib2": 1.5}
         
         with pytest.raises(ValueError):
@@ -850,7 +850,7 @@ pytest tests/unittests/models/test_tire_struct.py -v
 pytest tests/unittests/models/test_tire_struct.py::TestTireStructValidation -v
 
 # 生成覆盖率报告
-pytest tests/unittests/models/ --cov=src/models --cov-report=term-missing
+pytest tests/unittests/models/ --cov=tire_ai_pattern/models --cov-report=term-missing
 ```
 
 ---

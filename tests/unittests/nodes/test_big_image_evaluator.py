@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import pytest
 
-from src.common.exceptions import InputDataError
-from src.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, SourceTypeEnum
-from src.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
-from src.models.rule_models import Rule8Config, Rule8Feature, Rule8Score, Rule13Config, Rule13Feature, Rule13Score
-from src.nodes.big_image_evaluator import evaluate_big_image
+from tire_ai_pattern.common.exceptions import InputDataError
+from tire_ai_pattern.models.enums import ImageFormatEnum, ImageModeEnum, LevelEnum, RegionEnum, SourceTypeEnum
+from tire_ai_pattern.models.image_models import BigImage, ImageBiz, ImageMeta, SmallImage
+from tire_ai_pattern.models.rule_models import Rule8Config, Rule8Feature, Rule8Score, Rule13Config, Rule13Feature, Rule13Score
+from tire_ai_pattern.nodes.big_image_evaluator import evaluate_big_image
 
 
 def make_meta(width: int = 10, height: int = 20) -> ImageMeta:
@@ -65,7 +65,7 @@ class FakeRuleRunner:
 def test_evaluate_big_image_writes_single_big_image_evaluation_only(monkeypatch):
     """验证大图评估节点接收单张大图并返回已写入评估的大图对象。"""
     FakeRuleRunner.reset()
-    monkeypatch.setattr("src.nodes.base.RuleRunner", FakeRuleRunner)
+    monkeypatch.setattr("tire_ai_pattern.nodes.base.RuleRunner", FakeRuleRunner)
     big_image = make_big_image()
     rules_config = [
         Rule13Config(land_ratio_min=0.1, land_ratio_max=0.5),
@@ -75,9 +75,9 @@ def test_evaluate_big_image_writes_single_big_image_evaluation_only(monkeypatch)
     result = evaluate_big_image(big_image, rules_config)
 
     assert result is big_image
-    assert [rule.name for rule in result.evaluation.rules] == ["rule8", "rule13"]
-    assert result.evaluation.current_score == 5
-    assert [call[0] for call in FakeRuleRunner.calls] == ["feature", "score", "feature", "score"]
+    assert [rule.name for rule in result.evaluation.rules] == ["rule13"]
+    assert result.evaluation.current_score == 2
+    assert [call[0] for call in FakeRuleRunner.calls] == ["feature", "score"]
 
 
 def test_evaluate_big_image_raises_input_error_when_big_image_missing():
